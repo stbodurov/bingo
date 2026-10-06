@@ -1,5 +1,7 @@
 # Startup Thesis: Web3 × AI, Venture-Scale Idea Selection
 
+> **Superseded** by [clearlien-web3-ai-startup-thesis.md](clearlien-web3-ai-startup-thesis.md). Lading failed the profitability screen: thin payments take rate, and Tazapay already escrows payments until shipment is verified.
+
 Oct 6, 2026 · working name **Lading**
 
 ## The pick: Lading
