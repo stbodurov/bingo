@@ -1,0 +1,560 @@
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top" aria-label="Fontis home">
+      <svg viewBox="0 0 28 28" aria-hidden="true">
+        <circle cx="14" cy="20" r="2.6" fill="var(--accent)"/>
+        <path d="M8.5 16.5a7.5 7.5 0 0 1 11 0" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"/>
+        <path d="M4.5 12.5a13 13 0 0 1 19 0" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round"/>
+        <path d="M1.5 8.5a18 18 0 0 1 25 0" fill="none" stroke="var(--ink)" stroke-width="2" stroke-linecap="round" opacity=".45"/>
+      </svg>
+      <span>Fontis</span>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#how">How it works</a>
+      <a href="#uses">Use cases</a>
+      <a href="#split">AI + cryptography</a>
+      <a href="#developers">Developers</a>
+      <a class="btn small" href="#access">Request early access</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Income and hours verification, from the source</p>
+        <h1>Stop reading <span class="strike">documents</span>. Get the proof.</h1>
+        <p class="lede">Applicants prove income, hours and balances straight from the payroll portal, gig app or bank that holds them. You get a cryptographic proof that can't be edited, checked against your rules by AI, in about two minutes.</p>
+        <div class="cta-row">
+          <a class="btn" href="#access">Request early access</a>
+          <a class="btn ghost" href="#how">How a proof works</a>
+        </div>
+        <p class="audience">Built for the applicants payroll databases can't verify: gig workers, freelancers, creators and the self-employed.</p>
+      </div>
+
+      <figure class="exhibit" aria-label="Sample proof: a source page with private lines redacted, and the resulting proof report. Example data.">
+        <div class="pane">
+          <div class="pane-head">
+            <span class="lock"><b>Earnings dashboard</b>&nbsp;· applicant's own session</span>
+            <span class="sample-tag">Sample data</span>
+          </div>
+          <div class="src-rows">
+            <div class="src-row hide" style="--d: .7s"><span class="k">Account holder</span><span class="v">Jordan A. Ellis</span></div>
+            <div class="src-row"><span class="k">Period</span><span class="v">Jul 1 – Sep 30, 2026</span></div>
+            <div class="src-row share"><span class="k">Gross earnings</span><span class="v">$15,720.40</span></div>
+            <div class="src-row share"><span class="k">Online hours, September</span><span class="v">138.5 h</span></div>
+            <div class="src-row hide" style="--d: .9s"><span class="k">Payout account</span><span class="v">Checking ••4471</span></div>
+            <div class="src-row hide" style="--d: 1.1s"><span class="k">Home address</span><span class="v">1180 Larkspur Ave</span></div>
+            <div class="src-row hide" style="--d: 1.3s"><span class="k">Trips and ratings</span><span class="v">1,286 · 4.93</span></div>
+          </div>
+        </div>
+        <div class="flow" aria-hidden="true">zkTLS proof · 2 facts shared</div>
+        <div class="pane proof">
+          <div class="pane-head">
+            <span class="proof-id">Proof FNT-7Q2K-91</span>
+            <span>0x9c2e…71ab</span>
+          </div>
+          <div class="checks">
+            <div class="check-row" style="--d: 1.5s"><span class="tick" aria-hidden="true">✓</span><span>Came from the real site, unedited</span><span class="rule">TLS attested</span></div>
+            <div class="check-row" style="--d: 1.7s"><span class="tick" aria-hidden="true">✓</span><span>Monthly income $5,240</span><span class="rule">rule ≥ $4,950</span></div>
+            <div class="check-row" style="--d: 1.9s"><span class="tick" aria-hidden="true">✓</span><span>138.5 hours last month</span><span class="rule">rule ≥ 80 h</span></div>
+          </div>
+          <div class="verdict"><span>Meets your rules</span><span>Withheld: name, account, address, trips</span></div>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat"><b>1 in 16</b><span>documents submitted to lenders flagged as fraudulent</span><a href="https://www.inscribe.ai/reports/2026-document-fraud-report" target="_blank" rel="noopener">Inscribe, 2026</a></div>
+      <div class="stat"><b>12%</b><span>of rental applications contain fraud, most often forged income documents</span><a href="https://checkr.com/resources/articles/2026-rental-fraud-report" target="_blank" rel="noopener">Checkr, 2026</a></div>
+      <div class="stat"><b>74.9M</b><span>Americans do independent work that payroll databases don't see</span><a href="https://www.mbopartners.com/state-of-independence/" target="_blank" rel="noopener">MBO Partners, 2026</a></div>
+      <div class="stat"><b>$55–70</b><span>typical price of one employment check from the leading payroll database</span><a href="https://www.housingwire.com/articles/equifaxs-work-number-is-too-expensive-and-regulators-should-look-into-it-chla/" target="_blank" rel="noopener">HousingWire</a></div>
+    </div>
+  </div>
+
+  <section id="why">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Why now</p>
+        <h2>AI made documents worthless as evidence</h2>
+        <p class="lede">A convincing pay stub or bank statement now takes seconds to generate. Detecting fakes is an arms race the detectors lose. Payroll databases don't help with the fastest-growing part of the workforce. So check the source itself.</p>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th scope="col"></th><th scope="col">Uploaded documents</th><th scope="col">Payroll databases</th><th scope="col">Fontis proofs</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Can be forged</td><td class="no">Yes, in seconds</td><td class="yes">No</td><td class="us yes">No, cryptographically</td></tr>
+            <tr><td>Covers gig and self-employed income</td><td>If the applicant has documents</td><td class="no">Rarely</td><td class="us yes">Yes, from any site they can log into</td></tr>
+            <tr><td>Time to decision</td><td>Hours to days of review</td><td>Instant when there's a match</td><td class="us">About two minutes</td></tr>
+            <tr><td>What you receive</td><td>Everything in the statement</td><td>Employer and pay history</td><td class="us">Only the facts your rule needs</td></tr>
+            <tr><td>Typical price</td><td>Reviewer time</td><td>$55–70 per check</td><td class="us">Pay per verified proof, no proof no charge</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled" id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">How a proof works</p>
+        <h2>From request to decision in four steps</h2>
+      </div>
+      <div class="steps">
+        <article class="step">
+          <h3>Request</h3>
+          <p>Send a proof link from your leasing or loan system, or by API, with the rule attached, like "monthly income at least 3× rent."</p>
+        </article>
+        <article class="step">
+          <h3>Prove</h3>
+          <p>The applicant signs in to the site that holds their income, in their own session on their phone. Fontis never sees their password.</p>
+        </article>
+        <article class="step">
+          <h3>Decide</h3>
+          <p>You get a proof report: pass or fail against your rule, the source, the date range and a proof ID anyone can re-check.</p>
+        </article>
+        <article class="step">
+          <h3>Reuse</h3>
+          <p>The applicant keeps the proof in a free Fontis wallet and can share it with the next landlord or lender while it's fresh.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled" id="uses">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Use cases</p>
+        <h2>Wherever someone has to prove what they earn</h2>
+      </div>
+      <div class="uses">
+        <article class="use">
+          <h3>Leasing</h3>
+          <p>Approve gig and self-employed renters the same day, without trusting an uploaded pay stub.</p>
+          <code>monthly_income ≥ 3 × rent</code>
+        </article>
+        <article class="use">
+          <h3>Lending</h3>
+          <p>Verify income from delivery apps, freelance marketplaces and 1099 work, averaged the way your credit policy requires.</p>
+          <code>avg_monthly_income(12m) ≥ 4,000</code>
+        </article>
+        <article class="use">
+          <h3>Health plans</h3>
+          <p>Help members meet Medicaid work requirements by proving hours from gig dashboards that state wage records don't capture.</p>
+          <code>hours(last_month) ≥ 80 OR income ≥ 580</code>
+        </article>
+        <article class="use">
+          <h3>Hiring <span class="soon">· later</span></h3>
+          <p>Confirm a candidate's employment history and identity from the source as AI-generated candidate profiles spread.</p>
+          <code>tenure(employer) ≥ 24m</code>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled" id="split">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">AI + cryptography</p>
+        <h2>One makes it work everywhere. The other makes it true.</h2>
+        <p class="lede">Integrating source by source is why payroll APIs miss so many workers. Trusting AI to read a screenshot is how forgeries get through. Fontis splits the job.</p>
+      </div>
+      <div class="split">
+        <div>
+          <h3>What the AI does</h3>
+          <ul>
+            <li><b>Finds the right pages on any site</b><span>Earnings, hours, balances and tenure, across gig apps, payroll portals, banks and marketplaces, with no integration to build first.</span></li>
+            <li><b>Adds new sources by itself</b><span>When an applicant uses a site we haven't seen, the AI writes the extraction for it, so coverage keeps growing.</span></li>
+            <li><b>Applies your rules</b><span>3× rent, 12-month averages, 80 hours, multiple income streams combined.</span></li>
+            <li><b>Helps the applicant</b><span>Plain-language guidance, and a fallback review when no online source exists.</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3>What the cryptography does</h3>
+          <ul>
+            <li><b>Proves where the data came from</b><span>zkTLS attests that the numbers came from the real site over a genuine encrypted session, and weren't edited afterward.</span></li>
+            <li><b>Shares facts, not statements</b><span>Selective disclosure reveals only what your rule needs and keeps the rest private.</span></li>
+            <li><b>Lets anyone check it</b><span>Each proof has an ID anyone can verify, with an optional on-chain attestation for audit trails and revocation.</span></li>
+            <li><b>Belongs to the applicant</b><span>Proofs live in the applicant's wallet and can be reused across verifiers, so nobody has to prove the same thing twice.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled">
+    <div class="wrap privacy">
+      <div class="privacy-copy">
+        <p class="eyebrow">Privacy</p>
+        <h2 style="font-size: var(--step-3)">You get the answer, not the bank statement</h2>
+        <p>Applicants sign in to their own accounts on their own device, and Fontis never stores their passwords. They see exactly which facts will be shared before they agree.</p>
+        <p>You get what your decision needs and a proof you can stand behind in an audit. Less personal data in your systems also means less to protect.</p>
+      </div>
+      <div class="seen" aria-label="What the verifier sees and what stays private">
+        <div>
+          <h4 class="sh">You see</h4>
+          <ul>
+            <li>Pass or fail against your rule</li>
+            <li>The figures the rule used</li>
+            <li>Source type and date range</li>
+            <li>Proof ID and timestamp</li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="wh">Stays private</h4>
+          <ul>
+            <li>Login credentials</li>
+            <li>Full transaction history</li>
+            <li>Account numbers</li>
+            <li>Anything the rule doesn't need</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled" id="developers">
+    <div class="wrap dev">
+      <div class="dev-copy">
+        <p class="eyebrow">Developers</p>
+        <h2 style="font-size: var(--step-3)">Add a proof step to any application flow</h2>
+        <p>Create a proof request, send the link, and get a webhook when the applicant finishes. Verify any proof yourself against the published verification key.</p>
+        <p class="hint" style="opacity:.8">Illustrative interface. The API is in development.</p>
+      </div>
+      <div class="code" role="region" aria-label="Code example">
+        <div class="code-tabs" role="tablist">
+          <button type="button" role="tab" id="tab-req" aria-selected="true" aria-controls="pane-req">Request</button>
+          <button type="button" role="tab" id="tab-res" aria-selected="false" aria-controls="pane-res">Result</button>
+        </div>
+        <pre id="pane-req" role="tabpanel" aria-labelledby="tab-req"><span class="c"># Ask an applicant for a proof</span>
+<span class="k">POST</span> /v1/proof-requests
+{
+  <span class="s">"applicant"</span>: { <span class="s">"email"</span>: <span class="s">"applicant@example.com"</span> },
+  <span class="s">"rule"</span>: <span class="s">"monthly_income >= 3 * 1650"</span>,
+  <span class="s">"window"</span>: <span class="s">"last_3_months"</span>,
+  <span class="s">"webhook"</span>: <span class="s">"https://your-app.example/hooks/fontis"</span>
+}
+
+<span class="c"># Response</span>
+{ <span class="s">"id"</span>: <span class="s">"pr_8f3k2"</span>, <span class="s">"link"</span>: <span class="s">"https://prove.example/pr_8f3k2"</span> }</pre>
+        <pre id="pane-res" role="tabpanel" aria-labelledby="tab-res" hidden><span class="c"># Webhook payload when the applicant finishes</span>
+{
+  <span class="s">"proof_id"</span>: <span class="s">"FNT-7Q2K-91"</span>,
+  <span class="s">"result"</span>: <span class="g">"pass"</span>,
+  <span class="s">"facts"</span>: {
+    <span class="s">"monthly_income"</span>: 5240,
+    <span class="s">"hours_last_month"</span>: 138.5
+  },
+  <span class="s">"source"</span>: { <span class="s">"type"</span>: <span class="s">"gig_platform"</span>, <span class="s">"tls_attested"</span>: <span class="g">true</span> },
+  <span class="s">"window"</span>: [<span class="s">"2026-07-01"</span>, <span class="s">"2026-09-30"</span>],
+  <span class="s">"attestation"</span>: <span class="s">"0x9c2e…71ab"</span>
+}</pre>
+        <div class="code-cap">Example only · in development</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ruled">
+    <div class="wrap">
+      <div class="price">
+        <div>
+          <p class="eyebrow">Pricing</p>
+          <h2>Pay per verified proof. No proof, no charge.</h2>
+        </div>
+        <ul>
+          <li>Free for applicants, always</li>
+          <li>Volume pricing for leasing, lending and health plans</li>
+          <li>Design partners: free pilot on 500 applications</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="access" id="access">
+    <div class="wrap access-grid">
+      <div class="access-copy">
+        <p class="eyebrow">Early access</p>
+        <h2>Verify the applicants you can't verify today</h2>
+        <p>We're onboarding a small group of property managers, lenders and health plans first. Tell us about your applicants and we'll set up a pilot.</p>
+        <div class="offer">
+          <b>Design partners: free pilot on 500 applications</b>
+          <span>Run Fontis as the step after your current verification and compare results side by side.</span>
+        </div>
+      </div>
+
+      <div id="form-area">
+        <form id="access-form" name="early-access" method="POST" data-netlify="true" netlify-honeypot="website" novalidate>
+          <input type="hidden" name="form-name" value="early-access">
+          <input type="hidden" name="utm_source" id="utm_source">
+          <input type="hidden" name="utm_medium" id="utm_medium">
+          <input type="hidden" name="utm_campaign" id="utm_campaign">
+          <input type="hidden" name="utm_content" id="utm_content">
+          <input type="hidden" name="utm_term" id="utm_term">
+          <input type="hidden" name="referrer" id="referrer">
+          <div class="hp" aria-hidden="true"><label for="website">Website</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>
+
+          <div class="fields">
+            <div class="field">
+              <label for="name">Full name</label>
+              <input type="text" id="name" name="name" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="email">Work email</label>
+              <input type="email" id="email" name="email" autocomplete="email" required>
+              <span class="hint" id="email-hint">We use it to confirm your company.</span>
+            </div>
+            <div class="field">
+              <label for="company">Company</label>
+              <input type="text" id="company" name="company" autocomplete="organization" required>
+            </div>
+            <div class="field">
+              <label for="role">Role</label>
+              <select id="role" name="role" required>
+                <option value="">Choose one</option>
+                <option>Leasing / property operations</option>
+                <option>Fraud / risk</option>
+                <option>Credit / underwriting</option>
+                <option>Member services / eligibility</option>
+                <option>Product / engineering</option>
+                <option>Executive</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <fieldset>
+            <legend>What do you verify?</legend>
+            <div class="chips" role="radiogroup">
+              <label><input type="radio" name="use_case" value="Leasing" required><span>Renters</span></label>
+              <label><input type="radio" name="use_case" value="Lending"><span>Borrowers</span></label>
+              <label><input type="radio" name="use_case" value="Health plan"><span>Health plan members</span></label>
+              <label><input type="radio" name="use_case" value="Hiring"><span>Candidates</span></label>
+              <label><input type="radio" name="use_case" value="Other"><span>Other</span></label>
+            </div>
+          </fieldset>
+
+          <div class="fields">
+            <div class="field">
+              <label for="volume">Applications per month</label>
+              <select id="volume" name="volume">
+                <option value="">Choose a range</option>
+                <option>Under 500</option>
+                <option>500 to 5,000</option>
+                <option>5,000 to 50,000</option>
+                <option>Over 50,000</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="gap">Share you can't verify today</label>
+              <select id="gap" name="unverifiable_share">
+                <option value="">Choose a range</option>
+                <option>Under 10%</option>
+                <option>10% to 25%</option>
+                <option>25% to 40%</option>
+                <option>Over 40%</option>
+                <option>Not sure</option>
+              </select>
+            </div>
+          </div>
+
+          <label class="check"><input type="checkbox" id="partner" name="design_partner" value="yes" checked><span>I'd like a free pilot on 500 applications</span></label>
+
+          <div class="submit-row">
+            <button class="btn" type="submit" id="submit">Request early access</button>
+            <span class="status" id="status" role="status" aria-live="polite"></span>
+          </div>
+          <p class="form-note">We only use these details to contact you about Fontis. No one else sees them.</p>
+        </form>
+
+        <div class="done" id="done" hidden tabindex="-1">
+          <h3 id="done-title">You're on the list</h3>
+          <p id="done-text">We'll be in touch by email.</p>
+          <div class="submit-row">
+            <button class="btn small" type="button" id="copy-link">Copy link for a colleague</button>
+            <span class="status" id="copy-status" role="status" aria-live="polite"></span>
+          </div>
+          <p class="preview-note" id="preview-note" hidden>This is the preview of the page, so nothing was sent. On the deployed site, this form sends your details to the waitlist.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Questions</p>
+        <h2>What verifiers ask first</h2>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>How is a proof different from a screenshot or a PDF?</summary>
+          <p>A screenshot shows what someone claims a site said. A Fontis proof uses zkTLS to attest that the figures came from the real site over a genuine encrypted session and weren't changed afterward. Editing a single digit breaks the proof.</p>
+        </details>
+        <details>
+          <summary>Do applicants need crypto or a wallet app?</summary>
+          <p>No. Applicants open a link, sign in to the site they already use and approve what gets shared. The proof wallet is built in and free. Nothing to buy, and no token.</p>
+        </details>
+        <details>
+          <summary>What if a site isn't supported yet?</summary>
+          <p>The AI can read new sites and write the extraction for them, so coverage grows with use. If there's no online source at all, the applicant can fall back to a reviewed upload, flagged as such in your report.</p>
+        </details>
+        <details>
+          <summary>How is this different from payroll APIs?</summary>
+          <p>Payroll APIs and databases work well for W-2 employees at covered employers. Fontis is built for everyone else, and can sit right after your current provider as the step that catches the applicants it misses.</p>
+        </details>
+        <details>
+          <summary>Is the applicant's data safe?</summary>
+          <p>Applicants sign in on their own device and Fontis never stores passwords. You receive only the facts your rule needs. The applicant can see and revoke what they've shared.</p>
+        </details>
+        <details>
+          <summary>Is Fontis available now?</summary>
+          <p>Fontis is in development. Design partners decide which sources and integrations ship first.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <p>© 2026 Fontis. In development. People, figures, proof IDs and code on this page are examples. Cited statistics link to their sources. Fontis has no token.</p>
+    <a href="#top">Back to top</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Where sign-ups go on the deployed site. Leave empty to use Netlify Forms,
+  // or paste a Formspree (or similar) endpoint, e.g. "https://formspree.io/f/abcdwxyz".
+  var CONFIG = { endpoint: "" };
+
+  var inPreview = typeof window.claude !== "undefined" || /claude(usercontent)?\.(ai|com)$/.test(location.hostname);
+
+  // Code tabs
+  var tabs = [["tab-req", "pane-req"], ["tab-res", "pane-res"]];
+  tabs.forEach(function (pair) {
+    document.getElementById(pair[0]).addEventListener("click", function () {
+      tabs.forEach(function (p) {
+        var on = p[0] === pair[0];
+        document.getElementById(p[0]).setAttribute("aria-selected", on ? "true" : "false");
+        document.getElementById(p[1]).hidden = !on;
+      });
+    });
+  });
+
+  // Campaign attribution: keep the first UTM tags a visitor arrived with
+  var keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
+  var params;
+  try { params = new URLSearchParams(location.search); } catch (e) { params = null; }
+  var stored = {};
+  try { stored = JSON.parse(localStorage.getItem("fontis_utm") || "{}") || {}; } catch (e) { stored = {}; }
+  var fresh = {};
+  keys.forEach(function (k) { var v = params && params.get(k); if (v) fresh[k] = v.slice(0, 120); });
+  var utm = Object.keys(fresh).length ? fresh : stored;
+  if (Object.keys(fresh).length) { try { localStorage.setItem("fontis_utm", JSON.stringify(fresh)); } catch (e) {} }
+  keys.forEach(function (k) { var el = document.getElementById(k); if (el && utm[k]) el.value = utm[k]; });
+  var ref = document.getElementById("referrer");
+  if (ref) ref.value = (document.referrer || "").slice(0, 200);
+
+  // Work-email hint
+  var free = /@(gmail|googlemail|yahoo|hotmail|outlook|live|icloud|me|aol|proton|protonmail|gmx|mail)\./i;
+  var email = document.getElementById("email");
+  var hint = document.getElementById("email-hint");
+  email.addEventListener("blur", function () {
+    if (free.test(email.value)) {
+      hint.textContent = "A work email helps us confirm your company faster.";
+      hint.classList.add("warn");
+    } else {
+      hint.textContent = "We use it to confirm your company.";
+      hint.classList.remove("warn");
+    }
+  });
+
+  // Submit
+  var form = document.getElementById("access-form");
+  var status = document.getElementById("status");
+  var submit = document.getElementById("submit");
+  var nameEl = document.getElementById("name");
+  var companyEl = document.getElementById("company");
+  var roleEl = document.getElementById("role");
+
+  function firstInvalid() {
+    if (!nameEl.value.trim()) return [nameEl, "Enter your name."];
+    if (!email.value.trim() || !email.checkValidity()) return [email, "Enter a valid work email."];
+    if (!companyEl.value.trim()) return [companyEl, "Enter your company."];
+    if (!roleEl.value) return [roleEl, "Choose your role."];
+    if (!form.querySelector('input[name="use_case"]:checked')) return [form.querySelector('input[name="use_case"]'), "Choose what you verify."];
+    return null;
+  }
+
+  function showDone(data, preview) {
+    var first = (data.get("name") || "").toString().trim().split(/\s+/)[0];
+    document.getElementById("done-title").textContent = first ? "Thanks, " + first + ". You're on the list." : "You're on the list.";
+    var partner = data.get("design_partner") === "yes";
+    document.getElementById("done-text").textContent = partner
+      ? "We'll email " + data.get("email") + " to set up your pilot."
+      : "We'll email " + data.get("email") + " when early access opens.";
+    document.getElementById("preview-note").hidden = !preview;
+    form.hidden = true;
+    var done = document.getElementById("done");
+    done.hidden = false;
+    done.focus();
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    status.textContent = "";
+    status.classList.remove("err");
+    var bad = firstInvalid();
+    if (bad) {
+      status.textContent = bad[1];
+      status.classList.add("err");
+      bad[0].focus();
+      return;
+    }
+    var data = new FormData(form);
+    if (data.get("website")) return; // spam trap
+    submit.disabled = true;
+    submit.textContent = "Sending…";
+
+    var request;
+    if (inPreview) {
+      request = new Promise(function (resolve) { setTimeout(function () { resolve({ ok: true }); }, 450); });
+    } else if (CONFIG.endpoint) {
+      request = fetch(CONFIG.endpoint, { method: "POST", headers: { Accept: "application/json" }, body: data });
+    } else {
+      request = fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(data).toString()
+      });
+    }
+
+    request.then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      showDone(data, inPreview);
+    }).catch(function () {
+      status.textContent = "We couldn't send your request. Check your connection and try again.";
+      status.classList.add("err");
+    }).then(function () {
+      submit.disabled = false;
+      submit.textContent = "Request early access";
+    });
+  });
+
+  // Share
+  document.getElementById("copy-link").addEventListener("click", function () {
+    var url = location.href.split("#")[0];
+    var out = document.getElementById("copy-status");
+    function fallback() { out.textContent = url; }
+    try {
+      navigator.clipboard.writeText(url).then(function () { out.textContent = "Link copied"; }, fallback);
+    } catch (e) { fallback(); }
+  });
+})();
+</script>
