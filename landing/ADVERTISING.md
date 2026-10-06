@@ -14,7 +14,7 @@ That is a few thousand people in the US, not millions. One customer is worth $25
 The consequences:
 
 - Spend on precision, not reach. A $300 cost per qualified lead is cheap at this deal size.
-- Lead with the fraud cases and the free facility check. Don't lead with "blockchain" or "web3"; it lowers trust with this audience. The page already treats the ledger as a detail.
+- With lenders, lead with the fraud cases and the free facility check, then explain the ledger as the reason a second pledge can't hide. With on-chain platforms, lead with the Oracle and lien tokens.
 - Founder-led outreach will beat every paid channel at first. Paid channels support it.
 
 ## Channels, in order of expected return
@@ -81,9 +81,20 @@ The consequences:
 - **Field-exam firms and backup servicers** who want a software layer, and **secured-transactions law firms** advising on Article 12.
 - Join the **SFA fraud-mitigation working groups**. This is how the registry becomes a standard.
 
+### 9. The on-chain credit segment (Oracle buyers)
+
+Tokenization platforms and on-chain lending protocols are the second audience, and here crypto channels *are* the right ones:
+
+- **Direct outreach to roughly 40 teams.** Private-credit protocols, RWA tokenization platforms, and DeFi lending markets that list tokenized-credit collateral.
+- **Public analysis on X and crypto research forums.** For example, "how much tokenized private credit could be double-pledged off-chain?" Tag protocol founders. Publish in RWA newsletters and on research forums.
+- **Governance proposals.** Lending protocols decide which collateral to accept through governance votes. A proposal to require oracle attestations for RWA collateral puts Clearlien in front of the exact decision makers.
+- **Events:** RWA and tokenization tracks at crypto conferences (Devconnect, Permissionless, RWA summits). Check this year's dates.
+- **Use the same UTM scheme,** for example `?utm_source=x&utm_medium=organic&utm_campaign=oracle`.
+
 ### What not to spend on
 
-- Crypto or web3 media, X ads, Reddit, Product Hunt and broad Meta or Google Display. Wrong audience.
+- Crypto media, X ads and crypto conferences *for the lender audience*. Bank and private-credit buyers aren't there. Use them only for the on-chain segment above.
+- Reddit, Product Hunt and broad Meta or Google Display. Wrong audience for both segments.
 - Booths before you have a customer story.
 
 ## Track everything with UTM links

@@ -9,9 +9,10 @@
       <span>Clearlien</span>
     </a>
     <nav class="nav-links" aria-label="Sections">
-      <a href="#how">How it works</a>
-      <a href="#check">What we check</a>
-      <a href="#faq">FAQ</a>
+      <a href="#platform">Platform</a>
+      <a href="#split">AI + chain</a>
+      <a href="#onchain">Onchain credit</a>
+      <a href="#developers">Developers</a>
       <a class="btn small" href="#access">Request early access</a>
     </nav>
   </div>
@@ -22,58 +23,61 @@
   <section class="hero">
     <div class="wrap hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow">Collateral verification for private credit</p>
-        <h1>Know the collateral is real, and <em>pledged only to you.</em></h1>
-        <p class="lede">Clearlien checks every loan and invoice behind your facilities against sources the borrower doesn't control, every day. If an asset is already pledged to another lender, you find out before you fund.</p>
+        <p class="eyebrow">Proof of collateral for private credit</p>
+        <h1>AI checks the collateral. <em>The chain proves it's pledged once.</em></h1>
+        <p class="lede">Clearlien's AI examiners verify every loan and invoice against sources the borrower doesn't control. Each verified asset is registered on a public ledger and can be held as a token only its lender controls, so the same asset can't back two loans.</p>
         <div class="cta-row">
           <a class="btn" href="#access">Request early access</a>
-          <a class="btn ghost" href="#check">See what we check</a>
+          <a class="btn ghost" href="#split">How AI and the chain fit</a>
         </div>
-        <p class="audience">For lender-finance, warehouse and ABF teams at private credit funds, banks and factors.</p>
+        <p class="audience">For lender-finance, warehouse and ABF teams, and for onchain credit and tokenization platforms.</p>
       </div>
 
       <div class="exhibit">
         <canvas class="guilloche" id="guilloche" aria-hidden="true"></canvas>
-        <figure class="report" aria-label="Sample daily collateral report with example data">
-          <div class="report-head">
+        <figure class="cert" aria-label="Sample proof-of-collateral record with example data">
+          <div class="cert-head">
             <div>
-              <strong>Daily collateral check</strong>
-              <span class="meta">Warehouse facility WH-3 · auto loans · 06 Oct 2026</span>
+              <strong>Proof of collateral</strong>
+              <span class="meta">No. CL-WH3-21003 · auto loan · 2020 Honda Civic</span>
             </div>
             <span class="sample-tag">Sample data</span>
           </div>
-          <div class="report-sum">
-            <div><b>4,212</b><span>Assets checked</span></div>
-            <div><b>4,208</b><span>Clear</span></div>
-            <div class="bad"><b>4</b><span>Exceptions</span></div>
+
+          <div class="stage ai" style="--d: .3s">
+            <span class="dot" aria-hidden="true">AI</span>
+            <div>
+              <h4>Examined <span class="kind ai">AI examiner</span></h4>
+              <div class="checks"><span>Title lien ✓</span><span>VIN matches tape ✓</span><span>14 of 14 payments in bank data ✓</span><span>Borrower identity ✓</span></div>
+            </div>
           </div>
-          <div class="rows">
-            <div class="scan" aria-hidden="true"></div>
-            <div class="row">
-              <span class="id">AL-20931</span>
-              <span class="what"><b>2021 Toyota Camry · VIN …MU041187</b><small>Title lien names you · 14 of 14 payments in bank data</small></span>
-              <span class="chip ok">Clear</span>
+
+          <div class="stage" style="--d: .9s">
+            <span class="dot" aria-hidden="true">⛓</span>
+            <div>
+              <h4>Registered <span class="kind chain">Public ledger</span></h4>
+              <div class="kv">
+                <span>Fingerprint</span><span>0x7c41…e9a2</span>
+                <span>Transaction</span><span>0x3b9e…41d0</span>
+                <span>Recorded</span><span>2026-10-06 09:14 UTC</span>
+              </div>
             </div>
-            <div class="row flag" style="--d: 1.05s">
-              <span class="id">AL-20947</span>
-              <span class="what"><b>2019 Ford F-150 · VIN …KFA22906</b><small>Title lien names a different secured party</small></span>
-              <span class="chip stamp">Exception</span>
+          </div>
+
+          <div class="stage" style="--d: 1.5s">
+            <span class="dot" aria-hidden="true">◆</span>
+            <div>
+              <h4>Controlled <span class="kind chain">Lien token</span></h4>
+              <div class="kv">
+                <span>Held by</span><span>Lender A custody wallet</span>
+                <span>Legal basis</span><span>UCC Article 12 control</span>
+              </div>
             </div>
-            <div class="row flag" style="--d: 1.5s">
-              <span class="id">AL-21003</span>
-              <span class="what"><b>2020 Honda Civic · VIN …LH512874</b><small>Same asset registered to another facility on 14 Jun 2025</small></span>
-              <span class="chip stamp">Exception</span>
-            </div>
-            <div class="row flag" style="--d: 1.95s">
-              <span class="id">AL-21018</span>
-              <span class="what"><b>2022 Nissan Rogue · VIN …NC730415</b><small>Tape shows 9 on-time payments; bank data shows 2</small></span>
-              <span class="chip stamp">Exception</span>
-            </div>
-            <div class="row flag" style="--d: 2.4s">
-              <span class="id">AL-21052</span>
-              <span class="what"><b>Tape: 2022 Jeep Wrangler · VIN …EW118320</b><small>VIN decodes to a 2014 model; advance based on 2022 value</small></span>
-              <span class="chip stamp">Exception</span>
-            </div>
+          </div>
+
+          <div class="toast" role="note" style="--d: 2.2s">
+            <b>Second pledge blocked</b>
+            <span>Facility WH-9 tried to register the same loan. Both lenders were alerted; neither saw the other's deal.</span>
           </div>
         </figure>
       </div>
@@ -113,86 +117,199 @@
           <a class="src" href="https://www.manatt.com/insights/newsletters/client-alert/mfs-collapse-refuels-double-pledging-concerns-within-the-private-credit-industry" target="_blank" rel="noopener">Source</a>
         </article>
       </div>
-      <p class="cases-note">Field exams sample the borrower's own files once or twice a year, and UCC filings describe collateral by category, not asset by asset. A lender can't see what another lender holds.</p>
+      <p class="cases-note">Documents can now be forged in minutes, and a database run by one lender or vendor is only as trustworthy as whoever runs it. Clearlien uses AI to check the real world and a public ledger to keep the record.</p>
     </div>
   </section>
 
-  <section class="filed" id="how">
+  <section class="filed" id="platform">
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow">How it works</p>
-        <h2>Verify each asset. Register it once. Hold it outright.</h2>
+        <p class="eyebrow">Platform</p>
+        <h2>Four parts, one record per asset</h2>
       </div>
-      <div class="layers">
-        <article class="layer">
-          <span class="tag">Verify</span>
-          <h3>Checked against sources the borrower doesn't control</h3>
-          <p>Title and lien records, VINs, bank receipts, shipment records and the account debtor's real domain. Every asset, every day, with the evidence attached to each exception.</p>
+      <div class="modules">
+        <article class="module">
+          <span class="kind ai">AI</span>
+          <h3>Examiners</h3>
+          <p>AI agents that do a field examiner's work on every asset, every day. They read the tape and the documents, then check them against title records, VINs, bank receipts, shipment data and the debtor's real domain.</p>
         </article>
-        <article class="layer">
-          <span class="tag">Register</span>
-          <h3>One asset, one lender</h3>
-          <p>Each verified asset gets a private fingerprint built from its real-world identifiers. If another lender registers the same asset, both of you are told. Neither of you sees the other's deal.</p>
+        <article class="module">
+          <span class="kind chain">Onchain</span>
+          <h3>Registry</h3>
+          <p>A public ledger of asset fingerprints. When a second lender registers the same asset, both are alerted at once. No borrower names, amounts or deal terms are ever written to it.</p>
         </article>
-        <article class="layer">
-          <span class="tag">Control · optional</span>
-          <h3>Priority that a second pledge can't undo</h3>
-          <p>New originations can be issued as controllable electronic records under UCC Article 12. The lender holding control has priority over any filing, and the asset can't be pledged twice.</p>
-          <p class="fine">Article 12 took effect in New York on 3 June 2026 and has been enacted in 33 states and DC.</p>
+        <article class="module">
+          <span class="kind chain">Onchain</span>
+          <h3>Liens</h3>
+          <p>New loans can be issued as lien tokens, which are controllable electronic records under UCC Article 12. The lender holding the token has priority over any filing, and the asset moves into a securitization by transfer instead of re-papering.</p>
         </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="filed" id="check">
-    <div class="wrap">
-      <div class="section-head">
-        <p class="eyebrow">What we check</p>
-        <h2>Independent sources for each asset class</h2>
-      </div>
-      <div class="table-scroll">
-        <table>
-          <thead>
-            <tr><th scope="col">Asset class</th><th scope="col">Checked against</th><th scope="col">Exceptions we flag</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>Auto loans</td><td>Title and lien records, VIN decode, bank receipts for each payment</td><td>Lien held by another lender · vehicle doesn't match the tape · payments that never reached the account</td></tr>
-            <tr><td>Consumer and SMB loans</td><td>Bank receipts, borrower identity, servicing records, the cross-lender registry</td><td>Same loan in two facilities · invented payment history · borrowers who don't exist</td></tr>
-            <tr><td>Trade receivables</td><td>Debtor existence, confirmation through the debtor's verified domain or AP portal, purchase-order and shipment records</td><td>Confirmations from look-alike domains · invoices with no shipment · inflated amounts</td></tr>
-            <tr><td>Bridge and real-estate loans</td><td>Land-registry charges and existing liens</td><td>Property already charged to another lender</td></tr>
-          </tbody>
-        </table>
+        <article class="module">
+          <span class="kind ai">AI</span> <span class="kind chain">Onchain</span>
+          <h3>Oracle</h3>
+          <p>Signed, per-asset attestations from the examiners, published onchain. Tokenization platforms and lending protocols can check that a token is backed by a verified, unencumbered asset before accepting it.</p>
+        </article>
       </div>
     </div>
   </section>
 
-  <section class="filed">
+  <section class="filed" id="split">
     <div class="wrap">
       <div class="section-head">
-        <p class="eyebrow">Coverage</p>
-        <h2>From a sample once a year to every asset every morning</h2>
+        <p class="eyebrow">AI + chain</p>
+        <h2>Each does the part the other can't</h2>
+        <p class="lede">AI is good at judging messy evidence and bad at being a neutral record. A blockchain is a neutral record and can't see the real world. Clearlien needs both.</p>
       </div>
-      <div class="compare">
-        <div class="them">
-          <h3>Field exam today</h3>
+      <div class="split">
+        <div>
+          <h3>What the AI does <span class="kind ai">Examiners</span></h3>
           <ul>
-            <li>Once or twice a year</li>
-            <li>A sample of the tape</li>
-            <li>Reads the borrower's own documents and emails</li>
-            <li>No view of what other lenders hold</li>
-            <li>Findings arrive weeks after the visit</li>
+            <li><b>Reads what borrowers send</b><span>Loan tapes, receivables agings, invoices, statements, in any format.</span></li>
+            <li><b>Checks it against the world</b><span>Title and lien records, bank receipts, shipment data, the debtor's authenticated domain.</span></li>
+            <li><b>Spots forgery and inflation</b><span>Look-alike domains, edited statements, a 2014 car funded as a 2022.</span></li>
+            <li><b>Decides what's an exception</b><span>And attaches the evidence a credit officer needs.</span></li>
           </ul>
         </div>
-        <div class="us">
-          <h3>With Clearlien</h3>
+        <div class="chain-side">
+          <h3>What the chain does <span class="kind chain">Registry, Liens, Oracle</span></h3>
           <ul>
-            <li>Every business day</li>
-            <li>Every asset in the borrowing base</li>
-            <li>Checks independent records the borrower can't edit</li>
-            <li>Flags assets registered to another lender</li>
-            <li>Exceptions with evidence the same morning</li>
+            <li><b>Keeps one neutral record</b><span>No lender, borrower or vendor, Clearlien included, can rewrite who registered an asset first.</span></li>
+            <li><b>Makes a second pledge visible</b><span>Every lender checks the same ledger, so a collision can't hide in someone else's database.</span></li>
+            <li><b>Gives the lender control</b><span>A lien token held in the lender's own custody. Under Article 12, control beats any filing.</span></li>
+            <li><b>Lets credit move onchain</b><span>Verified, unencumbered loans can be financed by tokenized funds and lending protocols.</span></li>
           </ul>
         </div>
+      </div>
+      <p class="split-note">Article 12 took effect in New York on 3 June 2026 and has been enacted in 33 states and DC. Lien tokens are optional; examiners and the registry work for any facility today.</p>
+    </div>
+  </section>
+
+  <section class="filed" id="examiners">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Examiners at work</p>
+        <h2 style="font-size: var(--step-3)">Every asset, every morning, with the evidence attached</h2>
+        <p class="lede">A field exam samples the borrower's own files once or twice a year. Examiners check the whole borrowing base each business day and send only the exceptions.</p>
+        <div class="table-scroll" style="min-width:0">
+          <table style="min-width: 520px">
+            <thead><tr><th scope="col">Asset class</th><th scope="col">Checked against</th></tr></thead>
+            <tbody>
+              <tr><td>Auto loans</td><td>Title and lien records, VIN decode, bank receipts</td></tr>
+              <tr><td>Consumer and SMB loans</td><td>Bank receipts, identity, servicing records, registry</td></tr>
+              <tr><td>Trade receivables</td><td>Debtor's verified domain or AP portal, POs, shipment records</td></tr>
+              <tr><td>Bridge and real estate</td><td>Land-registry charges and existing liens</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <figure class="report" aria-label="Sample daily exception report with example data">
+        <div class="report-head">
+          <div>
+            <strong>Daily exception report</strong>
+            <span class="meta">Warehouse facility WH-3 · auto loans · 06 Oct 2026</span>
+          </div>
+          <span class="sample-tag">Sample data</span>
+        </div>
+        <div class="report-sum">
+          <div><b>4,212</b><span>Assets examined</span></div>
+          <div><b>4,208</b><span>Clear</span></div>
+          <div class="bad"><b>4</b><span>Exceptions</span></div>
+        </div>
+        <div class="rows">
+          <div class="scan" aria-hidden="true"></div>
+          <div class="row flag" style="--d: 1.05s">
+            <span class="id">AL-20947</span>
+            <span class="what"><b>2019 Ford F-150 · VIN …KFA22906</b><small>Title lien names a different secured party</small></span>
+            <span class="chip stamp">Exception</span>
+          </div>
+          <div class="row flag" style="--d: 1.5s">
+            <span class="id">AL-21003</span>
+            <span class="what"><b>2020 Honda Civic · VIN …LH512874</b><small>Fingerprint already registered by another facility</small></span>
+            <span class="chip stamp">Exception</span>
+          </div>
+          <div class="row flag" style="--d: 1.95s">
+            <span class="id">AL-21018</span>
+            <span class="what"><b>2022 Nissan Rogue · VIN …NC730415</b><small>Tape shows 9 on-time payments; bank data shows 2</small></span>
+            <span class="chip stamp">Exception</span>
+          </div>
+          <div class="row flag" style="--d: 2.4s">
+            <span class="id">AL-21052</span>
+            <span class="what"><b>Tape: 2022 Jeep Wrangler · VIN …EW118320</b><small>VIN decodes to a 2014 model; advance based on 2022 value</small></span>
+            <span class="chip stamp">Exception</span>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="filed" id="onchain">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Who it's for</p>
+        <h2>Lenders today. Onchain credit next.</h2>
+      </div>
+      <div class="audiences">
+        <article class="aud">
+          <h3>Banks, private credit funds and factors</h3>
+          <p>Replace sampled exams with daily, asset-level checks, and see whether anything in your borrowing base is pledged elsewhere.</p>
+          <div class="stat"><b>$1.4T</b><span>Bank loans to nonbank lenders at the end of 2025, growing about 23% a year.</span><a href="https://www.pymnts.com/legal/bank-regulation/2026/fdic-finds-steep-rise-in-loans-from-banks-to-nonbanks" target="_blank" rel="noopener">FDIC via PYMNTS</a></div>
+          <div class="stat"><b>+80%</b><span>Rise in demand for collateral verification at one consulting firm after Tricolor.</span><a href="https://www.autofinancenews.net/allposts/risk-management/tricolor-fallout-fuels-boom-in-business-for-collateral-checkers/" target="_blank" rel="noopener">Auto Finance News</a></div>
+        </article>
+        <article class="aud">
+          <h3>Tokenization platforms and lending protocols</h3>
+          <p>Lend against tokenized loans only when the oracle says each one exists, performs and isn't pledged anywhere else.</p>
+          <div class="stat"><b>~$1B</b><span>Borrowed against about $33.5B of tokenized real-world assets in DeFi, because most of it can't be verified onchain.</span><a href="https://coinpaprika.com/education/rwa-as-defi-collateral/" target="_blank" rel="noopener">Coinpaprika</a></div>
+          <div class="stat"><b>~$68M</b><span>Lost by onchain credit protocols to borrowers who misrepresented their position, with nothing onchain to catch it.</span><a href="https://coinpaprika.com/education/rwa-default-events-defi/" target="_blank" rel="noopener">Coinpaprika</a></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="filed" id="developers">
+    <div class="wrap dev">
+      <div class="dev-copy">
+        <p class="eyebrow">Developers</p>
+        <h2 style="font-size: var(--step-3)">Check any asset before you fund it</h2>
+        <p>Call the API from your borrowing-base system, or read the registry and oracle directly from a smart contract. Fingerprints are computed through Clearlien with a keyed function, so outsiders can't test whether a given VIN or invoice is pledged.</p>
+        <p class="hint" style="opacity:.8">Illustrative interface. The API is in development.</p>
+      </div>
+      <div class="code" role="region" aria-label="Code example">
+        <div class="code-tabs" role="tablist">
+          <button type="button" role="tab" id="tab-api" aria-selected="true" aria-controls="pane-api">REST</button>
+          <button type="button" role="tab" id="tab-sol" aria-selected="false" aria-controls="pane-sol">Solidity</button>
+        </div>
+        <pre id="pane-api" role="tabpanel" aria-labelledby="tab-api"><span class="c"># Verify and register one asset at pledge time</span>
+<span class="k">POST</span> /v1/assets/verify
+{
+  <span class="s">"facility"</span>: <span class="s">"WH-3"</span>,
+  <span class="s">"class"</span>: <span class="s">"auto_loan"</span>,
+  <span class="s">"vin"</span>: <span class="s">"2HGFC2F5XLH512874"</span>,
+  <span class="s">"loan_id"</span>: <span class="s">"AL-21003"</span>
+}
+
+<span class="c"># Response</span>
+{
+  <span class="s">"status"</span>: <span class="bad">"exception"</span>,
+  <span class="s">"reason"</span>: <span class="bad">"registered_elsewhere"</span>,
+  <span class="s">"fingerprint"</span>: <span class="s">"0x7c41…e9a2"</span>,
+  <span class="s">"evidence_url"</span>: <span class="s">"https://app.clearlien…/ex/21003"</span>
+}</pre>
+        <pre id="pane-sol" role="tabpanel" aria-labelledby="tab-sol" hidden><span class="k">interface</span> IClearlienRegistry {
+    <span class="c">// true while an active pledge exists for this asset</span>
+    <span class="k">function</span> isEncumbered(<span class="k">bytes32</span> fingerprint)
+        <span class="k">external view returns</span> (<span class="k">bool</span>);
+
+    <span class="c">// latest examiner attestation for the asset</span>
+    <span class="k">function</span> attestation(<span class="k">bytes32</span> fingerprint)
+        <span class="k">external view returns</span> (
+            <span class="k">uint16</span> checksPassed,
+            <span class="k">uint64</span> examinedAt,
+            <span class="k">uint64</span> validUntil
+        );
+}
+
+<span class="c">// in a lending pool: accept only verified, unencumbered collateral</span>
+<span class="k">require</span>(!registry.isEncumbered(fp), <span class="s">"already pledged"</span>);</pre>
+        <div class="code-cap">Example only · in development</div>
       </div>
     </div>
   </section>
@@ -200,18 +317,19 @@
   <section class="filed">
     <div class="wrap privacy">
       <div class="privacy-copy">
-        <p class="eyebrow">Your data</p>
-        <h2 style="font-size: var(--step-3)">The registry knows an asset exists. Not whose it is.</h2>
-        <p>Fingerprints are computed from identifiers like a VIN and obligor, or a debtor, purchase order and amount, and can't be reversed into those identifiers. They're recorded on a public ledger so no single company, us included, controls the record of who registered what first.</p>
-        <p>When two lenders register the same asset, each is told there's a collision. Who the other lender is stays private until both choose to talk.</p>
+        <p class="eyebrow">Security</p>
+        <h2 style="font-size: var(--step-3)">The ledger knows an asset exists. Not whose it is.</h2>
+        <p>Examiners get read-only access to the tape, servicing exports and collections account, which most facility agreements already require. Your data stays in your account and is never written to the ledger.</p>
+        <p>The ledger holds fingerprints and timestamps. When two lenders register the same asset, each is told there's a collision. Who the other lender is stays private until both choose to talk. Lien tokens sit in your own custody, not ours.</p>
       </div>
       <div class="ledger" aria-label="Example registry entry">
-        <div class="ledger-cap">Example registry entry</div>
+        <div class="ledger-cap">Example ledger entry</div>
         <div class="ledger-row"><span>Fingerprint</span><span>0x7c41…e9a2</span></div>
         <div class="ledger-row"><span>Asset class</span><span>auto loan</span></div>
         <div class="ledger-row"><span>Registered</span><span>2026-10-06 09:14 UTC</span></div>
+        <div class="ledger-row"><span>Attestation</span><span>12 of 12 checks · valid to 2026-10-07</span></div>
         <div class="ledger-row"><span>Status</span><span>active pledge</span></div>
-        <div class="ledger-row never"><span>Never stored</span><span>borrower names, amounts, lender names, deal terms</span></div>
+        <div class="ledger-row never"><span>Never written</span><span>borrower names, amounts, lender names, deal terms</span></div>
       </div>
     </div>
   </section>
@@ -221,7 +339,7 @@
       <div class="access-copy">
         <p class="eyebrow">Early access</p>
         <h2>Bring us one facility</h2>
-        <p>We're onboarding a small group of lenders first. Tell us what you finance and we'll set up a check of one facility.</p>
+        <p>We're onboarding a small group of lenders and platforms first. Tell us what you finance and we'll set up a check of one facility or one tokenized pool.</p>
         <div class="offer">
           <b>Design partners: one facility checked at no cost</b>
           <span>Two weeks, every asset, with the full exception report and evidence.</span>
@@ -262,6 +380,7 @@
                 <option>Asset-based lending</option>
                 <option>Factoring / receivables finance</option>
                 <option>Portfolio risk / credit</option>
+                <option>Protocol or tokenization team</option>
                 <option>Originator or borrower</option>
                 <option>Other</option>
               </select>
@@ -274,6 +393,7 @@
               <label><input type="radio" name="institution" value="Private credit fund" required><span>Private credit fund</span></label>
               <label><input type="radio" name="institution" value="Bank"><span>Bank</span></label>
               <label><input type="radio" name="institution" value="Factor"><span>Factor</span></label>
+              <label><input type="radio" name="institution" value="Onchain credit or tokenization"><span>Onchain credit / tokenization</span></label>
               <label><input type="radio" name="institution" value="Originator"><span>Originator</span></label>
               <label><input type="radio" name="institution" value="Other"><span>Other</span></label>
             </div>
@@ -287,7 +407,7 @@
               <label><input type="checkbox" name="collateral" value="SMB loans"><span>SMB loans</span></label>
               <label><input type="checkbox" name="collateral" value="Trade receivables"><span>Trade receivables</span></label>
               <label><input type="checkbox" name="collateral" value="Real estate / bridge"><span>Real estate / bridge</span></label>
-              <label><input type="checkbox" name="collateral" value="Other"><span>Other</span></label>
+              <label><input type="checkbox" name="collateral" value="Tokenized loans"><span>Tokenized loans</span></label>
             </div>
           </fieldset>
 
@@ -304,7 +424,7 @@
             </div>
           </div>
 
-          <label class="check"><input type="checkbox" id="partner" name="design_partner" value="yes" checked><span>I'd like a design-partner check of one facility</span></label>
+          <label class="check"><input type="checkbox" id="partner" name="design_partner" value="yes" checked><span>I'd like a design-partner check of one facility or pool</span></label>
 
           <div class="submit-row">
             <button class="btn" type="submit" id="submit">Request early access</button>
@@ -330,32 +450,32 @@
     <div class="wrap">
       <div class="section-head">
         <p class="eyebrow">Questions</p>
-        <h2>What lenders ask first</h2>
+        <h2>What people ask first</h2>
       </div>
       <div class="faq">
+        <details>
+          <summary>Why does this need a blockchain?</summary>
+          <p>A double pledge works because each lender only sees its own records. A shared registry fixes that only if no single company can edit it or quietly favor a customer, and that includes us. A public ledger gives every lender the same record of who registered an asset first. It's also what lets a lien token give a lender control under UCC Article 12.</p>
+        </details>
+        <details>
+          <summary>Why does this need AI?</summary>
+          <p>A ledger only records what it's told. If the asset doesn't exist, or the invoice was generated in ten minutes, an onchain record of it is worthless. The examiners check each asset against independent sources before anything is registered, across thousands of assets a day.</p>
+        </details>
+        <details>
+          <summary>Do we have to hold crypto?</summary>
+          <p>No. There's no token to buy or trade. Examiners and registry alerts work like any other software. Lien tokens are optional and can sit with your existing digital-asset custodian.</p>
+        </details>
         <details>
           <summary>What does the borrower have to share?</summary>
           <p>Read-only access to the loan tape or receivables aging, servicing exports and the collections account. Most facility agreements already require this for reporting and field exams.</p>
         </details>
         <details>
-          <summary>Who can see our data?</summary>
-          <p>Only your team. The registry stores fingerprints, not borrower names, amounts or deal terms. A collision tells the two lenders involved that it exists, and nothing more until they choose to talk.</p>
-        </details>
-        <details>
-          <summary>Is this a crypto product?</summary>
-          <p>No tokens, and nothing to trade. Verification and alerts work like any other software service. The registry records fingerprints on a public ledger so that no single company controls the record. The optional control layer uses the same ledger to give lenders control of an asset under UCC Article 12.</p>
-        </details>
-        <details>
-          <summary>Does it replace field exams?</summary>
-          <p>It covers every asset daily, which a field exam can't. Many lenders will keep an annual exam at first. The aim is for the exam to confirm what you already know.</p>
-        </details>
-        <details>
           <summary>How is it priced?</summary>
-          <p>On the collateral you monitor, in basis points per year, with a minimum per facility. Design partners get their first facility checked at no cost.</p>
+          <p>Lenders pay on the collateral monitored, in basis points per year, with a minimum per facility. Originators pay a small fee per registered asset. Design partners get their first facility checked at no cost.</p>
         </details>
         <details>
           <summary>Is Clearlien available now?</summary>
-          <p>Clearlien is in development. Early-access lenders decide which asset classes and integrations ship first.</p>
+          <p>Clearlien is in development. Early-access lenders and platforms decide which asset classes and integrations ship first.</p>
         </details>
       </div>
     </div>
@@ -365,7 +485,7 @@
 <footer>
   <div class="microprint" aria-hidden="true" id="microprint-bottom"></div>
   <div class="wrap foot">
-    <p>© 2026 Clearlien. In development. Report rows and registry entries on this page are sample data. Figures for named cases are reported allegations; follow each source link for details.</p>
+    <p>© 2026 Clearlien. In development. Records, reports, hashes and code on this page are examples. Figures for named cases are reported allegations; follow each source link for details. Clearlien has no token and nothing here is an offer of securities.</p>
     <a href="#top">Back to top</a>
   </div>
 </footer>
@@ -379,14 +499,14 @@
   var inPreview = typeof window.claude !== "undefined" || /claude(usercontent)?\.(ai|com)$/.test(location.hostname);
 
   // Microprint
-  var phrase = "CLEARLIEN · VERIFIED COLLATERAL · ONE ASSET ONE LENDER · ";
+  var phrase = "CLEARLIEN · PROOF OF COLLATERAL · ONE ASSET ONE LENDER · ";
   var line = new Array(60).join(phrase);
   ["microprint-top", "microprint-bottom"].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) el.textContent = line;
   });
 
-  // Guilloche rosette behind the sample report
+  // Guilloche rosette behind the certificate
   var canvas = document.getElementById("guilloche");
   function drawGuilloche() {
     if (!canvas || !canvas.getContext) return;
@@ -439,6 +559,18 @@
   } catch (e) {}
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawGuilloche);
 
+  // Code tabs
+  var tabs = [["tab-api", "pane-api"], ["tab-sol", "pane-sol"]];
+  tabs.forEach(function (pair) {
+    document.getElementById(pair[0]).addEventListener("click", function () {
+      tabs.forEach(function (p) {
+        var on = p[0] === pair[0];
+        document.getElementById(p[0]).setAttribute("aria-selected", on ? "true" : "false");
+        document.getElementById(p[1]).hidden = !on;
+      });
+    });
+  });
+
   // Campaign attribution: keep the first UTM tags a visitor arrived with
   var keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
   var params;
@@ -471,7 +603,6 @@
   var form = document.getElementById("access-form");
   var status = document.getElementById("status");
   var submit = document.getElementById("submit");
-
   var nameEl = document.getElementById("name");
   var firmEl = document.getElementById("firm");
   var roleEl = document.getElementById("role");
@@ -490,7 +621,7 @@
     document.getElementById("done-title").textContent = name ? "Thanks, " + name + ". You're on the list." : "You're on the list.";
     var partner = data.get("design_partner") === "yes";
     document.getElementById("done-text").textContent = partner
-      ? "We'll email " + data.get("email") + " to schedule your facility check."
+      ? "We'll email " + data.get("email") + " to schedule your check."
       : "We'll email " + data.get("email") + " when early access opens.";
     document.getElementById("preview-note").hidden = !preview;
     form.hidden = true;

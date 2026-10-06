@@ -21,6 +21,32 @@ It sells the *work* lenders already pay consultants and field examiners for, and
 
 ---
 
+## How it is web3 + AI (refined Oct 6, 2026)
+
+Clearlien is "proof of collateral": the oracle problem for real-world credit. A blockchain can't see whether a loan or invoice exists, and AI can't be a neutral record that competing lenders trust. Each covers the other's gap.
+
+| Module | Layer | What it does |
+|---|---|---|
+| **Examiners** | AI | Agents that do a field examiner's work on every asset daily: read tapes and documents, check title and lien records, VINs, bank receipts, shipment data and the debtor's authenticated domain, flag forgery and inflation |
+| **Registry** | On-chain | A public ledger of keyed, non-reversible asset fingerprints. It records who registered an asset first and surfaces collisions across lenders. No deal data on-chain |
+| **Liens** | On-chain | Lien tokens: controllable electronic records under UCC Article 12. The holder has control, which beats any filing; transfers into securitizations or back-leverage happen in minutes |
+| **Oracle** | AI + on-chain | Signed, per-asset examiner attestations published on-chain, so tokenization platforms and lending protocols accept only verified, unencumbered collateral |
+
+**A second market on the web3 side.** On-chain private credit is ~$12.9B of TVL (only ~$5B freely transferable). DeFi lends only about $1B against ~$33.5B of tokenized real-world assets because it can't verify them. Protocols lost ~$68M to borrowers who misrepresented their position, with "no mechanism to detect the deception" (Maple's Orthogonal default, Goldfinch's three defaults). The Oracle sells to these platforms. Lien tokens are how verified traditional-finance loans become collateral DeFi can accept.
+
+**Lessons from Sequoia-backed sites, applied to the landing page** (Bridge, Vanta, Harvey, Linear, Turnkey, Rowspace, Magentic):
+
+- a one-line category claim ("Proof of collateral for private credit")
+- named modules (Examiners, Registry, Liens, Oracle; Magentic names its AI agents "Mages")
+- a section explaining exactly what the AI does and what the chain does
+- a developer section with a REST and Solidity example (Bridge and Turnkey style)
+- a security section ("the ledger knows an asset exists, not whose it is")
+- no invented logos or customer numbers
+
+Sources: [on-chain private credit $12.9B vs $5B](https://paragraph.com/@yielddesk/on-chain-private-credit-in-2026-what-the-headline-numbers-hide-and-where-the-real-yield-lives) · [RWA as DeFi collateral](https://coinpaprika.com/education/rwa-as-defi-collateral/) · [RWA default events](https://coinpaprika.com/education/rwa-default-events-defi/) · [Rowspace (Sequoia-led)](https://fintech.global/2026/02/26/rowspace-launches-with-50m-to-scale-ai-for-finance/) · [Magentic (Sequoia seed)](https://thenextweb.com/news/magentic-18m-series-a-ai-agents-procurement) · [Turnkey (Sequoia)](https://www.turnkey.com/blog/2025-turnkey-crypto-wallet-infrastructure) · [Bridge](https://www.bridge.xyz/)
+
+---
+
 ## Profitability check: is this a profitable niche?
 
 The question to answer before anything else. Four tests, each with evidence:
