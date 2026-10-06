@@ -1,0 +1,553 @@
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top" aria-label="Clearlien home">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="14.5" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="10.5" fill="none" stroke="var(--engrave)" stroke-width="1" stroke-dasharray="1.6 1.6"/>
+        <path d="M10.5 16.4l3.6 3.6 7.4-8" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="square"/>
+      </svg>
+      <span>Clearlien</span>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#how">How it works</a>
+      <a href="#check">What we check</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn small" href="#access">Request early access</a>
+    </nav>
+  </div>
+  <div class="microprint" aria-hidden="true" id="microprint-top"></div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Collateral verification for private credit</p>
+        <h1>Know the collateral is real, and <em>pledged only to you.</em></h1>
+        <p class="lede">Clearlien checks every loan and invoice behind your facilities against sources the borrower doesn't control, every day. If an asset is already pledged to another lender, you find out before you fund.</p>
+        <div class="cta-row">
+          <a class="btn" href="#access">Request early access</a>
+          <a class="btn ghost" href="#check">See what we check</a>
+        </div>
+        <p class="audience">For lender-finance, warehouse and ABF teams at private credit funds, banks and factors.</p>
+      </div>
+
+      <div class="exhibit">
+        <canvas class="guilloche" id="guilloche" aria-hidden="true"></canvas>
+        <figure class="report" aria-label="Sample daily collateral report with example data">
+          <div class="report-head">
+            <div>
+              <strong>Daily collateral check</strong>
+              <span class="meta">Warehouse facility WH-3 · auto loans · 06 Oct 2026</span>
+            </div>
+            <span class="sample-tag">Sample data</span>
+          </div>
+          <div class="report-sum">
+            <div><b>4,212</b><span>Assets checked</span></div>
+            <div><b>4,208</b><span>Clear</span></div>
+            <div class="bad"><b>4</b><span>Exceptions</span></div>
+          </div>
+          <div class="rows">
+            <div class="scan" aria-hidden="true"></div>
+            <div class="row">
+              <span class="id">AL-20931</span>
+              <span class="what"><b>2021 Toyota Camry · VIN …MU041187</b><small>Title lien names you · 14 of 14 payments in bank data</small></span>
+              <span class="chip ok">Clear</span>
+            </div>
+            <div class="row flag" style="--d: 1.05s">
+              <span class="id">AL-20947</span>
+              <span class="what"><b>2019 Ford F-150 · VIN …KFA22906</b><small>Title lien names a different secured party</small></span>
+              <span class="chip stamp">Exception</span>
+            </div>
+            <div class="row flag" style="--d: 1.5s">
+              <span class="id">AL-21003</span>
+              <span class="what"><b>2020 Honda Civic · VIN …LH512874</b><small>Same asset registered to another facility on 14 Jun 2025</small></span>
+              <span class="chip stamp">Exception</span>
+            </div>
+            <div class="row flag" style="--d: 1.95s">
+              <span class="id">AL-21018</span>
+              <span class="what"><b>2022 Nissan Rogue · VIN …NC730415</b><small>Tape shows 9 on-time payments; bank data shows 2</small></span>
+              <span class="chip stamp">Exception</span>
+            </div>
+            <div class="row flag" style="--d: 2.4s">
+              <span class="id">AL-21052</span>
+              <span class="what"><b>Tape: 2022 Jeep Wrangler · VIN …EW118320</b><small>VIN decodes to a 2014 model; advance based on 2022 value</small></span>
+              <span class="chip stamp">Exception</span>
+            </div>
+          </div>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="filed" id="pattern">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Why now</p>
+        <h2>The same failure, four times in a year</h2>
+        <p class="lede">Each of these lenders had filings, covenants and audits. None of them could see the asset itself, or what another lender held against it.</p>
+      </div>
+      <div class="cases">
+        <article class="case">
+          <span class="who">First Brands · Sep 2025</span>
+          <span class="fig">$2.3B</span>
+          <p>Receivables that creditors say could not be located after the auto-parts maker's bankruptcy.</p>
+          <a class="src" href="https://en.wikipedia.org/wiki/First_Brands_Group" target="_blank" rel="noopener">Source</a>
+        </article>
+        <article class="case">
+          <span class="who">Tricolor · SEC complaint, Aug 2026</span>
+          <span class="fig">$800M</span>
+          <p>Collateral gap the SEC alleges, including 3,225 auto loans placed in two securitizations at once.</p>
+          <a class="src" href="https://www.investmentnews.com/regulation-legal-compliance/sec-accuses-tricolor-executives-of-hiding-800-million-collateral-hole/267915" target="_blank" rel="noopener">Source</a>
+        </article>
+        <article class="case">
+          <span class="who">HPS and BNP Paribas · Nov 2025</span>
+          <span class="fig">~$430M</span>
+          <p>Lent against telecom receivables the lenders allege were fake, with confirmations sent from look-alike email domains.</p>
+          <a class="src" href="https://www.usnews.com/news/top-news/articles/2025-11-17/us-probes-telecom-firms-after-blackrocks-hps-uncovers-alleged-400m-fraud-financial-times-reports" target="_blank" rel="noopener">Source</a>
+        </article>
+        <article class="case">
+          <span class="who">Market Financial Solutions · Feb 2026</span>
+          <span class="fig">£930M</span>
+          <p>Shortfall alleged at the UK bridging lender after the same properties were pledged to more than one lender.</p>
+          <a class="src" href="https://www.manatt.com/insights/newsletters/client-alert/mfs-collapse-refuels-double-pledging-concerns-within-the-private-credit-industry" target="_blank" rel="noopener">Source</a>
+        </article>
+      </div>
+      <p class="cases-note">Field exams sample the borrower's own files once or twice a year, and UCC filings describe collateral by category, not asset by asset. A lender can't see what another lender holds.</p>
+    </div>
+  </section>
+
+  <section class="filed" id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">How it works</p>
+        <h2>Verify each asset. Register it once. Hold it outright.</h2>
+      </div>
+      <div class="layers">
+        <article class="layer">
+          <span class="tag">Verify</span>
+          <h3>Checked against sources the borrower doesn't control</h3>
+          <p>Title and lien records, VINs, bank receipts, shipment records and the account debtor's real domain. Every asset, every day, with the evidence attached to each exception.</p>
+        </article>
+        <article class="layer">
+          <span class="tag">Register</span>
+          <h3>One asset, one lender</h3>
+          <p>Each verified asset gets a private fingerprint built from its real-world identifiers. If another lender registers the same asset, both of you are told. Neither of you sees the other's deal.</p>
+        </article>
+        <article class="layer">
+          <span class="tag">Control · optional</span>
+          <h3>Priority that a second pledge can't undo</h3>
+          <p>New originations can be issued as controllable electronic records under UCC Article 12. The lender holding control has priority over any filing, and the asset can't be pledged twice.</p>
+          <p class="fine">Article 12 took effect in New York on 3 June 2026 and has been enacted in 33 states and DC.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="filed" id="check">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">What we check</p>
+        <h2>Independent sources for each asset class</h2>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th scope="col">Asset class</th><th scope="col">Checked against</th><th scope="col">Exceptions we flag</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Auto loans</td><td>Title and lien records, VIN decode, bank receipts for each payment</td><td>Lien held by another lender · vehicle doesn't match the tape · payments that never reached the account</td></tr>
+            <tr><td>Consumer and SMB loans</td><td>Bank receipts, borrower identity, servicing records, the cross-lender registry</td><td>Same loan in two facilities · invented payment history · borrowers who don't exist</td></tr>
+            <tr><td>Trade receivables</td><td>Debtor existence, confirmation through the debtor's verified domain or AP portal, purchase-order and shipment records</td><td>Confirmations from look-alike domains · invoices with no shipment · inflated amounts</td></tr>
+            <tr><td>Bridge and real-estate loans</td><td>Land-registry charges and existing liens</td><td>Property already charged to another lender</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="filed">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Coverage</p>
+        <h2>From a sample once a year to every asset every morning</h2>
+      </div>
+      <div class="compare">
+        <div class="them">
+          <h3>Field exam today</h3>
+          <ul>
+            <li>Once or twice a year</li>
+            <li>A sample of the tape</li>
+            <li>Reads the borrower's own documents and emails</li>
+            <li>No view of what other lenders hold</li>
+            <li>Findings arrive weeks after the visit</li>
+          </ul>
+        </div>
+        <div class="us">
+          <h3>With Clearlien</h3>
+          <ul>
+            <li>Every business day</li>
+            <li>Every asset in the borrowing base</li>
+            <li>Checks independent records the borrower can't edit</li>
+            <li>Flags assets registered to another lender</li>
+            <li>Exceptions with evidence the same morning</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="filed">
+    <div class="wrap privacy">
+      <div class="privacy-copy">
+        <p class="eyebrow">Your data</p>
+        <h2 style="font-size: var(--step-3)">The registry knows an asset exists. Not whose it is.</h2>
+        <p>Fingerprints are computed from identifiers like a VIN and obligor, or a debtor, purchase order and amount, and can't be reversed into those identifiers. They're recorded on a public ledger so no single company, us included, controls the record of who registered what first.</p>
+        <p>When two lenders register the same asset, each is told there's a collision. Who the other lender is stays private until both choose to talk.</p>
+      </div>
+      <div class="ledger" aria-label="Example registry entry">
+        <div class="ledger-cap">Example registry entry</div>
+        <div class="ledger-row"><span>Fingerprint</span><span>0x7c41…e9a2</span></div>
+        <div class="ledger-row"><span>Asset class</span><span>auto loan</span></div>
+        <div class="ledger-row"><span>Registered</span><span>2026-10-06 09:14 UTC</span></div>
+        <div class="ledger-row"><span>Status</span><span>active pledge</span></div>
+        <div class="ledger-row never"><span>Never stored</span><span>borrower names, amounts, lender names, deal terms</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="access" id="access">
+    <div class="wrap access-grid">
+      <div class="access-copy">
+        <p class="eyebrow">Early access</p>
+        <h2>Bring us one facility</h2>
+        <p>We're onboarding a small group of lenders first. Tell us what you finance and we'll set up a check of one facility.</p>
+        <div class="offer">
+          <b>Design partners: one facility checked at no cost</b>
+          <span>Two weeks, every asset, with the full exception report and evidence.</span>
+        </div>
+      </div>
+
+      <div id="form-area">
+        <form id="access-form" name="early-access" method="POST" data-netlify="true" netlify-honeypot="website" novalidate>
+          <input type="hidden" name="form-name" value="early-access">
+          <input type="hidden" name="utm_source" id="utm_source">
+          <input type="hidden" name="utm_medium" id="utm_medium">
+          <input type="hidden" name="utm_campaign" id="utm_campaign">
+          <input type="hidden" name="utm_content" id="utm_content">
+          <input type="hidden" name="utm_term" id="utm_term">
+          <input type="hidden" name="referrer" id="referrer">
+          <div class="hp" aria-hidden="true"><label for="website">Website</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>
+
+          <div class="fields">
+            <div class="field">
+              <label for="name">Full name</label>
+              <input type="text" id="name" name="name" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="email">Work email</label>
+              <input type="email" id="email" name="email" autocomplete="email" required>
+              <span class="hint" id="email-hint">We use it to confirm your firm.</span>
+            </div>
+            <div class="field">
+              <label for="firm">Firm</label>
+              <input type="text" id="firm" name="firm" autocomplete="organization" required>
+            </div>
+            <div class="field">
+              <label for="role">Role</label>
+              <select id="role" name="role" required>
+                <option value="">Choose one</option>
+                <option>Lender finance / warehouse lending</option>
+                <option>ABF / private credit</option>
+                <option>Asset-based lending</option>
+                <option>Factoring / receivables finance</option>
+                <option>Portfolio risk / credit</option>
+                <option>Originator or borrower</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <fieldset>
+            <legend>Institution</legend>
+            <div class="chips" role="radiogroup">
+              <label><input type="radio" name="institution" value="Private credit fund" required><span>Private credit fund</span></label>
+              <label><input type="radio" name="institution" value="Bank"><span>Bank</span></label>
+              <label><input type="radio" name="institution" value="Factor"><span>Factor</span></label>
+              <label><input type="radio" name="institution" value="Originator"><span>Originator</span></label>
+              <label><input type="radio" name="institution" value="Other"><span>Other</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Collateral you finance</legend>
+            <div class="chips">
+              <label><input type="checkbox" name="collateral" value="Auto loans"><span>Auto loans</span></label>
+              <label><input type="checkbox" name="collateral" value="Consumer loans"><span>Consumer loans</span></label>
+              <label><input type="checkbox" name="collateral" value="SMB loans"><span>SMB loans</span></label>
+              <label><input type="checkbox" name="collateral" value="Trade receivables"><span>Trade receivables</span></label>
+              <label><input type="checkbox" name="collateral" value="Real estate / bridge"><span>Real estate / bridge</span></label>
+              <label><input type="checkbox" name="collateral" value="Other"><span>Other</span></label>
+            </div>
+          </fieldset>
+
+          <div class="fields">
+            <div class="field">
+              <label for="size">Collateral you monitor</label>
+              <select id="size" name="size">
+                <option value="">Choose a range</option>
+                <option>Under $500M</option>
+                <option>$500M to $2B</option>
+                <option>$2B to $10B</option>
+                <option>Over $10B</option>
+              </select>
+            </div>
+          </div>
+
+          <label class="check"><input type="checkbox" id="partner" name="design_partner" value="yes" checked><span>I'd like a design-partner check of one facility</span></label>
+
+          <div class="submit-row">
+            <button class="btn" type="submit" id="submit">Request early access</button>
+            <span class="status" id="status" role="status" aria-live="polite"></span>
+          </div>
+          <p class="form-note">We only use these details to contact you about Clearlien. No one else sees them.</p>
+        </form>
+
+        <div class="done" id="done" hidden tabindex="-1">
+          <h3 id="done-title">You're on the list</h3>
+          <p id="done-text">We'll be in touch by email.</p>
+          <div class="submit-row">
+            <button class="btn small" type="button" id="copy-link">Copy link for a colleague</button>
+            <span class="status" id="copy-status" role="status" aria-live="polite"></span>
+          </div>
+          <p class="preview-note" id="preview-note" hidden>This is the preview of the page, so nothing was sent. On the deployed site, this form sends your details to the waitlist.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Questions</p>
+        <h2>What lenders ask first</h2>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>What does the borrower have to share?</summary>
+          <p>Read-only access to the loan tape or receivables aging, servicing exports and the collections account. Most facility agreements already require this for reporting and field exams.</p>
+        </details>
+        <details>
+          <summary>Who can see our data?</summary>
+          <p>Only your team. The registry stores fingerprints, not borrower names, amounts or deal terms. A collision tells the two lenders involved that it exists, and nothing more until they choose to talk.</p>
+        </details>
+        <details>
+          <summary>Is this a crypto product?</summary>
+          <p>No tokens, and nothing to trade. Verification and alerts work like any other software service. The registry records fingerprints on a public ledger so that no single company controls the record. The optional control layer uses the same ledger to give lenders control of an asset under UCC Article 12.</p>
+        </details>
+        <details>
+          <summary>Does it replace field exams?</summary>
+          <p>It covers every asset daily, which a field exam can't. Many lenders will keep an annual exam at first. The aim is for the exam to confirm what you already know.</p>
+        </details>
+        <details>
+          <summary>How is it priced?</summary>
+          <p>On the collateral you monitor, in basis points per year, with a minimum per facility. Design partners get their first facility checked at no cost.</p>
+        </details>
+        <details>
+          <summary>Is Clearlien available now?</summary>
+          <p>Clearlien is in development. Early-access lenders decide which asset classes and integrations ship first.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="microprint" aria-hidden="true" id="microprint-bottom"></div>
+  <div class="wrap foot">
+    <p>© 2026 Clearlien. In development. Report rows and registry entries on this page are sample data. Figures for named cases are reported allegations; follow each source link for details.</p>
+    <a href="#top">Back to top</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Where sign-ups go on the deployed site. Leave empty to use Netlify Forms,
+  // or paste a Formspree (or similar) endpoint, e.g. "https://formspree.io/f/abcdwxyz".
+  var CONFIG = { endpoint: "" };
+
+  var inPreview = typeof window.claude !== "undefined" || /claude(usercontent)?\.(ai|com)$/.test(location.hostname);
+
+  // Microprint
+  var phrase = "CLEARLIEN · VERIFIED COLLATERAL · ONE ASSET ONE LENDER · ";
+  var line = new Array(60).join(phrase);
+  ["microprint-top", "microprint-bottom"].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = line;
+  });
+
+  // Guilloche rosette behind the sample report
+  var canvas = document.getElementById("guilloche");
+  function drawGuilloche() {
+    if (!canvas || !canvas.getContext) return;
+    var rect = canvas.getBoundingClientRect();
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = Math.max(1, Math.round(rect.width * dpr));
+    var h = Math.max(1, Math.round(rect.height * dpr));
+    canvas.width = w; canvas.height = h;
+    var ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, w, h);
+    var color = getComputedStyle(document.documentElement).getPropertyValue("--engrave").trim() || "#1C5C50";
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 0.6 * dpr;
+    var cx = w * 0.82, cy = h * 0.18;
+    var R = Math.min(w, h) * 0.34;
+    for (var k = 0; k < 18; k++) {
+      ctx.globalAlpha = 0.16 + (k % 3) * 0.05;
+      ctx.beginPath();
+      var phase = (k / 18) * Math.PI * 2;
+      for (var i = 0; i <= 720; i++) {
+        var t = (i / 720) * Math.PI * 2;
+        var r = R * (0.62 + 0.22 * Math.cos(9 * t + phase) + 0.08 * Math.sin(27 * t));
+        var x = cx + r * Math.cos(t);
+        var y = cy + r * Math.sin(t);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+    var cx2 = w * 0.12, cy2 = h * 0.9, R2 = Math.min(w, h) * 0.22;
+    for (var j = 0; j < 12; j++) {
+      ctx.globalAlpha = 0.14;
+      ctx.beginPath();
+      var ph = (j / 12) * Math.PI * 2;
+      for (var n = 0; n <= 540; n++) {
+        var u = (n / 540) * Math.PI * 2;
+        var rr = R2 * (0.7 + 0.25 * Math.sin(7 * u + ph));
+        var px = cx2 + rr * Math.cos(u), py = cy2 + rr * Math.sin(u);
+        if (n === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  drawGuilloche();
+  var resizeTimer;
+  window.addEventListener("resize", function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(drawGuilloche, 150); });
+  try {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawGuilloche);
+    new MutationObserver(drawGuilloche).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  } catch (e) {}
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawGuilloche);
+
+  // Campaign attribution: keep the first UTM tags a visitor arrived with
+  var keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
+  var params;
+  try { params = new URLSearchParams(location.search); } catch (e) { params = null; }
+  var stored = {};
+  try { stored = JSON.parse(localStorage.getItem("clearlien_utm") || "{}") || {}; } catch (e) { stored = {}; }
+  var fresh = {};
+  keys.forEach(function (k) { var v = params && params.get(k); if (v) fresh[k] = v.slice(0, 120); });
+  var utm = Object.keys(fresh).length ? fresh : stored;
+  if (Object.keys(fresh).length) { try { localStorage.setItem("clearlien_utm", JSON.stringify(fresh)); } catch (e) {} }
+  keys.forEach(function (k) { var el = document.getElementById(k); if (el && utm[k]) el.value = utm[k]; });
+  var ref = document.getElementById("referrer");
+  if (ref) ref.value = (document.referrer || "").slice(0, 200);
+
+  // Work-email hint
+  var free = /@(gmail|googlemail|yahoo|hotmail|outlook|live|icloud|me|aol|proton|protonmail|gmx|mail)\./i;
+  var email = document.getElementById("email");
+  var hint = document.getElementById("email-hint");
+  email.addEventListener("blur", function () {
+    if (free.test(email.value)) {
+      hint.textContent = "A work email helps us confirm your firm faster.";
+      hint.classList.add("warn");
+    } else {
+      hint.textContent = "We use it to confirm your firm.";
+      hint.classList.remove("warn");
+    }
+  });
+
+  // Submit
+  var form = document.getElementById("access-form");
+  var status = document.getElementById("status");
+  var submit = document.getElementById("submit");
+
+  var nameEl = document.getElementById("name");
+  var firmEl = document.getElementById("firm");
+  var roleEl = document.getElementById("role");
+
+  function firstInvalid() {
+    if (!nameEl.value.trim()) return [nameEl, "Enter your name."];
+    if (!email.value.trim() || !email.checkValidity()) return [email, "Enter a valid work email."];
+    if (!firmEl.value.trim()) return [firmEl, "Enter your firm."];
+    if (!roleEl.value) return [roleEl, "Choose your role."];
+    if (!form.querySelector('input[name="institution"]:checked')) return [form.querySelector('input[name="institution"]'), "Choose your institution type."];
+    return null;
+  }
+
+  function showDone(data, preview) {
+    var name = (data.get("name") || "").toString().trim().split(/\s+/)[0];
+    document.getElementById("done-title").textContent = name ? "Thanks, " + name + ". You're on the list." : "You're on the list.";
+    var partner = data.get("design_partner") === "yes";
+    document.getElementById("done-text").textContent = partner
+      ? "We'll email " + data.get("email") + " to schedule your facility check."
+      : "We'll email " + data.get("email") + " when early access opens.";
+    document.getElementById("preview-note").hidden = !preview;
+    form.hidden = true;
+    var done = document.getElementById("done");
+    done.hidden = false;
+    done.focus();
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    status.textContent = "";
+    status.classList.remove("err");
+    var bad = firstInvalid();
+    if (bad) {
+      status.textContent = bad[1];
+      status.classList.add("err");
+      bad[0].focus();
+      return;
+    }
+    var data = new FormData(form);
+    if (data.get("website")) return; // spam trap
+    submit.disabled = true;
+    submit.textContent = "Sending…";
+
+    var request;
+    if (inPreview) {
+      request = new Promise(function (resolve) { setTimeout(function () { resolve({ ok: true }); }, 450); });
+    } else if (CONFIG.endpoint) {
+      request = fetch(CONFIG.endpoint, { method: "POST", headers: { Accept: "application/json" }, body: data });
+    } else {
+      request = fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(data).toString()
+      });
+    }
+
+    request.then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      showDone(data, inPreview);
+    }).catch(function () {
+      status.textContent = "We couldn't send your request. Check your connection and try again.";
+      status.classList.add("err");
+    }).then(function () {
+      submit.disabled = false;
+      submit.textContent = "Request early access";
+    });
+  });
+
+  // Share
+  document.getElementById("copy-link").addEventListener("click", function () {
+    var url = location.href.split("#")[0];
+    var out = document.getElementById("copy-status");
+    function fallback() { out.textContent = url; }
+    try {
+      navigator.clipboard.writeText(url).then(function () { out.textContent = "Link copied"; }, fallback);
+    } catch (e) { fallback(); }
+  });
+})();
+</script>

@@ -1,0 +1,884 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Clearlien checks every loan and invoice behind your facilities against independent sources, every day, and flags assets already pledged to another lender.">
+<meta property="og:title" content="Clearlien: know the collateral is real, and pledged only to you">
+<meta property="og:description" content="Daily, asset-level collateral verification and a cross-lender registry for private credit, banks and factors.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="theme-color" content="#10221D">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%2715%27 fill=%27%2310221D%27/%3E%3Cpath d=%27M10.5 16.4l3.6 3.6 7.4-8%27 fill=%27none%27 stroke=%27%23F3F6F4%27 stroke-width=%272.4%27/%3E%3C/svg%3E">
+<title>Clearlien</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Schibsted+Grotesk:wght@500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&display=swap">
+<style>
+/* Layout: a lender's file. Left-aligned editorial column, a sample exception report as the hero exhibit,
+   sections filed between hairline rules, banknote-style microprint and guilloche as the security motif. */
+:root {
+  --paper: #F3F6F4;
+  --panel: #FFFFFF;
+  --ink: #10221D;
+  --muted: #4E625B;
+  --line: #D3DCD7;
+  --engrave: #1C5C50;
+  --engrave-soft: #E1EBE7;
+  --void: #B3261E;
+  --void-soft: #FBEAE8;
+  --ok: #1E7449;
+  --ok-soft: #E3F1E8;
+  --warn-inv: #F4B9AA;
+  --font-display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-data: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  --step--1: 0.8125rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.25rem;
+  --step-2: 1.625rem;
+  --step-3: clamp(1.9rem, 1.4rem + 2vw, 2.6rem);
+  --step-4: clamp(2.35rem, 1.5rem + 3.6vw, 4rem);
+  --gutter: clamp(16px, 4vw, 48px);
+  --measure: 64ch;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0B1412;
+    --panel: #101C19;
+    --ink: #E4ECE8;
+    --muted: #98AAA3;
+    --line: #23342F;
+    --engrave: #74C7B2;
+    --engrave-soft: #13251F;
+    --void: #FF8273;
+    --void-soft: #2B1614;
+    --ok: #5CC88F;
+    --ok-soft: #12261B;
+    --warn-inv: #9C2A20;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0B1412;
+  --panel: #101C19;
+  --ink: #E4ECE8;
+  --muted: #98AAA3;
+  --line: #23342F;
+  --engrave: #74C7B2;
+  --engrave-soft: #13251F;
+  --void: #FF8273;
+  --void-soft: #2B1614;
+  --ok: #5CC88F;
+  --ok-soft: #12261B;
+  --warn-inv: #9C2A20;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--engrave); text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+:focus-visible { outline: 2px solid var(--engrave); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.08; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+p { margin: 0; }
+
+.wrap { width: 100%; max-width: 1180px; margin-inline: auto; padding-inline: var(--gutter); }
+.eyebrow {
+  font-family: var(--font-data);
+  font-size: var(--step--1);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--engrave);
+}
+.lede { color: var(--muted); max-width: var(--measure); }
+
+/* Microprint rule, as on banknotes and cheques */
+.microprint {
+  font-family: var(--font-data);
+  font-size: 7px;
+  letter-spacing: 0.12em;
+  line-height: 1;
+  color: var(--engrave);
+  opacity: 0.55;
+  white-space: nowrap;
+  overflow: hidden;
+  padding-block: 4px;
+  border-block: 1px solid var(--line);
+  user-select: none;
+}
+
+/* Nav */
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 10; background: var(--paper); }
+.nav-inner { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 14px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink); }
+.brand svg { width: 30px; height: 30px; flex: none; }
+.brand span { font-family: var(--font-display); font-weight: 800; font-size: 1.25rem; letter-spacing: -0.03em; }
+.nav-links { display: flex; align-items: center; gap: 22px; font-family: var(--font-display); font-weight: 500; font-size: 0.95rem; }
+.nav-links a:not(.btn) { color: var(--muted); text-decoration: none; }
+.nav-links a:not(.btn):hover { color: var(--ink); }
+@media (max-width: 720px) { .nav-links a:not(.btn) { display: none; } }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--font-display); font-weight: 600; font-size: 1rem;
+  padding: 12px 20px; border-radius: 2px; border: 1.5px solid var(--ink);
+  background: var(--ink); color: var(--paper); text-decoration: none; cursor: pointer;
+  transition: transform .15s ease, background .15s ease, color .15s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn.small { padding: 8px 14px; font-size: 0.9rem; }
+.btn[disabled] { opacity: .6; cursor: progress; transform: none; }
+
+/* Hero */
+.hero { overflow-x: clip; padding-block: clamp(40px, 7vw, 88px) clamp(48px, 7vw, 96px); }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(36px, 5vw, 64px); align-items: center; }
+@media (min-width: 980px) { .hero-grid { grid-template-columns: minmax(0, 1.02fr) minmax(0, 1fr); } }
+.hero-copy { display: grid; gap: 22px; min-width: 0; }
+.hero h1 { font-size: var(--step-4); font-weight: 800; letter-spacing: -0.035em; }
+.hero h1 em { font-style: normal; color: var(--engrave); }
+.hero .lede { font-size: var(--step-1); line-height: 1.5; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 6px; }
+.audience { font-family: var(--font-data); font-size: var(--step--1); color: var(--muted); }
+
+/* Sample report exhibit */
+.exhibit { position: relative; min-width: 0; }
+.guilloche { position: absolute; inset: -40px -40px -40px -40px; width: calc(100% + 80px); height: calc(100% + 80px); pointer-events: none; opacity: 0.5; }
+.report {
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--ink);
+  outline: 1px solid var(--line);
+  outline-offset: 5px;
+  box-shadow: 0 30px 60px -40px rgba(16, 34, 29, 0.45);
+  font-family: var(--font-data);
+  font-size: 0.78rem;
+  overflow: hidden;
+}
+.report-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 14px 16px 12px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.report-head strong { display: block; font-family: var(--font-display); font-size: 1rem; letter-spacing: -0.01em; }
+.report-head .meta { color: var(--muted); }
+.sample-tag { font-size: 0.68rem; letter-spacing: .1em; text-transform: uppercase; padding: 3px 7px; border: 1px dashed var(--muted); color: var(--muted); white-space: nowrap; }
+.report-sum { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid var(--line); }
+.report-sum div { padding: 10px 16px; display: grid; gap: 2px; }
+.report-sum div + div { border-left: 1px solid var(--line); }
+.report-sum b { font-family: var(--font-display); font-size: 1.35rem; font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.report-sum span { color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: .06em; }
+.report-sum .bad b { color: var(--void); }
+.rows { position: relative; }
+.row { display: grid; grid-template-columns: 76px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 11px 16px; border-bottom: 1px solid var(--line); }
+.row:last-child { border-bottom: 0; }
+.row .id { color: var(--muted); font-variant-numeric: tabular-nums; }
+.row .what { min-width: 0; }
+.row .what b { font-weight: 600; display: block; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.row .what small { display: block; color: var(--muted); font-size: 0.72rem; line-height: 1.4; }
+.row.flag { background: var(--void-soft); }
+.row.flag .what small { color: var(--ink); }
+.chip { font-size: 0.66rem; letter-spacing: .08em; text-transform: uppercase; padding: 3px 7px; border: 1.5px solid currentColor; white-space: nowrap; font-weight: 600; }
+.chip.ok { color: var(--ok); }
+.chip.stamp { color: var(--void); transform: rotate(-3deg); }
+.scan {
+  position: absolute; left: 0; right: 0; height: 44px; top: -44px; pointer-events: none;
+  background: linear-gradient(180deg, transparent, var(--engrave-soft) 70%, transparent);
+  mix-blend-mode: multiply; opacity: 0;
+  animation: scan 2.6s cubic-bezier(.45,.05,.4,1) .5s 1 both;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .scan { mix-blend-mode: screen; } }
+:root[data-theme="dark"] .scan { mix-blend-mode: screen; }
+@keyframes scan { 0% { top: -44px; opacity: 1; } 92% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
+.row.flag .chip.stamp { animation: stamp .35s ease-out var(--d, 1s) both; }
+@keyframes stamp { 0% { transform: rotate(-3deg) scale(1); } 45% { transform: rotate(-3deg) scale(1.18); } 100% { transform: rotate(-3deg) scale(1); } }
+@media (prefers-reduced-motion: reduce) { .scan { display: none; } .row.flag .chip.stamp { animation: none; } }
+@media (max-width: 460px) { .row { grid-template-columns: minmax(0, 1fr) auto; } .row .id { display: none; } }
+
+/* Sections */
+section { padding-block: clamp(56px, 8vw, 104px); }
+.filed { border-top: 1px solid var(--line); }
+.section-head { display: grid; gap: 14px; margin-bottom: clamp(28px, 4vw, 48px); max-width: 820px; }
+.section-head h2 { font-size: var(--step-3); font-weight: 700; }
+
+/* Cases */
+.cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 0; border-top: 2px solid var(--ink); }
+.case { padding: 22px 22px 24px 0; display: grid; gap: 10px; align-content: start; border-bottom: 1px solid var(--line); }
+@media (min-width: 560px) { .case + .case { padding-left: 22px; border-left: 1px solid var(--line); } }
+.case .fig { font-family: var(--font-display); font-weight: 800; font-size: var(--step-3); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.case .who { font-family: var(--font-data); font-size: var(--step--1); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.case p { font-size: 0.98rem; }
+.case .src { font-family: var(--font-data); font-size: 0.75rem; }
+.cases-note { margin-top: 28px; max-width: var(--measure); color: var(--muted); }
+
+/* Layers */
+.layers { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: clamp(20px, 3vw, 36px); }
+.layer { display: grid; gap: 12px; align-content: start; }
+.layer .tag { font-family: var(--font-data); font-size: var(--step--1); color: var(--engrave); letter-spacing: .06em; text-transform: uppercase; display: flex; gap: 10px; align-items: center; }
+.layer .tag::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.layer h3 { font-size: var(--step-2); font-weight: 700; }
+.layer p { color: var(--muted); }
+.layer .fine { font-family: var(--font-data); font-size: 0.78rem; color: var(--muted); border-left: 2px solid var(--engrave); padding-left: 12px; }
+
+/* Check table */
+.table-scroll { overflow-x: auto; border: 1px solid var(--line); background: var(--panel); }
+table { border-collapse: collapse; width: 100%; min-width: 760px; }
+th, td { text-align: left; vertical-align: top; padding: 16px 18px; border-bottom: 1px solid var(--line); }
+th { font-family: var(--font-data); font-weight: 500; font-size: 0.75rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); background: var(--paper); }
+td:first-child { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; white-space: nowrap; }
+td { font-size: 0.98rem; }
+tr:last-child td { border-bottom: 0; }
+td .x { color: var(--void); }
+
+/* Compare */
+.compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 0; border: 1px solid var(--ink); }
+.compare > div { padding: clamp(20px, 3vw, 32px); display: grid; gap: 14px; align-content: start; }
+.compare > div + div { border-top: 1px solid var(--ink); }
+@media (min-width: 700px) { .compare > div + div { border-top: 0; border-left: 1px solid var(--ink); } }
+.compare h3 { font-size: var(--step-1); font-weight: 700; }
+.compare .us { background: var(--engrave-soft); }
+.compare ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.compare li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 8px; }
+.compare li::before { font-family: var(--font-data); font-weight: 600; }
+.compare .them li::before { content: "–"; color: var(--muted); }
+.compare .us li::before { content: "✓"; color: var(--ok); }
+
+/* Privacy */
+.privacy { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: start; }
+@media (min-width: 900px) { .privacy { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } }
+.privacy-copy { display: grid; gap: 16px; }
+.privacy-copy p { color: var(--muted); max-width: var(--measure); }
+.ledger { font-family: var(--font-data); font-size: 0.8rem; background: var(--panel); border: 1px solid var(--line); min-width: 0; }
+.ledger-row { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.ledger-row:last-child { border-bottom: 0; }
+.ledger-row span:first-child { color: var(--muted); }
+.ledger-row span:last-child { overflow-wrap: anywhere; }
+.ledger-row.never span:last-child { color: var(--void); }
+.ledger-cap { padding: 10px 16px; font-size: 0.7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--line); background: var(--paper); }
+
+/* Early access */
+.access { background: var(--ink); color: var(--paper); }
+.access .eyebrow { color: var(--engrave-soft); }
+.access-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); }
+@media (min-width: 980px) { .access-grid { grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); } }
+.access-copy { display: grid; gap: 18px; align-content: start; }
+.access-copy h2 { font-size: var(--step-3); font-weight: 800; }
+.access-copy p { opacity: .82; max-width: 48ch; }
+.offer { border: 1px solid color-mix(in srgb, var(--paper) 30%, transparent); padding: 18px 20px; display: grid; gap: 6px; }
+.offer b { font-family: var(--font-display); font-size: 1.1rem; }
+.offer span { font-size: .95rem; opacity: .82; }
+
+form { display: grid; gap: 18px; min-width: 0; }
+.fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 16px; }
+.field { display: grid; gap: 6px; min-width: 0; }
+label, legend { font-family: var(--font-display); font-weight: 600; font-size: 0.9rem; }
+.hint { font-family: var(--font-data); font-size: 0.72rem; opacity: .7; }
+.hint.warn { color: var(--warn-inv); opacity: 1; }
+input[type="text"], input[type="email"], select {
+  width: 100%; font: inherit; font-family: var(--font-body); font-size: 1rem;
+  padding: 11px 12px; border-radius: 2px;
+  background: color-mix(in srgb, var(--paper) 8%, transparent);
+  color: var(--paper);
+  border: 1px solid color-mix(in srgb, var(--paper) 35%, transparent);
+}
+select option { color: var(--ink); background: var(--panel); }
+input::placeholder { color: color-mix(in srgb, var(--paper) 45%, transparent); }
+input:focus-visible, select:focus-visible { outline: 2px solid var(--engrave-soft); outline-offset: 1px; border-color: transparent; }
+fieldset { border: 0; padding: 0; margin: 0; display: grid; gap: 10px; min-width: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chips label { font-family: var(--font-data); font-weight: 500; font-size: 0.8rem; cursor: pointer; }
+.chips input { position: absolute; opacity: 0; pointer-events: none; }
+.chips span { display: inline-block; padding: 7px 12px; border: 1px solid color-mix(in srgb, var(--paper) 35%, transparent); border-radius: 2px; transition: background .12s ease, color .12s ease; }
+.chips input:checked + span { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+.chips input:focus-visible + span { outline: 2px solid var(--engrave-soft); outline-offset: 2px; }
+.check { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; align-items: start; font-family: var(--font-body); font-weight: 400; font-size: 0.98rem; cursor: pointer; }
+.check input { width: 18px; height: 18px; margin-top: 4px; accent-color: var(--engrave); }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.submit-row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+.access .btn { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+.form-note { font-size: 0.85rem; opacity: .7; max-width: 52ch; }
+.status { font-family: var(--font-data); font-size: 0.85rem; min-height: 1.2em; }
+.status.err { color: var(--warn-inv); }
+.done { display: grid; gap: 14px; align-content: start; border: 1px solid color-mix(in srgb, var(--paper) 30%, transparent); padding: clamp(22px, 3vw, 32px); }
+.done h3 { font-size: var(--step-2); font-weight: 800; }
+.done p { opacity: .85; }
+.done .preview-note { font-family: var(--font-data); font-size: 0.78rem; opacity: .75; border-top: 1px dashed color-mix(in srgb, var(--paper) 30%, transparent); padding-top: 12px; }
+
+/* FAQ */
+.faq { display: grid; gap: 0; border-top: 2px solid var(--ink); max-width: 900px; }
+details { border-bottom: 1px solid var(--line); }
+summary { cursor: pointer; list-style: none; padding: 20px 0; font-family: var(--font-display); font-weight: 600; font-size: var(--step-1); display: flex; justify-content: space-between; gap: 16px; }
+summary::-webkit-details-marker { display: none; }
+summary::after { content: "+"; font-family: var(--font-data); color: var(--engrave); }
+details[open] summary::after { content: "–"; }
+details p { padding-bottom: 22px; color: var(--muted); max-width: var(--measure); }
+
+footer { padding-block: 28px 40px; }
+.foot { display: flex; flex-wrap: wrap; gap: 16px 32px; justify-content: space-between; align-items: flex-start; padding-top: 22px; font-size: 0.85rem; color: var(--muted); }
+.foot p { max-width: 70ch; }
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#top" aria-label="Clearlien home">
+      <svg viewBox="0 0 32 32" aria-hidden="true">
+        <circle cx="16" cy="16" r="14.5" fill="none" stroke="var(--ink)" stroke-width="1.5"/>
+        <circle cx="16" cy="16" r="10.5" fill="none" stroke="var(--engrave)" stroke-width="1" stroke-dasharray="1.6 1.6"/>
+        <path d="M10.5 16.4l3.6 3.6 7.4-8" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-linecap="square"/>
+      </svg>
+      <span>Clearlien</span>
+    </a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#how">How it works</a>
+      <a href="#check">What we check</a>
+      <a href="#faq">FAQ</a>
+      <a class="btn small" href="#access">Request early access</a>
+    </nav>
+  </div>
+  <div class="microprint" aria-hidden="true" id="microprint-top"></div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">Collateral verification for private credit</p>
+        <h1>Know the collateral is real, and <em>pledged only to you.</em></h1>
+        <p class="lede">Clearlien checks every loan and invoice behind your facilities against sources the borrower doesn't control, every day. If an asset is already pledged to another lender, you find out before you fund.</p>
+        <div class="cta-row">
+          <a class="btn" href="#access">Request early access</a>
+          <a class="btn ghost" href="#check">See what we check</a>
+        </div>
+        <p class="audience">For lender-finance, warehouse and ABF teams at private credit funds, banks and factors.</p>
+      </div>
+
+      <div class="exhibit">
+        <canvas class="guilloche" id="guilloche" aria-hidden="true"></canvas>
+        <figure class="report" aria-label="Sample daily collateral report with example data">
+          <div class="report-head">
+            <div>
+              <strong>Daily collateral check</strong>
+              <span class="meta">Warehouse facility WH-3 · auto loans · 06 Oct 2026</span>
+            </div>
+            <span class="sample-tag">Sample data</span>
+          </div>
+          <div class="report-sum">
+            <div><b>4,212</b><span>Assets checked</span></div>
+            <div><b>4,208</b><span>Clear</span></div>
+            <div class="bad"><b>4</b><span>Exceptions</span></div>
+          </div>
+          <div class="rows">
+            <div class="scan" aria-hidden="true"></div>
+            <div class="row">
+              <span class="id">AL-20931</span>
+              <span class="what"><b>2021 Toyota Camry · VIN …MU041187</b><small>Title lien names you · 14 of 14 payments in bank data</small></span>
+              <span class="chip ok">Clear</span>
+            </div>
+            <div class="row flag" style="--d: 1.05s">
+              <span class="id">AL-20947</span>
+              <span class="what"><b>2019 Ford F-150 · VIN …KFA22906</b><small>Title lien names a different secured party</small></span>
+              <span class="chip stamp">Exception</span>
+            </div>
+            <div class="row flag" style="--d: 1.5s">
+              <span class="id">AL-21003</span>
+              <span class="what"><b>2020 Honda Civic · VIN …LH512874</b><small>Same asset registered to another facility on 14 Jun 2025</small></span>
+              <span class="chip stamp">Exception</span>
+            </div>
+            <div class="row flag" style="--d: 1.95s">
+              <span class="id">AL-21018</span>
+              <span class="what"><b>2022 Nissan Rogue · VIN …NC730415</b><small>Tape shows 9 on-time payments; bank data shows 2</small></span>
+              <span class="chip stamp">Exception</span>
+            </div>
+            <div class="row flag" style="--d: 2.4s">
+              <span class="id">AL-21052</span>
+              <span class="what"><b>Tape: 2022 Jeep Wrangler · VIN …EW118320</b><small>VIN decodes to a 2014 model; advance based on 2022 value</small></span>
+              <span class="chip stamp">Exception</span>
+            </div>
+          </div>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="filed" id="pattern">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Why now</p>
+        <h2>The same failure, four times in a year</h2>
+        <p class="lede">Each of these lenders had filings, covenants and audits. None of them could see the asset itself, or what another lender held against it.</p>
+      </div>
+      <div class="cases">
+        <article class="case">
+          <span class="who">First Brands · Sep 2025</span>
+          <span class="fig">$2.3B</span>
+          <p>Receivables that creditors say could not be located after the auto-parts maker's bankruptcy.</p>
+          <a class="src" href="https://en.wikipedia.org/wiki/First_Brands_Group" target="_blank" rel="noopener">Source</a>
+        </article>
+        <article class="case">
+          <span class="who">Tricolor · SEC complaint, Aug 2026</span>
+          <span class="fig">$800M</span>
+          <p>Collateral gap the SEC alleges, including 3,225 auto loans placed in two securitizations at once.</p>
+          <a class="src" href="https://www.investmentnews.com/regulation-legal-compliance/sec-accuses-tricolor-executives-of-hiding-800-million-collateral-hole/267915" target="_blank" rel="noopener">Source</a>
+        </article>
+        <article class="case">
+          <span class="who">HPS and BNP Paribas · Nov 2025</span>
+          <span class="fig">~$430M</span>
+          <p>Lent against telecom receivables the lenders allege were fake, with confirmations sent from look-alike email domains.</p>
+          <a class="src" href="https://www.usnews.com/news/top-news/articles/2025-11-17/us-probes-telecom-firms-after-blackrocks-hps-uncovers-alleged-400m-fraud-financial-times-reports" target="_blank" rel="noopener">Source</a>
+        </article>
+        <article class="case">
+          <span class="who">Market Financial Solutions · Feb 2026</span>
+          <span class="fig">£930M</span>
+          <p>Shortfall alleged at the UK bridging lender after the same properties were pledged to more than one lender.</p>
+          <a class="src" href="https://www.manatt.com/insights/newsletters/client-alert/mfs-collapse-refuels-double-pledging-concerns-within-the-private-credit-industry" target="_blank" rel="noopener">Source</a>
+        </article>
+      </div>
+      <p class="cases-note">Field exams sample the borrower's own files once or twice a year, and UCC filings describe collateral by category, not asset by asset. A lender can't see what another lender holds.</p>
+    </div>
+  </section>
+
+  <section class="filed" id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">How it works</p>
+        <h2>Verify each asset. Register it once. Hold it outright.</h2>
+      </div>
+      <div class="layers">
+        <article class="layer">
+          <span class="tag">Verify</span>
+          <h3>Checked against sources the borrower doesn't control</h3>
+          <p>Title and lien records, VINs, bank receipts, shipment records and the account debtor's real domain. Every asset, every day, with the evidence attached to each exception.</p>
+        </article>
+        <article class="layer">
+          <span class="tag">Register</span>
+          <h3>One asset, one lender</h3>
+          <p>Each verified asset gets a private fingerprint built from its real-world identifiers. If another lender registers the same asset, both of you are told. Neither of you sees the other's deal.</p>
+        </article>
+        <article class="layer">
+          <span class="tag">Control · optional</span>
+          <h3>Priority that a second pledge can't undo</h3>
+          <p>New originations can be issued as controllable electronic records under UCC Article 12. The lender holding control has priority over any filing, and the asset can't be pledged twice.</p>
+          <p class="fine">Article 12 took effect in New York on 3 June 2026 and has been enacted in 33 states and DC.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="filed" id="check">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">What we check</p>
+        <h2>Independent sources for each asset class</h2>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th scope="col">Asset class</th><th scope="col">Checked against</th><th scope="col">Exceptions we flag</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Auto loans</td><td>Title and lien records, VIN decode, bank receipts for each payment</td><td>Lien held by another lender · vehicle doesn't match the tape · payments that never reached the account</td></tr>
+            <tr><td>Consumer and SMB loans</td><td>Bank receipts, borrower identity, servicing records, the cross-lender registry</td><td>Same loan in two facilities · invented payment history · borrowers who don't exist</td></tr>
+            <tr><td>Trade receivables</td><td>Debtor existence, confirmation through the debtor's verified domain or AP portal, purchase-order and shipment records</td><td>Confirmations from look-alike domains · invoices with no shipment · inflated amounts</td></tr>
+            <tr><td>Bridge and real-estate loans</td><td>Land-registry charges and existing liens</td><td>Property already charged to another lender</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="filed">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Coverage</p>
+        <h2>From a sample once a year to every asset every morning</h2>
+      </div>
+      <div class="compare">
+        <div class="them">
+          <h3>Field exam today</h3>
+          <ul>
+            <li>Once or twice a year</li>
+            <li>A sample of the tape</li>
+            <li>Reads the borrower's own documents and emails</li>
+            <li>No view of what other lenders hold</li>
+            <li>Findings arrive weeks after the visit</li>
+          </ul>
+        </div>
+        <div class="us">
+          <h3>With Clearlien</h3>
+          <ul>
+            <li>Every business day</li>
+            <li>Every asset in the borrowing base</li>
+            <li>Checks independent records the borrower can't edit</li>
+            <li>Flags assets registered to another lender</li>
+            <li>Exceptions with evidence the same morning</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="filed">
+    <div class="wrap privacy">
+      <div class="privacy-copy">
+        <p class="eyebrow">Your data</p>
+        <h2 style="font-size: var(--step-3)">The registry knows an asset exists. Not whose it is.</h2>
+        <p>Fingerprints are computed from identifiers like a VIN and obligor, or a debtor, purchase order and amount, and can't be reversed into those identifiers. They're recorded on a public ledger so no single company, us included, controls the record of who registered what first.</p>
+        <p>When two lenders register the same asset, each is told there's a collision. Who the other lender is stays private until both choose to talk.</p>
+      </div>
+      <div class="ledger" aria-label="Example registry entry">
+        <div class="ledger-cap">Example registry entry</div>
+        <div class="ledger-row"><span>Fingerprint</span><span>0x7c41…e9a2</span></div>
+        <div class="ledger-row"><span>Asset class</span><span>auto loan</span></div>
+        <div class="ledger-row"><span>Registered</span><span>2026-10-06 09:14 UTC</span></div>
+        <div class="ledger-row"><span>Status</span><span>active pledge</span></div>
+        <div class="ledger-row never"><span>Never stored</span><span>borrower names, amounts, lender names, deal terms</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="access" id="access">
+    <div class="wrap access-grid">
+      <div class="access-copy">
+        <p class="eyebrow">Early access</p>
+        <h2>Bring us one facility</h2>
+        <p>We're onboarding a small group of lenders first. Tell us what you finance and we'll set up a check of one facility.</p>
+        <div class="offer">
+          <b>Design partners: one facility checked at no cost</b>
+          <span>Two weeks, every asset, with the full exception report and evidence.</span>
+        </div>
+      </div>
+
+      <div id="form-area">
+        <form id="access-form" name="early-access" method="POST" data-netlify="true" netlify-honeypot="website" novalidate>
+          <input type="hidden" name="form-name" value="early-access">
+          <input type="hidden" name="utm_source" id="utm_source">
+          <input type="hidden" name="utm_medium" id="utm_medium">
+          <input type="hidden" name="utm_campaign" id="utm_campaign">
+          <input type="hidden" name="utm_content" id="utm_content">
+          <input type="hidden" name="utm_term" id="utm_term">
+          <input type="hidden" name="referrer" id="referrer">
+          <div class="hp" aria-hidden="true"><label for="website">Website</label><input type="text" id="website" name="website" tabindex="-1" autocomplete="off"></div>
+
+          <div class="fields">
+            <div class="field">
+              <label for="name">Full name</label>
+              <input type="text" id="name" name="name" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="email">Work email</label>
+              <input type="email" id="email" name="email" autocomplete="email" required>
+              <span class="hint" id="email-hint">We use it to confirm your firm.</span>
+            </div>
+            <div class="field">
+              <label for="firm">Firm</label>
+              <input type="text" id="firm" name="firm" autocomplete="organization" required>
+            </div>
+            <div class="field">
+              <label for="role">Role</label>
+              <select id="role" name="role" required>
+                <option value="">Choose one</option>
+                <option>Lender finance / warehouse lending</option>
+                <option>ABF / private credit</option>
+                <option>Asset-based lending</option>
+                <option>Factoring / receivables finance</option>
+                <option>Portfolio risk / credit</option>
+                <option>Originator or borrower</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+
+          <fieldset>
+            <legend>Institution</legend>
+            <div class="chips" role="radiogroup">
+              <label><input type="radio" name="institution" value="Private credit fund" required><span>Private credit fund</span></label>
+              <label><input type="radio" name="institution" value="Bank"><span>Bank</span></label>
+              <label><input type="radio" name="institution" value="Factor"><span>Factor</span></label>
+              <label><input type="radio" name="institution" value="Originator"><span>Originator</span></label>
+              <label><input type="radio" name="institution" value="Other"><span>Other</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend>Collateral you finance</legend>
+            <div class="chips">
+              <label><input type="checkbox" name="collateral" value="Auto loans"><span>Auto loans</span></label>
+              <label><input type="checkbox" name="collateral" value="Consumer loans"><span>Consumer loans</span></label>
+              <label><input type="checkbox" name="collateral" value="SMB loans"><span>SMB loans</span></label>
+              <label><input type="checkbox" name="collateral" value="Trade receivables"><span>Trade receivables</span></label>
+              <label><input type="checkbox" name="collateral" value="Real estate / bridge"><span>Real estate / bridge</span></label>
+              <label><input type="checkbox" name="collateral" value="Other"><span>Other</span></label>
+            </div>
+          </fieldset>
+
+          <div class="fields">
+            <div class="field">
+              <label for="size">Collateral you monitor</label>
+              <select id="size" name="size">
+                <option value="">Choose a range</option>
+                <option>Under $500M</option>
+                <option>$500M to $2B</option>
+                <option>$2B to $10B</option>
+                <option>Over $10B</option>
+              </select>
+            </div>
+          </div>
+
+          <label class="check"><input type="checkbox" id="partner" name="design_partner" value="yes" checked><span>I'd like a design-partner check of one facility</span></label>
+
+          <div class="submit-row">
+            <button class="btn" type="submit" id="submit">Request early access</button>
+            <span class="status" id="status" role="status" aria-live="polite"></span>
+          </div>
+          <p class="form-note">We only use these details to contact you about Clearlien. No one else sees them.</p>
+        </form>
+
+        <div class="done" id="done" hidden tabindex="-1">
+          <h3 id="done-title">You're on the list</h3>
+          <p id="done-text">We'll be in touch by email.</p>
+          <div class="submit-row">
+            <button class="btn small" type="button" id="copy-link">Copy link for a colleague</button>
+            <span class="status" id="copy-status" role="status" aria-live="polite"></span>
+          </div>
+          <p class="preview-note" id="preview-note" hidden>This is the preview of the page, so nothing was sent. On the deployed site, this form sends your details to the waitlist.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Questions</p>
+        <h2>What lenders ask first</h2>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>What does the borrower have to share?</summary>
+          <p>Read-only access to the loan tape or receivables aging, servicing exports and the collections account. Most facility agreements already require this for reporting and field exams.</p>
+        </details>
+        <details>
+          <summary>Who can see our data?</summary>
+          <p>Only your team. The registry stores fingerprints, not borrower names, amounts or deal terms. A collision tells the two lenders involved that it exists, and nothing more until they choose to talk.</p>
+        </details>
+        <details>
+          <summary>Is this a crypto product?</summary>
+          <p>No tokens, and nothing to trade. Verification and alerts work like any other software service. The registry records fingerprints on a public ledger so that no single company controls the record. The optional control layer uses the same ledger to give lenders control of an asset under UCC Article 12.</p>
+        </details>
+        <details>
+          <summary>Does it replace field exams?</summary>
+          <p>It covers every asset daily, which a field exam can't. Many lenders will keep an annual exam at first. The aim is for the exam to confirm what you already know.</p>
+        </details>
+        <details>
+          <summary>How is it priced?</summary>
+          <p>On the collateral you monitor, in basis points per year, with a minimum per facility. Design partners get their first facility checked at no cost.</p>
+        </details>
+        <details>
+          <summary>Is Clearlien available now?</summary>
+          <p>Clearlien is in development. Early-access lenders decide which asset classes and integrations ship first.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="microprint" aria-hidden="true" id="microprint-bottom"></div>
+  <div class="wrap foot">
+    <p>© 2026 Clearlien. In development. Report rows and registry entries on this page are sample data. Figures for named cases are reported allegations; follow each source link for details.</p>
+    <a href="#top">Back to top</a>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Where sign-ups go on the deployed site. Leave empty to use Netlify Forms,
+  // or paste a Formspree (or similar) endpoint, e.g. "https://formspree.io/f/abcdwxyz".
+  var CONFIG = { endpoint: "" };
+
+  var inPreview = typeof window.claude !== "undefined" || /claude(usercontent)?\.(ai|com)$/.test(location.hostname);
+
+  // Microprint
+  var phrase = "CLEARLIEN · VERIFIED COLLATERAL · ONE ASSET ONE LENDER · ";
+  var line = new Array(60).join(phrase);
+  ["microprint-top", "microprint-bottom"].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) el.textContent = line;
+  });
+
+  // Guilloche rosette behind the sample report
+  var canvas = document.getElementById("guilloche");
+  function drawGuilloche() {
+    if (!canvas || !canvas.getContext) return;
+    var rect = canvas.getBoundingClientRect();
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = Math.max(1, Math.round(rect.width * dpr));
+    var h = Math.max(1, Math.round(rect.height * dpr));
+    canvas.width = w; canvas.height = h;
+    var ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, w, h);
+    var color = getComputedStyle(document.documentElement).getPropertyValue("--engrave").trim() || "#1C5C50";
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 0.6 * dpr;
+    var cx = w * 0.82, cy = h * 0.18;
+    var R = Math.min(w, h) * 0.34;
+    for (var k = 0; k < 18; k++) {
+      ctx.globalAlpha = 0.16 + (k % 3) * 0.05;
+      ctx.beginPath();
+      var phase = (k / 18) * Math.PI * 2;
+      for (var i = 0; i <= 720; i++) {
+        var t = (i / 720) * Math.PI * 2;
+        var r = R * (0.62 + 0.22 * Math.cos(9 * t + phase) + 0.08 * Math.sin(27 * t));
+        var x = cx + r * Math.cos(t);
+        var y = cy + r * Math.sin(t);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+    var cx2 = w * 0.12, cy2 = h * 0.9, R2 = Math.min(w, h) * 0.22;
+    for (var j = 0; j < 12; j++) {
+      ctx.globalAlpha = 0.14;
+      ctx.beginPath();
+      var ph = (j / 12) * Math.PI * 2;
+      for (var n = 0; n <= 540; n++) {
+        var u = (n / 540) * Math.PI * 2;
+        var rr = R2 * (0.7 + 0.25 * Math.sin(7 * u + ph));
+        var px = cx2 + rr * Math.cos(u), py = cy2 + rr * Math.sin(u);
+        if (n === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  drawGuilloche();
+  var resizeTimer;
+  window.addEventListener("resize", function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(drawGuilloche, 150); });
+  try {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", drawGuilloche);
+    new MutationObserver(drawGuilloche).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  } catch (e) {}
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawGuilloche);
+
+  // Campaign attribution: keep the first UTM tags a visitor arrived with
+  var keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"];
+  var params;
+  try { params = new URLSearchParams(location.search); } catch (e) { params = null; }
+  var stored = {};
+  try { stored = JSON.parse(localStorage.getItem("clearlien_utm") || "{}") || {}; } catch (e) { stored = {}; }
+  var fresh = {};
+  keys.forEach(function (k) { var v = params && params.get(k); if (v) fresh[k] = v.slice(0, 120); });
+  var utm = Object.keys(fresh).length ? fresh : stored;
+  if (Object.keys(fresh).length) { try { localStorage.setItem("clearlien_utm", JSON.stringify(fresh)); } catch (e) {} }
+  keys.forEach(function (k) { var el = document.getElementById(k); if (el && utm[k]) el.value = utm[k]; });
+  var ref = document.getElementById("referrer");
+  if (ref) ref.value = (document.referrer || "").slice(0, 200);
+
+  // Work-email hint
+  var free = /@(gmail|googlemail|yahoo|hotmail|outlook|live|icloud|me|aol|proton|protonmail|gmx|mail)\./i;
+  var email = document.getElementById("email");
+  var hint = document.getElementById("email-hint");
+  email.addEventListener("blur", function () {
+    if (free.test(email.value)) {
+      hint.textContent = "A work email helps us confirm your firm faster.";
+      hint.classList.add("warn");
+    } else {
+      hint.textContent = "We use it to confirm your firm.";
+      hint.classList.remove("warn");
+    }
+  });
+
+  // Submit
+  var form = document.getElementById("access-form");
+  var status = document.getElementById("status");
+  var submit = document.getElementById("submit");
+
+  var nameEl = document.getElementById("name");
+  var firmEl = document.getElementById("firm");
+  var roleEl = document.getElementById("role");
+
+  function firstInvalid() {
+    if (!nameEl.value.trim()) return [nameEl, "Enter your name."];
+    if (!email.value.trim() || !email.checkValidity()) return [email, "Enter a valid work email."];
+    if (!firmEl.value.trim()) return [firmEl, "Enter your firm."];
+    if (!roleEl.value) return [roleEl, "Choose your role."];
+    if (!form.querySelector('input[name="institution"]:checked')) return [form.querySelector('input[name="institution"]'), "Choose your institution type."];
+    return null;
+  }
+
+  function showDone(data, preview) {
+    var name = (data.get("name") || "").toString().trim().split(/\s+/)[0];
+    document.getElementById("done-title").textContent = name ? "Thanks, " + name + ". You're on the list." : "You're on the list.";
+    var partner = data.get("design_partner") === "yes";
+    document.getElementById("done-text").textContent = partner
+      ? "We'll email " + data.get("email") + " to schedule your facility check."
+      : "We'll email " + data.get("email") + " when early access opens.";
+    document.getElementById("preview-note").hidden = !preview;
+    form.hidden = true;
+    var done = document.getElementById("done");
+    done.hidden = false;
+    done.focus();
+  }
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    status.textContent = "";
+    status.classList.remove("err");
+    var bad = firstInvalid();
+    if (bad) {
+      status.textContent = bad[1];
+      status.classList.add("err");
+      bad[0].focus();
+      return;
+    }
+    var data = new FormData(form);
+    if (data.get("website")) return; // spam trap
+    submit.disabled = true;
+    submit.textContent = "Sending…";
+
+    var request;
+    if (inPreview) {
+      request = new Promise(function (resolve) { setTimeout(function () { resolve({ ok: true }); }, 450); });
+    } else if (CONFIG.endpoint) {
+      request = fetch(CONFIG.endpoint, { method: "POST", headers: { Accept: "application/json" }, body: data });
+    } else {
+      request = fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(data).toString()
+      });
+    }
+
+    request.then(function (res) {
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      showDone(data, inPreview);
+    }).catch(function () {
+      status.textContent = "We couldn't send your request. Check your connection and try again.";
+      status.classList.add("err");
+    }).then(function () {
+      submit.disabled = false;
+      submit.textContent = "Request early access";
+    });
+  });
+
+  // Share
+  document.getElementById("copy-link").addEventListener("click", function () {
+    var url = location.href.split("#")[0];
+    var out = document.getElementById("copy-status");
+    function fallback() { out.textContent = url; }
+    try {
+      navigator.clipboard.writeText(url).then(function () { out.textContent = "Link copied"; }, fallback);
+    } catch (e) { fallback(); }
+  });
+})();
+</script>
+</body>
+</html>
