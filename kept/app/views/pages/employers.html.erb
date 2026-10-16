@@ -1,0 +1,40 @@
+<% content_for :title, "Kept for employers & health plans" %>
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">For employers & health plans</span>
+      <h1>Your GLP-1 spend, <span>made to last.</span></h1>
+      <p class="lede">Two-thirds of members stop within a year and regain most of the weight — so most of the spend buys a temporary result. Kept keeps members on track, protects their muscle and plans the off-ramp, for a fraction of one month’s drug cost.</p>
+      <div class="cta"><a class="btn btn-primary" href="#talk">Talk to us</a><a class="btn btn-ghost" href="<%= employer_dashboard_path('northwind') %>">Open the demo dashboard</a></div>
+      <p class="small muted">Demo access code: <code>northwind-demo</code></p>
+    </div>
+    <div class="card">
+      <h3>The math for 1,000 members on GLP-1s</h3>
+      <table>
+        <tr><td>Drug spend at ~$1,000/member/month</td><td class="r">$12.0M / yr</td></tr>
+        <tr><td>Members still on therapy at 12 months, typical</td><td class="r">~35%</td></tr>
+        <tr><td>Kept PMPM across 10,000 covered lives at $0.85</td><td class="r">$102k / yr</td></tr>
+        <tr><td>Members kept on therapy per +10 pts persistence</td><td class="r">100</td></tr>
+      </table>
+      <p class="hint">Kept is priced per covered life, so cost doesn’t grow with utilisation. Members can also get Kept Plus individually.</p>
+    </div>
+  </div>
+</section>
+<section class="band alt">
+  <div class="wrap">
+    <div class="features">
+      <article class="card feature"><h3>Persistence</h3><p>Side-effect coaching timed to the dose cycle and a cost finder remove the top two reasons people quit.</p></article>
+      <article class="card feature"><h3>Lean-mass protection</h3><p>Protein and strength targets with a measurable muscle protection score — fewer frail, deconditioned members later.</p></article>
+      <article class="card feature"><h3>Planned off-ramp</h3><p>Maintenance and taper plans with a regain guardrail, so stopping doesn’t erase the result you paid for.</p></article>
+      <article class="card feature"><h3>Coverage criteria, enforced kindly</h3><p>Document lifestyle-program participation many plans now require, without paperwork for members.</p></article>
+      <article class="card feature"><h3>De-identified by design</h3><p>Cohort metrics only, suppressed below 10 members. No individual data ever leaves the member’s account.</p></article>
+      <article class="card feature"><h3>Fast to launch</h3><p>Eligibility file or access code; members are live in minutes. Works with any PBM and any prescriber.</p></article>
+    </div>
+  </div>
+</section>
+<section class="band" id="talk">
+  <div class="wrap split">
+    <div><span class="eyebrow">Pilot program</span><h2>Start with a 90-day pilot.</h2><p class="muted">We’ll measure persistence, protein adherence and strength training against your current baseline.</p></div>
+    <%= render "pages/waitlist_form", signup: @signup.role == "employer" ? @signup : WaitlistSignup.new(role: "employer") %>
+  </div>
+</section>

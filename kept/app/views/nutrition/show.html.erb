@@ -1,0 +1,29 @@
+<% content_for :title, "Protein & water · Kept" %>
+<div class="topline"><h1>Protein & water</h1></div>
+<div id="nutrition-summary"><%= render "nutrition/summary", o: @o %></div>
+<section class="card" style="margin-top:14px">
+  <div class="card-head"><h3>Quick add</h3><span class="small muted">Protein-first, easy on a small appetite</span></div>
+  <div class="quick">
+    <% @foods.each do |f| %>
+      <%= button_to foods_path(food_key: f.key), class: "", form: { data: { turbo_stream: true } } do %><b><%= f.protein_g %> g</b><%= f.name %><span class="small muted"> · <%= f.serving %></span><% end %>
+    <% end %>
+  </div>
+</section>
+<div class="grid g2" style="margin-top:14px">
+  <section class="card">
+    <h3>Add something else</h3>
+    <%= form_with model: FoodEntry.new, url: foods_path, data: { turbo_stream: true } do |f| %>
+      <div class="field"><%= f.label :name, "Food" %><%= f.text_field :name, required: true, maxlength: 80 %></div>
+      <div class="row"><div class="field"><%= f.label :protein_g, "Protein (g)" %><%= f.number_field :protein_g, step: 1, min: 0, max: 200, required: true, value: nil, inputmode: "numeric" %></div>
+        <div class="field"><%= f.label :fiber_g, "Fiber (g)" %><%= f.number_field :fiber_g, step: 1, min: 0, max: 100, value: nil, inputmode: "numeric", placeholder: "0" %></div></div>
+      <%= f.submit "Add", class: "btn btn-primary btn-sm" %>
+    <% end %>
+  </section>
+  <section class="card">
+    <h3>Water</h3>
+    <div class="row">
+      <% (current_user.imperial? ? [237, 473, 710] : [250, 500, 750]).each do |ml| %><%= button_to "+ #{water_label(ml)}", waters_path(ml: ml), class: "btn btn-ghost btn-block", form: { data: { turbo_stream: true } } %><% end %>
+    </div>
+    <p class="hint">Fiber and fluids together prevent the constipation many people get on GLP-1s.</p>
+  </section>
+</div>

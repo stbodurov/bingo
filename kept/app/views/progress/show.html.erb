@@ -1,0 +1,47 @@
+<% content_for :title, "Progress · Kept" %>
+<% tr = @o.trend %>
+<div class="topline"><h1>Progress</h1></div>
+<div class="grid g3">
+  <div class="card stat"><div class="k">Total change</div><div class="v"><%= tr.empty? ? "—" : "−#{weight(tr.total_loss_kg)}" %></div><div class="s"><%= tr.total_loss_pct %>% of starting weight (trend)</div></div>
+  <div class="card stat"><div class="k">Pace</div><div class="v"><%= tr.weekly_rate_pct || "—" %>%</div><div class="s">per week, last 4 weeks <%= status_badge(:warning, "fast") if tr.too_fast? %></div></div>
+  <div class="card stat"><div class="k">Goal</div><div class="v"><%= weight(current_user.goal_weight_kg) %></div><div class="s"><%= current_user.goal_weight_kg && tr.current_trend ? "#{weight([tr.current_trend - current_user.goal_weight_kg.to_f, 0].max)} to go" : "Set a goal in Settings" %></div></div>
+</div>
+<section class="card" style="margin-top:14px">
+  <h3>Weight</h3>
+  <ul class="legend"><li><i style="background:var(--brand)"></i>Trend</li><li><i style="background:var(--muted);height:6px;width:6px;border-radius:50%"></i>Scale readings</li><% if current_user.goal_weight_kg %><li><i style="background:none;border-top:2px dashed var(--accent);height:0"></i>Goal</li><% end %></ul>
+  <% if tr.empty? %><p class="muted">No weights yet.</p><% else %>
+    <div class="chart" data-controller="line-chart" data-line-chart-points-value="<%= tr.series.to_json %>" data-line-chart-goal-value="<%= current_user.goal_weight_kg.to_f %>"
+      data-line-chart-unit-value="<%= weight_unit %>" data-line-chart-factor-value="<%= current_user.imperial? ? 2.20462 : 1 %>"></div>
+    <p class="hint">The trend smooths day-to-day water swings so you can see the real direction.</p>
+  <% end %>
+</section>
+<div class="grid g2" style="margin-top:14px">
+  <section class="card">
+    <h3>Add a reading</h3>
+    <%= form_with url: weights_path, scope: :weight_entry do |f| %>
+      <div class="row">
+        <div class="field"><%= f.label :weight, "Weight (#{weight_unit})" %><%= f.number_field :weight, step: 0.1, required: true, inputmode: "decimal" %></div>
+        <div class="field"><%= f.label :measured_on, "Date" %><%= f.date_field :measured_on, value: current_user.today %></div>
+      </div>
+      <div class="row">
+        <div class="field"><%= f.label :body_fat_pct, "Body fat % (optional)" %><%= f.number_field :body_fat_pct, step: 0.1 %></div>
+        <div class="field"><%= f.label :waist, "Waist (#{height_unit}, optional)" %><%= f.number_field :waist, step: 0.1 %></div>
+      </div>
+      <%= f.submit "Save", class: "btn btn-primary" %>
+    <% end %>
+  </section>
+  <section class="card">
+    <h3>Muscle vs. fat</h3>
+    <p>Estimated lean mass lost: <strong><%= weight(@o.muscle.lean_lost_kg) %></strong> of <%= weight(tr.total_loss_kg) %> (<%= pct(@o.muscle.shown_share) %>).</p>
+    <p class="muted small"><%= @o.muscle.from_readings? ? "Calculated from your body-fat readings." : "Estimated from your medicine, protein and strength training. Add body-fat readings from a smart scale or DEXA for a measured number." %></p>
+    <ul class="tips"><% @o.muscle.advice.each do |a| %><li><%= a %></li><% end %></ul>
+  </section>
+</div>
+<section class="card" style="margin-top:14px">
+  <div class="card-head"><h3>Recent readings</h3><a class="small" href="<%= export_path(format: :csv) %>">Download all (CSV)</a></div>
+  <% trend_on = @o.trend.points.index_by(&:date) %>
+  <div class="table-wrap"><table><thead><tr><th>Date</th><th class="r">Scale</th><th class="r">Trend</th><th class="r">Body fat</th><th></th></tr></thead><tbody>
+    <% @entries.each do |e| %><tr><td><%= e.measured_on.strftime("%a %b %-d") %></td><td class="r"><%= weight(e.weight_kg) %></td><td class="r muted"><%= (t = trend_on[e.measured_on]) ? weight(t.trend) : "—" %></td><td class="r"><%= e.body_fat_pct ? "#{e.body_fat_pct}%" : "—" %></td>
+      <td class="r"><%= button_to "Remove", weight_path(e), method: :delete, class: "linkish small" %></td></tr><% end %>
+  </tbody></table></div>
+</section>

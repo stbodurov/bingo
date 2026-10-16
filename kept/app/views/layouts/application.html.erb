@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= content_for(:title) || "Kept" %></title>
+    <%= render "shared/head" %>
+  </head>
+  <body>
+    <a class="sr-only" href="#main">Skip to content</a>
+    <% if authenticated? %>
+      <div class="app">
+        <aside class="side" aria-label="Main">
+          <%= render "shared/logo", href: today_path %>
+          <%= nav_link "Today", today_path, "☀" %>
+          <%= nav_link "Doses", doses_path, "✚" %>
+          <%= nav_link "Side effects", symptoms_path, "♡" %>
+          <%= nav_link "Protein & water", nutrition_path, "◍" %>
+          <%= nav_link "Strength", strength_path, "▲" %>
+          <%= nav_link "Progress", progress_path, "↘" %>
+          <%= nav_link "Plan & cost", plan_path, "⇢" %>
+          <%= nav_link "Doctor report", report_path, "▤" %>
+          <div class="spacer"></div>
+          <%= nav_link "Settings", edit_profile_path, "⚙" %>
+          <%= button_to "Sign out", session_path, method: :delete, class: "linkish small", form: { style: "padding:8px 12px" } %>
+        </aside>
+        <main class="main" id="main">
+          <div class="mobile-head"><%= render "shared/logo", href: today_path %><a class="btn btn-ghost btn-sm" href="<%= edit_profile_path %>">Settings</a></div>
+          <%= render "shared/flash" %>
+          <%= yield %>
+        </main>
+        <nav class="bottom-nav" aria-label="Main">
+          <%= nav_link "Today", today_path, "☀" %>
+          <%= nav_link "Doses", doses_path, "✚" %>
+          <%= nav_link "Food", nutrition_path, "◍" %>
+          <%= nav_link "Strength", strength_path, "▲" %>
+          <%= nav_link "Progress", progress_path, "↘" %>
+        </nav>
+      </div>
+    <% else %>
+      <main id="main" class="auth"><%= render "shared/logo" %><div style="height:18px"></div><%= render "shared/flash" %><%= yield %></main>
+    <% end %>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+<% content_for :title, "Strength · Kept" %>
+<div class="topline"><h1>Strength</h1>
+  <div class="pills"><a class="btn btn-sm <%= @home ? 'btn-ghost' : 'btn-primary' %>" href="<%= strength_path %>">Gym</a><a class="btn btn-sm <%= @home ? 'btn-primary' : 'btn-ghost' %>" href="<%= strength_path(mode: 'home') %>">Home</a></div></div>
+<div class="grid g3">
+  <div class="card stat"><div class="k">This week</div><div class="v"><%= @o.strength_this_week %>/3</div><div class="s">strength sessions</div></div>
+  <div class="card stat"><div class="k">Last 14 days</div><div class="v"><%= @o.strength_14d %></div><div class="s">sessions · aim for 6</div></div>
+  <div class="card stat"><div class="k">Muscle protection</div><div class="v"><%= @o.muscle.score %></div><div class="s"><%= status_badge @o.muscle.status, @o.muscle.status.to_s.humanize %></div></div>
+</div>
+<section class="card" style="margin-top:14px">
+  <div class="card-head"><h3>Next up: <%= @next_day.title %></h3><span class="small muted">~40 minutes · 2–3 hard sets each</span></div>
+  <% @next_day.exercises.each do |e| %>
+    <div class="exercise"><div><strong><%= @home ? e.home : e.name %></strong><div class="small muted"><%= e.cue %></div></div><div class="num"><%= e.sets %> × <%= e.reps %></div></div>
+  <% end %>
+  <%= form_with url: workouts_path, scope: :workout, class: "row row-end mt" do |f| %>
+    <%= f.hidden_field :kind, value: "strength" %><%= f.hidden_field :program_day, value: @next_day.key %>
+    <div><%= f.label :minutes, "Minutes", class: "label" %><%= f.number_field :minutes, value: 40, min: 5, max: 180 %></div>
+    <div><%= f.submit "Done — log #{@next_day.key}", class: "btn btn-primary btn-block" %></div>
+  <% end %>
+</section>
+<div class="grid g2" style="margin-top:14px">
+  <section class="card">
+    <h3>Log a walk or cardio</h3>
+    <%= form_with url: workouts_path, scope: :workout, class: "row row-end" do |f| %>
+      <div><%= f.label :kind, "Type", class: "label" %><%= f.select :kind, [["Walk", "walk"], ["Cardio", "cardio"], ["Strength (other)", "strength"]] %></div>
+      <div><%= f.label :minutes, "Minutes", class: "label" %><%= f.number_field :minutes, value: 30, min: 1, max: 300 %></div>
+      <div><%= f.submit "Log", class: "btn btn-ghost btn-block" %></div>
+    <% end %>
+  </section>
+  <section class="card">
+    <h3>Why lifting matters on a GLP-1</h3>
+    <p class="muted small">Without resistance training and enough protein, a quarter to well over a third of the weight lost on these medicines can be muscle. Muscle keeps your metabolism, strength and blood sugar where you want them — and it’s what helps keep weight off after treatment.</p>
+  </section>
+</div>
+<section class="card" style="margin-top:14px">
+  <h3>Recent sessions</h3>
+  <ul class="list">
+    <% @o.workouts.reverse.first(12).each do |w| %>
+      <li><span><strong><%= w.kind.capitalize %></strong><%= " · Day #{w.program_day}" if w.program_day %> <span class="small muted">· <%= w.performed_on.strftime("%a %b %-d") %> · <%= w.minutes %> min</span></span><%= button_to "Remove", workout_path(w), method: :delete, class: "linkish small" %></li>
+    <% end %>
+  </ul>
+</section>

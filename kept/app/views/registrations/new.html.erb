@@ -1,0 +1,18 @@
+<% content_for :title, "Create your account · Kept" %>
+<h1 class="auth-title">Create your account</h1>
+<section class="card">
+  <%= form_with model: @user, url: registration_path do |f| %>
+    <% if @user.errors.any? %><div class="errors"><ul><% @user.errors.full_messages.each do |m| %><li><%= m %></li><% end %></ul></div><% end %>
+    <div class="field"><%= f.label :name, "First name" %><%= f.text_field :name, required: true, maxlength: 60, autocomplete: "given-name" %></div>
+    <div class="field"><%= f.label :email_address, "Email" %><%= f.email_field :email_address, required: true, autocomplete: "email" %></div>
+    <div class="field"><%= f.label :password %><%= f.password_field :password, required: true, minlength: 10, autocomplete: "new-password" %><p class="hint">At least 10 characters.</p></div>
+    <div class="row">
+      <div class="field"><%= f.label :sex, "Sex at birth" %><%= f.select :sex, [["Female", "female"], ["Male", "male"]] %></div>
+      <div class="field"><%= f.label :birth_year %><%= f.number_field :birth_year, min: 1920, max: Date.current.year - 18 %></div>
+      <div class="field"><%= f.label :units %><%= f.select :units, [["lb / in", "imperial"], ["kg / cm", "metric"]] %></div>
+    </div>
+    <div class="field"><%= label_tag :enrollment_code, "Code from work or your health plan (optional)" %><%= text_field_tag :enrollment_code, params[:code] || params[:enrollment_code], autocomplete: "off" %><p class="hint">Unlocks Kept Plus at no cost to you.</p></div>
+    <%= f.submit "Create account", class: "btn btn-primary btn-block" %>
+  <% end %>
+  <p class="hint center mt">Already have one? <%= link_to "Sign in", new_session_path %></p>
+</section>

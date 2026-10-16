@@ -1,0 +1,26 @@
+<% t = o.targets %>
+<div class="grid g2">
+  <section class="card">
+    <div class="rings">
+      <%= ring o.protein_today, t.protein_g, label: "#{o.protein_today.round} g", sub: "of #{t.protein_g} g protein" %>
+      <%= ring o.fiber_today, t.fiber_g, label: "#{o.fiber_today.round} g", sub: "of #{t.fiber_g} g fiber", color: "var(--good)" %>
+      <%= ring o.water_today, t.water_ml, label: water_label(o.water_today), sub: "of #{water_label(t.water_ml)}", color: "var(--water)" %>
+    </div>
+    <p class="hint" style="text-align:center">About <%= t.protein_per_meal_g %> g of protein per meal across <%= current_user.meals_per_day %> meals. Target = <%= current_user.protein_factor %> g/kg of <%= t.bmi && t.bmi >= 30 ? "adjusted" : "" %> body weight.</p>
+  </section>
+  <section class="card">
+    <div class="card-head"><h3>Last 14 days</h3><span class="small muted">7-day average <%= o.protein_avg_7d %> g</span></div>
+    <ul class="legend"><li><i style="background:var(--accent)"></i>Protein per day</li><li><i style="background:none;border-top:2px dashed var(--ink);height:0"></i>Target</li></ul>
+    <div class="chart" data-controller="bar-chart" data-bar-chart-days-value="<%= o.protein_by_day(14).map { |d, v| [d.iso8601, v] }.to_json %>" data-bar-chart-target-value="<%= t.protein_g %>"></div>
+  </section>
+</div>
+<section class="card" style="margin-top:14px">
+  <h3>Today</h3>
+  <ul class="list">
+    <% o.food_today.each do |e| %>
+      <li><span><%= e.name %> <span class="small muted">· <%= e.protein_g.to_f.round %> g protein<%= " · #{e.fiber_g.to_f.round} g fiber" if e.fiber_g.to_f.positive? %></span></span>
+        <%= button_to "Remove", food_path(e), method: :delete, class: "linkish small", form: { data: { turbo_stream: true } } %></li>
+    <% end %>
+    <% if o.food_today.none? %><li class="muted">Nothing logged yet today.</li><% end %>
+  </ul>
+</section>

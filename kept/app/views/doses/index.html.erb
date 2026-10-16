@@ -1,0 +1,48 @@
+<% content_for :title, "Doses · Kept" %>
+<% med = @o.medication; s = @o.schedule; d = med.info %>
+<div class="topline"><h1>Doses</h1><a class="btn btn-ghost btn-sm" href="<%= edit_medication_path %>">Change dose or medicine</a></div>
+<div class="grid g3">
+  <div class="card stat"><div class="k">Current</div><div class="v"><%= mg med.dose_mg %></div><div class="s"><%= d.brand %> · <%= d.frequency %> · since <%= med.dose_started_on.strftime("%b %-d") %></div></div>
+  <div class="card stat"><div class="k">Next dose</div><div class="v"><%= s.next_due_at.strftime("%a %-d") %></div><div class="s"><%= s.next_due_at.strftime("%B") %><%= " · #{DrugCatalog.site_label(s.suggested_site)}" if s.suggested_site %></div></div>
+  <div class="card stat"><div class="k">On schedule</div><div class="v"><%= s.adherence_pct %>%</div><div class="s">of expected doses, last 8 weeks</div></div>
+</div>
+<% if (g = s.missed_guidance) %><div class="alert alert-warning" style="margin-top:14px"><span class="i">!</span><div><strong>Missed dose</strong><%= g %></div></div><% end %>
+<div class="grid g2" style="margin-top:14px">
+  <section class="card">
+    <h3>Log a dose</h3>
+    <%= form_with url: doses_path, scope: :dose_log do |f| %>
+      <div class="row">
+        <div class="field"><%= f.label :taken_at, "When" %><%= f.datetime_local_field :taken_at, value: Time.current.in_time_zone(current_user.time_zone).strftime("%Y-%m-%dT%H:%M") %></div>
+        <% if d.form == :injection %><div class="field"><%= f.label :site, "Injection site" %><%= f.select :site, DrugCatalog::INJECTION_SITES.map { |x| [DrugCatalog.site_label(x), x] }, selected: s.suggested_site %></div><% end %>
+      </div>
+      <div class="field"><%= f.label :note, "Note (optional)" %><%= f.text_field :note, maxlength: 280, placeholder: "e.g. took it a day late" %></div>
+      <label style="display:flex;gap:8px;align-items:center;font-weight:600"><%= f.check_box :skipped, style: "width:20px;height:20px" %> I skipped this dose</label>
+      <div style="margin-top:12px"><%= f.submit "Log #{mg med.dose_mg}", class: "btn btn-primary" %></div>
+    <% end %>
+  </section>
+  <section class="card">
+    <h3>Dose ladder</h3>
+    <p class="muted small"><%= d.how_to_take %></p>
+    <ol class="timeline">
+      <% d.ladder.each do |step| %>
+        <% state = (step - med.dose_mg.to_f).abs < 0.001 ? "current" : (step < med.dose_mg.to_f ? "done" : "ahead") %>
+        <li class="<%= state %>"><strong><%= mg step %></strong><% if (step - med.dose_mg.to_f).abs < 0.001 %> <span class="badge badge-good">you are here</span><% end %>
+          <div class="small muted"><%= d.step_weeks %> week<%= "s" if d.step_weeks > 1 %> minimum before stepping up</div></li>
+      <% end %>
+    </ol>
+    <p class="hint"><%= s.escalation_note(recent_severe_side_effects: @o.coach.severe_recently?) %> Dose changes are your prescriber’s call.</p>
+  </section>
+</div>
+<section class="card" style="margin-top:14px">
+  <h3>History</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Date</th><th>Dose</th><th>Site</th><th>Note</th><th></th></tr></thead>
+    <tbody>
+      <% @logs.each do |l| %>
+        <tr><td><%= l.taken_at.in_time_zone(current_user.time_zone).strftime("%a %b %-d, %-l:%M %p") %></td><td><%= l.skipped ? "Skipped" : mg(l.dose_mg) %></td>
+          <td><%= l.site ? DrugCatalog.site_label(l.site) : "—" %></td><td class="small"><%= l.note %></td>
+          <td class="r"><%= button_to "Remove", dose_path(l), method: :delete, class: "linkish small", form: { data: { turbo_confirm: "Remove this dose?" } } %></td></tr>
+      <% end %>
+    </tbody>
+  </table></div>
+</section>

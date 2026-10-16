@@ -1,0 +1,93 @@
+<% content_for :title, "Today · Kept" %>
+<% med = @o.medication; s = @o.schedule; t = @o.targets %>
+<div class="topline">
+  <div><span class="eyebrow"><%= @o.date.strftime("%A, %B %-d") %></span><h1>Hi <%= current_user.first_name %></h1></div>
+  <span class="small muted">Week <%= s.weeks_on_medication + 1 %> on <%= med.info.brand %></span>
+</div>
+
+<% @o.alerts.each do |level, title, body| %>
+  <div class="alert alert-<%= level %>" role="<%= level == :critical ? 'alert' : 'status' %>">
+    <span class="i" aria-hidden="true"><%= { critical: "!", warning: "!", info: "i" }[level] %></span>
+    <div><strong><%= title %></strong><%= body %></div>
+  </div>
+<% end %>
+
+<div class="grid g2">
+  <section class="card dose-card" aria-labelledby="dose-h">
+    <div class="card-head"><h3 id="dose-h"><%= med.label %></h3><span class="small muted"><%= s.adherence_pct %>% on schedule (8 wks)</span></div>
+    <% if s.due_today? %>
+      <div class="big">Dose due <%= s.next_due_at.to_date == @o.date ? "today" : "since #{s.next_due_at.strftime('%a %b %-d')}" %></div>
+      <p class="muted small"><%= med.info.how_to_take %></p>
+      <%= form_with url: doses_path, scope: :dose_log, class: "row row-end" do |f| %>
+        <% if med.info.form == :injection %>
+          <div><%= f.label :site, "Site", class: "label", style: "color:inherit" %>
+            <%= f.select :site, DrugCatalog::INJECTION_SITES.map { |x| [DrugCatalog.site_label(x), x] }, selected: s.suggested_site %></div>
+        <% end %>
+        <div><%= f.submit "Log #{med.info.form == :pill ? 'today’s pill' : 'injection'}", class: "btn btn-accent btn-block" %></div>
+      <% end %>
+    <% else %>
+      <div class="big">Next dose <%= s.next_due_at.strftime("%a %b %-d") %></div>
+      <p class="muted small">Last taken <%= s.last_dose&.taken_at&.strftime("%a %b %-d") || "—" %><%= " · next site: #{DrugCatalog.site_label(s.suggested_site)}" if s.suggested_site %></p>
+    <% end %>
+    <p class="hint"><%= s.escalation_note(recent_severe_side_effects: @o.coach.severe_recently?) %></p>
+  </section>
+
+  <section class="card" aria-labelledby="fuel-h">
+    <div class="card-head"><h3 id="fuel-h">Today’s targets</h3><a class="small" href="<%= nutrition_path %>">Log food</a></div>
+    <div class="rings">
+      <%= ring @o.protein_today, t.protein_g, label: "#{@o.protein_today.round} g", sub: "of #{t.protein_g} g protein" %>
+      <%= ring @o.water_today, t.water_ml, label: water_label(@o.water_today), sub: "of #{water_label(t.water_ml)}", color: "var(--water)" %>
+      <%= ring @o.strength_this_week, 3, label: "#{@o.strength_this_week}/3", sub: "strength this week", color: "var(--lift)" %>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <% glass = current_user.imperial? ? 237 : 250 %>
+      <%= button_to "+ #{water_label(glass)} water", waters_path(ml: glass), class: "btn btn-ghost btn-sm btn-block" %>
+      <%= button_to "+ Protein shake (30 g)", foods_path(food_key: "shake"), class: "btn btn-ghost btn-sm btn-block" %>
+    </div>
+  </section>
+</div>
+
+<div class="grid g2" style="margin-top:14px">
+  <section class="card" aria-labelledby="mus-h">
+    <div class="card-head"><h3 id="mus-h">Muscle protection</h3><%= status_badge @o.muscle.status, "#{@o.muscle.score}/100" %></div>
+    <p class="muted small">About <strong><%= weight(@o.muscle.lean_lost_kg) %></strong> of your <%= weight(@o.trend.total_loss_kg) %> loss is likely lean mass (<%= pct(@o.muscle.shown_share) %><%= @o.muscle.from_readings? ? ", from your body-composition readings" : ", estimated" %>).</p>
+    <% mg = @o.muscle; lean = mg.shown_share %>
+    <div class="split-bar" role="img" aria-label="Of the weight lost, <%= pct(1 - lean) %> fat and <%= pct(lean) %> lean mass">
+      <i class="fat" style="width:<%= ((1 - lean) * 100).round(1) %>%"></i><i class="lean" style="width:<%= (lean * 100).round(1) %>%"></i>
+    </div>
+    <ul class="legend mt"><li><i style="background:var(--brand)"></i>Fat <%= weight(@o.trend.total_loss_kg - mg.lean_lost_kg) %></li><li><i style="background:var(--accent)"></i>Lean <%= weight(mg.lean_lost_kg) %></li><li class="muted">Goal: under 25% lean</li></ul>
+    <div class="meters">
+      <div><div class="meter-head"><span>Protein, 7-day average</span><strong><%= @o.protein_avg_7d.round %> / <%= @o.targets.protein_g %> g</strong></div><div class="bar"><i style="width:<%= (mg.protein_adherence * 100).round %>%"></i></div></div>
+      <div><div class="meter-head"><span>Strength sessions, 14 days</span><strong><%= @o.strength_14d %> / 6</strong></div><div class="bar"><i style="width:<%= (mg.strength_adherence * 100).round %>%;background:var(--lift)"></i></div></div>
+    </div>
+    <ul class="tips"><% mg.advice.each do |a| %><li><%= a %></li><% end %></ul>
+  </section>
+  <section class="card" aria-labelledby="ci-h">
+    <div class="card-head"><h3 id="ci-h">Daily check-in</h3><% if @o.check_in_today %><span class="badge badge-good">✓ Done</span><% end %></div>
+    <%= form_with model: @check_in, url: check_ins_path do |f| %>
+      <% [[:appetite, "Appetite", %w[None Low Some Normal Big]], [:food_noise, "Food noise", %w[Silent Quiet Some Loud Constant]], [:energy, "Energy", %w[Drained Low OK Good Great]], [:mood, "Mood", %w[Low Meh OK Good Great]]].each do |field, label, words| %>
+        <fieldset class="field" style="border:0;padding:0;margin:0 0 10px">
+          <legend class="label"><%= label %></legend>
+          <div class="scale"><% (1..5).each do |v| %><label><%= f.radio_button field, v %><span title="<%= words[v - 1] %>"><%= v %></span></label><% end %></div>
+        </fieldset>
+      <% end %>
+      <%= f.submit "Save check-in", class: "btn btn-primary btn-sm" %>
+    <% end %>
+  </section>
+</div>
+
+<section class="card" style="margin-top:14px">
+  <div class="card-head"><h3>Weight trend</h3><a class="small" href="<%= progress_path %>">Details</a></div>
+  <% if @o.trend.empty? %>
+    <p class="muted">Log your first weight to start the trend.</p>
+  <% else %>
+    <p class="muted small">Down <strong><%= weight(@o.trend.total_loss_kg) %></strong> (<%= @o.trend.total_loss_pct %>%) · <%= @o.trend.weekly_rate_pct %>% a week lately</p>
+    <div class="chart" data-controller="line-chart" data-line-chart-points-value="<%= @o.trend.series.last(120).to_json %>"
+      data-line-chart-goal-value="<%= current_user.goal_weight_kg.to_f %>" data-line-chart-unit-value="<%= weight_unit %>"
+      data-line-chart-factor-value="<%= current_user.imperial? ? 2.20462 : 1 %>"></div>
+  <% end %>
+  <%= form_with url: weights_path, scope: :weight_entry, class: "row row-end mt" do |f| %>
+    <div><%= f.label :weight, "Today’s weight (#{weight_unit})", class: "label" %><%= f.number_field :weight, step: 0.1, required: true, inputmode: "decimal" %></div>
+    <div><%= f.submit "Save weight", class: "btn btn-primary btn-block" %></div>
+  <% end %>
+</section>

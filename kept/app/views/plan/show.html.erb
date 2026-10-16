@@ -1,0 +1,32 @@
+<% content_for :title, "Plan & cost · Kept" %>
+<div class="topline"><h1>Plan & cost</h1></div>
+<section class="card">
+  <div class="card-head"><h3>Paying for <%= @o.medication.info.brand %></h3><a class="small" href="<%= edit_profile_path %>">Coverage: <%= CostOptions::COVERAGE[current_user.coverage] %></a></div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Option</th><th class="r">Per month</th><th>How</th></tr></thead>
+    <tbody><% @cost.options.each do |o| %>
+      <tr><td><strong><%= o.label %></strong><div class="small muted"><%= o.note %></div></td><td class="r"><%= o.monthly ? number_to_currency(o.monthly, precision: 0) : "—" %></td><td class="small"><%= o.how %></td></tr>
+    <% end %></tbody>
+  </table></div>
+  <% if @o.medication.monthly_cost && (save = @cost.annual_saving(@o.medication.monthly_cost)).positive? %>
+    <p class="flash flash-notice mt">You pay <%= number_to_currency(@o.medication.monthly_cost, precision: 0) %>/month. <%= @cost.best.label %> at <%= number_to_currency(@cost.best.monthly, precision: 0) %>/month could save about <strong><%= number_to_currency(save, precision: 0) %> a year</strong>.</p>
+  <% end %>
+  <p class="small"><%= link_to(@o.medication.monthly_cost ? "Update what you pay" : "Add what you pay to see your savings", edit_medication_path) %></p>
+  <p class="hint">Prices as of October 2026 from manufacturer and federal announcements; confirm with your pharmacy. <a href="<%= appeal_path %>">Draft a coverage appeal letter →</a></p>
+</section>
+<section class="card" style="margin-top:14px">
+  <div class="card-head"><h3>Your off-ramp</h3><% if @maintenance.ready? %><span class="badge badge-info">i Worth discussing now</span><% end %></div>
+  <p class="muted">Most people stop GLP-1s within a year, and about 60% of lost weight returns within a year of stopping. A planned transition — with your prescriber — protects the result.</p>
+  <div class="grid g3">
+    <% @maintenance.paths.each_with_index do |p, i| %>
+      <div class="path <%= 'recommended' if i.zero? %>">
+        <h3><%= p.label %></h3>
+        <p class="small"><%= p.summary %></p>
+        <%= status_badge({ low: :good, moderate: :warning, high: :critical }[p.risk], "#{p.risk} regain risk") %>
+        <ol class="timeline" style="margin-top:12px"><% p.weeks.each do |w| %><li><strong>Week <%= w.week %>: <%= w.dose_mg.to_f.zero? ? "off medication" : mg(w.dose_mg) %></strong><div class="small muted"><%= w.focus %></div></li><% end %></ol>
+      </div>
+    <% end %>
+  </div>
+  <h4 style="margin-top:16px">Guardrails during any transition</h4>
+  <ul class="list"><% @maintenance.guardrails.each do |g| %><li><%= g %></li><% end %></ul>
+</section>

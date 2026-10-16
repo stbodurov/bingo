@@ -1,0 +1,17 @@
+<% content_for :title, "You're on the list · Kept" %>
+<section class="band"><div class="wrap" style="max-width:760px">
+  <span class="eyebrow">You’re on the list</span>
+  <h1>Thanks<%= ", #{@signup.first_name}" if @signup.first_name.present? %>.</h1>
+  <div class="grid g3" style="margin:22px 0">
+    <div class="card stat"><div class="k">Your place</div><div class="v">#<%= @signup.position %></div><div class="s">of <%= WaitlistSignup.count %></div></div>
+    <div class="card stat"><div class="k">Friends joined</div><div class="v"><%= @signup.referrals %></div><div class="s">+5 places each</div></div>
+    <div class="card stat"><div class="k">Meanwhile</div><div class="v">Web app</div><div class="s"><a href="<%= new_registration_path %>">Start free today</a></div></div>
+  </div>
+  <div class="card" data-controller="copy">
+    <h3>Share your link</h3>
+    <div class="row" style="align-items:end">
+      <input data-copy-target="source" readonly value="<%= root_url(ref: @signup.code) %>" aria-label="Your referral link">
+      <button class="btn btn-primary" data-copy-target="button" data-action="copy#copy">Copy link</button>
+    </div>
+  </div>
+</div></section>

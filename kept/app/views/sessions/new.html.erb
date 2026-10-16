@@ -1,0 +1,15 @@
+<% content_for :title, "Sign in · Kept" %>
+<h1 class="auth-title">Welcome back</h1>
+<section class="card">
+  <%= form_with url: session_path do |form| %>
+    <div class="field"><%= form.label :email_address, "Email" %><%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", value: params[:email_address] %></div>
+    <div class="field"><%= form.label :password %><%= form.password_field :password, required: true, autocomplete: "current-password", maxlength: 72 %></div>
+    <%= form.submit "Sign in", class: "btn btn-primary btn-block" %>
+  <% end %>
+  <p class="hint center mt"><%= link_to "Forgot password?", new_password_path %> · <%= link_to "Create an account", new_registration_path %></p>
+</section>
+<section class="card">
+  <h3>Just looking?</h3>
+  <p class="small muted">Open a demo account with five months of logs on Zepbound.</p>
+  <%= button_to "Open the demo", demo_session_path, class: "btn btn-ghost btn-block" %>
+</section>

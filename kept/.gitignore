@@ -1,0 +1,15 @@
+/.bundle
+/.env*
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+/tmp/pids/*
+!/tmp/pids/.keep
+/storage/*
+!/storage/.keep
+/public/assets
+/config/master.key
+/config/credentials/*.key
+/config/credentials.yml.enc
+/node_modules

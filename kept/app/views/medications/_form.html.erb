@@ -1,0 +1,11 @@
+<% if medication.errors.any? %><div class="errors">Please fix:<ul><% medication.errors.full_messages.each do |m| %><li><%= m %></li><% end %></ul></div><% end %>
+<div class="field"><%= f.label :drug, "Medicine" %><%= f.select :drug, DrugCatalog.options %></div>
+<div class="row">
+  <div class="field"><%= f.label :dose_mg, "Current dose (mg)" %><%= f.select :dose_mg, DrugCatalog::DRUGS.values.flat_map(&:ladder).uniq.sort.map { |d| [mg(d), d] }, selected: medication.dose_mg.to_f %>
+    <p class="hint">Must be a labelled dose for the medicine you choose.</p></div>
+  <div class="field"><%= f.label :dose_weekday, "Injection day (weekly medicines)" %><%= f.select :dose_weekday, Date::DAYNAMES.each_with_index.map { |n, i| [n, i] }, include_blank: "—" %></div>
+</div>
+<div class="row">
+  <div class="field"><%= f.label :started_on, "Started treatment on" %><%= f.date_field :started_on %></div>
+  <div class="field"><%= f.label :monthly_cost, "What you pay per month ($, optional)" %><%= f.number_field :monthly_cost, step: 1, min: 0 %></div>
+</div>

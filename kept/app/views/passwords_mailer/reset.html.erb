@@ -1,0 +1,5 @@
+<p>Hi <%= @user.first_name %>,</p>
+<p>Someone asked to reset the password for your Kept account. If it was you, choose a new one here:</p>
+<p><%= link_to "Reset my password", edit_password_url(@user.password_reset_token) %></p>
+<p>This link expires in <%= distance_of_time_in_words(0, @user.password_reset_token_expires_in) %>. If you didn't ask, ignore this email — nothing changes.</p>
+<p>— Kept</p>

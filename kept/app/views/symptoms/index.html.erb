@@ -1,0 +1,53 @@
+<% content_for :title, "Side effects · Kept" %>
+<div class="topline"><h1>Side effects</h1></div>
+<% if @advice %>
+  <section class="card" style="margin-bottom:14px" aria-live="polite">
+    <% if @advice.urgent %>
+      <div class="alert alert-critical" role="alert"><span class="i">!</span><div><strong>This needs a clinician</strong><%= @advice.red_flag %></div></div>
+    <% end %>
+    <h3>For <%= @advice.label.downcase %></h3>
+    <ul class="list"><% @advice.tips.each do |tip| %><li><%= tip %></li><% end %></ul>
+    <% if @advice.red_flag && !@advice.urgent %><p class="hint"><strong>Watch for:</strong> <%= @advice.red_flag %></p><% end %>
+  </section>
+<% end %>
+<div class="grid g2">
+  <section class="card">
+    <h3>How are you feeling?</h3>
+    <%= form_with model: SideEffectLog.new, url: symptoms_path do |f| %>
+      <div class="field"><%= f.label :symptom %><%= f.select :symptom, SideEffectCoach.options %></div>
+      <fieldset class="field" style="border:0;padding:0"><legend class="label">How bad?</legend>
+        <div class="pills">
+          <% [[1, "Mild"], [2, "Bothersome"], [3, "Severe"]].each do |v, l| %><label class="pill"><%= f.radio_button :severity, v, checked: v == 1 %><span><%= l %></span></label><% end %>
+        </div></fieldset>
+      <div class="field"><%= f.label :note, "Note (optional)" %><%= f.text_field :note, maxlength: 280 %></div>
+      <%= f.submit "Log and get advice", class: "btn btn-primary" %>
+    <% end %>
+  </section>
+  <section class="card">
+    <h3>Your pattern</h3>
+    <% if (note = @o.coach.pattern_note) %><p><%= note %></p><% end %>
+    <% counts = @o.coach.by_day_after_dose %>
+    <% if counts.any? %>
+      <% max = [counts.values.max, 1].max %>
+      <p class="small muted">Symptom load by day after your dose (last 60 days)</p>
+      <% (0..6).each do |d| %>
+        <div style="display:grid;grid-template-columns:70px 1fr 30px;gap:8px;align-items:center;margin:4px 0">
+          <span class="small"><%= d.zero? ? "Dose day" : "Day #{d}" %></span>
+          <div class="bar" title="<%= counts[d].to_i %>"><i style="width:<%= (100.0 * counts[d].to_i / max).round %>%;background:var(--accent)"></i></div>
+          <span class="small num"><%= counts[d].to_i %></span>
+        </div>
+      <% end %>
+    <% else %><p class="muted">Log a few days and Kept will show when symptoms cluster.</p><% end %>
+    <h4 style="margin-top:14px">Most frequent (30 days)</h4>
+    <ul class="list"><% @o.coach.top_symptoms.first(5).each do |s, n, worst| %><li><span><%= symptom_label(s) %></span><span class="small muted"><%= n %>× · worst <%= %w[- mild bothersome severe][worst] %></span></li><% end %></ul>
+  </section>
+</div>
+<section class="card" style="margin-top:14px">
+  <h3>Log</h3>
+  <ul class="list">
+    <% @logs.each do |l| %>
+      <li><span><strong><%= symptom_label(l.symptom) %></strong> · <%= %w[- mild bothersome severe][l.severity] %><span class="small muted"> · <%= l.logged_on.strftime("%b %-d") %><%= " · #{l.note}" if l.note.present? %></span></span>
+        <%= button_to "Remove", symptom_path(l), method: :delete, class: "linkish small" %></li>
+    <% end %>
+  </ul>
+</section>

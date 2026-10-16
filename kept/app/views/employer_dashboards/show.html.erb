@@ -1,0 +1,50 @@
+<% content_for :title, "#{@employer.name} · Kept dashboard" %>
+<% r = @report %>
+<section class="band"><div class="wrap">
+  <span class="eyebrow">Employer dashboard · de-identified</span>
+  <h1 style="font-size:clamp(1.8rem,4vw,2.6rem)"><%= @employer.name %></h1>
+  <% if r.suppressed? %>
+    <div class="card"><p>Fewer than <%= CohortReport::MIN_COHORT %> members are enrolled, so metrics are hidden to protect privacy.</p></div>
+  <% else %>
+  <div class="grid g3">
+    <div class="card stat"><div class="k">Members on a GLP-1</div><div class="v"><%= r.members_on_medication.size %></div><div class="s"><%= r.active_count %> dosing in the last 14 days</div></div>
+    <div class="card stat"><div class="k">On therapy at 12 months</div><div class="v"><%= pct(r.persistence(12)) %></div><div class="s">benchmark ~<%= pct(CohortReport::BENCHMARK_PERSISTENCE_12M) %> without support</div></div>
+    <div class="card stat"><div class="k">Average weight loss</div><div class="v"><%= r.avg_loss_pct %>%</div><div class="s">trend, since starting</div></div>
+  </div>
+  <div class="grid g3" style="margin-top:14px">
+    <div class="card stat"><div class="k">Protein target met</div><div class="v"><%= pct(r.protein_adherence) %></div><div class="s">14-day average adherence</div></div>
+    <div class="card stat"><div class="k">Strength sessions</div><div class="v"><%= r.strength_weekly %></div><div class="s">per member per week · goal 3</div></div>
+    <div class="card stat"><div class="k">Severe side effects</div><div class="v"><%= r.side_effect_risk_count %></div><div class="s">members, last 14 days — routed to care</div></div>
+  </div>
+  <div class="grid g2" style="margin-top:14px">
+    <section class="card">
+      <h3>Persistence</h3>
+      <% [[3, "3 months"], [6, "6 months"], [12, "12 months"]].each do |m, label| %>
+        <% v = r.persistence(m) %>
+        <div style="display:grid;grid-template-columns:90px 1fr 50px;gap:10px;align-items:center;margin:8px 0">
+          <span class="small"><%= label %></span><div class="bar"><i style="width:<%= ((v || 0) * 100).round %>%"></i></div><span class="small num"><%= pct(v) %></span>
+        </div>
+      <% end %>
+      <p class="hint">Share of members who started at least that long ago and are still dosing. Suppressed when fewer than 10 are eligible.</p>
+    </section>
+    <section class="card">
+      <h3>Medicines</h3>
+      <% max = r.by_drug.map(&:last).max.to_f %>
+      <% r.by_drug.each do |name, n| %>
+        <div style="display:grid;grid-template-columns:110px 1fr 40px;gap:10px;align-items:center;margin:8px 0"><span class="small"><%= name %></span><div class="bar"><i style="width:<%= (100 * n / max).round %>%;background:var(--water)"></i></div><span class="small num"><%= n %></span></div>
+      <% end %>
+    </section>
+  </div>
+  <section class="card" style="margin-top:14px">
+    <h3>Spend</h3>
+    <table>
+      <tr><td>Estimated monthly drug spend (active members × <%= number_to_currency(@employer.monthly_drug_cost, precision: 0) %>)</td><td class="r"><%= number_to_currency(r.monthly_drug_spend, precision: 0) %></td></tr>
+      <tr><td>Kept (<%= number_with_delimiter(@employer.covered_lives) %> covered lives × <%= number_to_currency(@employer.pmpm) %> PMPM)</td><td class="r"><%= number_to_currency(r.monthly_kept_cost, precision: 0) %></td></tr>
+      <% if (lift = r.persistence_lift_12m) %><tr><td>Persistence lift vs. benchmark at 12 months</td><td class="r">+<%= (lift * 100).round %> pts</td></tr>
+        <tr><td>Members still on therapy beyond the benchmark (of <%= r.eligible_12m %> eligible)</td><td class="r"><%= r.retained_beyond_benchmark %></td></tr>
+        <tr><td><strong>Drug spend kept productive</strong> — 12 months of therapy that isn't followed by stopping and regain</td><td class="r"><strong><%= number_to_currency(r.spend_kept_productive, precision: 0) %></strong></td></tr><% end %>
+    </table>
+    <p class="hint">All figures are aggregates of fictional demo members. Real dashboards use the same suppression rules.</p>
+  </section>
+  <% end %>
+</div></section>

@@ -1,0 +1,9 @@
+<% content_for :title, "Medicine · Kept" %>
+<div class="topline"><h1>Medicine & dose</h1></div>
+<section class="card" style="max-width:720px">
+  <%= form_with model: @medication, url: medication_path, method: :patch do |f| %>
+    <%= render "form", f:, medication: @medication %>
+    <p class="hint">Changing the dose restarts the “weeks at this dose” count from today.</p>
+    <%= f.submit "Save", class: "btn btn-primary" %>
+  <% end %>
+</section>

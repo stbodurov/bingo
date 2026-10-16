@@ -1,0 +1,63 @@
+<% content_for :title, "Settings · Kept" %>
+<div class="topline"><h1>Settings</h1></div>
+<section class="card" style="max-width:720px">
+  <%= form_with model: @user, url: profile_path, method: :patch do |f| %>
+    <% if @user.errors.any? %><div class="errors"><%= @user.errors.full_messages.to_sentence %></div><% end %>
+    <div class="row">
+      <div class="field"><%= f.label :name %><%= f.text_field :name, maxlength: 60 %></div>
+      <div class="field"><%= f.label :birth_year %><%= f.number_field :birth_year, min: 1920, max: Date.current.year - 18 %></div>
+      <div class="field"><%= f.label :sex, "Sex at birth" %><%= f.select :sex, [["Female", "female"], ["Male", "male"]] %></div>
+    </div>
+    <div class="row">
+      <div class="field"><%= f.label :units %><%= f.select :units, [["Pounds & inches", "imperial"], ["Kilograms & cm", "metric"]] %></div>
+      <div class="field"><%= label_tag "user[height]", "Height (#{height_unit})" %><%= number_field_tag "user[height]", height_value(@user.height_cm), step: 0.5 %></div>
+      <div class="field"><%= label_tag "user[goal_weight]", "Goal weight (#{weight_unit})" %><%= number_field_tag "user[goal_weight]", weight_value(@user.goal_weight_kg), step: 0.1 %></div>
+    </div>
+    <div class="row">
+      <div class="field"><%= f.label :protein_factor, "Protein target (g per kg)" %><%= f.select :protein_factor, [1.2, 1.3, 1.4, 1.5, 1.6].map { |v| [v, v] } %><p class="hint">1.2–1.6 g/kg is the 2025 joint-advisory range.</p></div>
+      <div class="field"><%= f.label :meals_per_day %><%= f.select :meals_per_day, (2..6).to_a %></div>
+      <div class="field"><%= f.label :coverage, "Coverage" %><%= f.select :coverage, CostOptions::COVERAGE.invert %></div>
+    </div>
+    <div class="field"><%= f.label :time_zone %><%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.us_zones %></div>
+    <%= f.submit "Save", class: "btn btn-primary" %>
+  <% end %>
+</section>
+<section class="card" style="max-width:720px">
+  <h3>Your plan</h3>
+  <p><%= current_user.plus? ? "Kept Plus#{" — provided by #{current_user.employer.name}" if current_user.employer}" : "Free" %></p>
+  <% if current_user.employer %>
+    <%= button_to "Leave the employer plan", enroll_profile_path, method: :delete, class: "btn btn-ghost btn-sm", form: { data: { turbo_confirm: "Leave #{current_user.employer.name}'s plan? You'll move to Free." } } %>
+  <% else %>
+    <%= form_with url: enroll_profile_path, class: "row row-end" do |f| %>
+      <div><%= f.label :code, "Got a code from work or your health plan?" %><%= f.text_field :code, autocomplete: "off", placeholder: "e.g. NORTHWIND", required: true %></div>
+      <div><%= f.submit "Activate Kept Plus", class: "btn btn-primary btn-block" %></div>
+    <% end %>
+  <% end %>
+  <p class="hint">Your data is never sold or used for advertising. Employers only ever see de-identified totals for groups of 10 or more — never your name, never your logs.</p>
+</section>
+<section class="card" style="max-width:720px" id="reminders">
+  <h3>Dose reminders</h3>
+  <p class="small muted">Subscribe once and your phone's calendar reminds you on dose day — no app install needed. It updates when your dose changes, and adds a check-in with your prescriber when the label's step-up window arrives.</p>
+  <% feed = dose_calendar_url(current_user.calendar_token, format: :ics) %>
+  <div class="row">
+    <a class="btn btn-primary" href="<%= feed.sub(/\Ahttps?/, "webcal") %>">Add to my calendar</a>
+    <button class="btn btn-ghost" type="button" data-controller="copy" data-copy-text-value="<%= feed %>" data-action="copy#copy">Copy link</button>
+  </div>
+  <p class="hint">This link is private to you — anyone with it can see your dose schedule. <%= button_to "Make a new link", reset_calendar_path, class: "linkish small", form: { class: "inline" } %></p>
+</section>
+<section class="card" style="max-width:720px">
+  <h3>Your data</h3>
+  <p class="small muted">Take everything with you, any time.</p>
+  <div class="row">
+    <a class="btn btn-ghost" href="<%= export_path(format: :json) %>">Download everything (JSON)</a>
+    <a class="btn btn-ghost" href="<%= export_path(format: :csv) %>">Download weights (CSV)</a>
+  </div>
+  <details class="danger mt">
+    <summary>Delete my account</summary>
+    <p class="small">This permanently deletes your account and every dose, symptom, weight, meal and workout. It can't be undone.</p>
+    <%= form_with url: profile_path, method: :delete, class: "row row-end" do |f| %>
+      <div><%= f.label :password, "Confirm with your password" %><%= f.password_field :password, required: true, autocomplete: "current-password" %></div>
+      <div><%= f.submit "Delete everything", class: "btn btn-danger btn-block" %></div>
+    <% end %>
+  </details>
+</section>

@@ -1,0 +1,143 @@
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <span class="eyebrow">For the 1 in 9 American adults on a GLP-1</span>
+      <h1>Lose the weight. <span>Keep</span> the muscle. <span>Keep</span> the results.</h1>
+      <p class="lede">Kept is the daily companion for Zepbound, Wegovy, Foundayo and other GLP-1 medicines: dose reminders and site rotation, a side-effect coach that knows your dose schedule, protein and strength targets that protect your muscle — and an off-ramp plan so the weight stays off.</p>
+      <div class="cta">
+        <a class="btn btn-primary" href="#waitlist">Join the waitlist</a>
+        <%= button_to "Try the live demo", demo_session_path, class: "btn btn-ghost" %>
+      </div>
+      <div class="trust"><span>Built on prescribing information & 2025 nutrition guidance</span><span>Never sells your data</span><span>Works with any prescriber</span></div>
+    </div>
+    <div class="phone" aria-label="Kept app preview" role="img">
+      <div class="phone-screen">
+        <div class="mini-row"><strong>Today</strong><span class="small muted">Week 22 · Zepbound</span></div>
+        <div class="card dose-card"><div class="small muted">Thursday dose</div><div style="font-size:1.4rem;font-weight:800">10 mg due today</div>
+          <div class="mini-row" style="margin-top:8px"><span class="small muted">Next site: left arm</span><span class="btn btn-accent btn-sm">Log injection</span></div></div>
+        <div class="card"><div class="rings">
+          <%= ring 74, 98, label: "74 g", sub: "of 98 g protein", size: 92 %>
+          <%= ring 1750, 3300, label: "1.8 L", sub: "of 3.3 L water", size: 92, color: "var(--water)" %>
+          <%= ring 2, 3, label: "2/3", sub: "lifts this week", size: 92, color: "var(--lift)" %>
+        </div></div>
+        <div class="card"><div class="mini-row"><strong>Muscle protection</strong><%= status_badge :good, "85/100" %></div>
+          <p class="small muted" style="margin:6px 0 0">≈ 16% of your loss is lean mass. Keep the protein and the lifting going.</p></div>
+        <div class="card"><div class="mini-row"><strong>Side-effect pattern</strong><span class="small muted">last 60 days</span></div>
+          <p class="small" style="margin:6px 0 0">Nausea peaks 1 day after your dose. Plan lighter, lower-fat meals for that window.</p></div>
+        <div class="card"><div class="mini-row"><strong>Down 14.2%</strong><span class="small muted">0.8% a week lately</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" aria-labelledby="why-h">
+  <div class="wrap">
+    <div class="band-head"><span class="eyebrow">The problem</span><h2 id="why-h">The medicine works. What happens around it decides whether the results last.</h2></div>
+    <div class="facts">
+      <div class="fact"><div class="n">11%</div><p>of US adults now take a GLP-1 for weight loss — up from 3% in 2024.</p><a href="https://kffhealthnews.org/morning-breakout/pharma-and-tech-070826/">Gallup via KFF Health News, 2026</a></div>
+      <div class="fact"><div class="n">65%</div><p>of people without diabetes stop within 12 months — side effects, cost and plateaus.</p><a href="https://uspharmacist.com/article/weight-regain-common-after-stopping-glp1-drugs">125,474-adult cohort, 2025</a></div>
+      <div class="fact"><div class="n">~60%</div><p>of the weight lost returns within a year of stopping without a plan.</p><a href="https://www.doctors.net.uk/news/patients-regain-60-of-weight-lost-on-glp-1-drugs-within-a-year-of-stopping">Meta-analysis of 48 studies, 2026</a></div>
+      <div class="fact"><div class="n">up to 40%</div><p>of the weight lost can be muscle without enough protein and strength training.</p><a href="<%= science_path %>">The science</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="gap-h">
+  <div class="wrap">
+    <div class="band-head"><span class="eyebrow">What your prescription doesn’t come with</span><h2 id="gap-h">Four things Kept adds to every dose.</h2></div>
+    <div class="gaps">
+      <div class="card gap"><div class="ic" style="background:var(--accent-soft)">♡</div><h3>A side-effect plan</h3><p class="muted">A coach that knows which day after your dose symptoms peak, what helps, and the red flags that mean call someone now.</p></div>
+      <div class="card gap"><div class="ic" style="background:var(--brand-soft)">◍</div><h3>Protein & strength targets</h3><p class="muted">1.2–1.6 g/kg of protein and three short lifting sessions a week — the evidence-backed way to keep muscle while you lose fat.</p></div>
+      <div class="card gap"><div class="ic" style="background:var(--water-soft)">✚</div><h3>A dose system</h3><p class="muted">Reminders, site rotation, missed-dose rules from the label, and when the dose ladder says it’s time to ask about the next step.</p></div>
+      <div class="card gap"><div class="ic" style="background:var(--lift-soft)">⇢</div><h3>An off-ramp</h3><p class="muted">Maintenance dose, taper or stop — planned with your prescriber, with a regain guardrail that catches drift early.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" id="features" aria-labelledby="feat-h">
+  <div class="wrap">
+    <div class="band-head"><span class="eyebrow">Everything in one app</span><h2 id="feat-h">Built for real life on a GLP-1.</h2></div>
+    <div class="features">
+      <% [["Smart dose log", "Weekly or daily, injection or pill. Site rotation, adherence and missed-dose guidance per your medicine’s label."],
+          ["Side-effect coach", "Log nausea, reflux or constipation in two taps; get advice timed to your dose cycle and red-flag triage."],
+          ["Protein-first food log", "Quick-add high-protein foods that are easy on a small appetite. Fiber and water tracked alongside."],
+          ["Strength program", "Three 40-minute full-body sessions a week, gym or home, that progress with you."],
+          ["Muscle protection score", "Estimates how much of your loss is lean mass from your medicine, protein and training — or from your smart scale."],
+          ["Weight trend, not noise", "A smoothed trend that ignores water swings, flags losing too fast, plateaus and early regain."],
+          ["Cost finder", "Savings cards, Medicare’s $50 program, direct cash prices and cheaper approved alternatives — compared monthly."],
+          ["Doctor-ready report", "One printable page: doses, adherence, side effects, weight, protein and questions to ask."],
+          ["Coverage appeal draft", "A letter of medical necessity built from your logs for your prescriber to edit and send."]].each do |t, d| %>
+        <article class="card feature"><h3><%= t %></h3><p><%= d %></p></article>
+      <% end %>
+    </div>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="emp-h">
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">For employers & health plans</span>
+      <h2 id="emp-h">You’re paying ~$1,000 a month per member. Make it stick.</h2>
+      <p class="muted">Most GLP-1 spend is wasted when people stop early and regain. Kept raises persistence, protects muscle and plans the off-ramp — with a de-identified dashboard that shows it.</p>
+      <a class="btn btn-primary" href="<%= employers_path %>">See the employer program</a>
+    </div>
+    <div class="card">
+      <div class="mini-row"><strong>Northwind Logistics (demo)</strong><span class="small muted">111 members on GLP-1s</span></div>
+      <div class="grid g3" style="margin-top:12px">
+        <div class="stat"><div class="k">On therapy at 12 mo</div><div class="v">72%</div><div class="s">vs ~35% typical</div></div>
+        <div class="stat"><div class="k">Avg weight loss</div><div class="v">13%</div><div class="s">trend</div></div>
+        <div class="stat"><div class="k">Protein target met</div><div class="v">84%</div><div class="s">14-day average</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="safe-h">
+  <div class="wrap">
+    <div class="safety">
+      <span class="eyebrow">Safety & privacy</span>
+      <h2 id="safe-h">A companion, not a prescriber.</h2>
+      <ul>
+        <li>Dose guidance comes straight from prescribing information; dose changes are always your clinician’s decision.</li>
+        <li>Red-flag symptoms (pancreatitis, gallbladder, dehydration, allergic reactions) trigger clear “seek care” guidance.</li>
+        <li>No compounded-drug sales, no supplements pushed, no data sold — ever.</li>
+        <li>Employers see de-identified totals for groups of 10 or more. Never your name, never your logs.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" aria-labelledby="price-h">
+  <div class="wrap">
+    <div class="band-head"><span class="eyebrow">Pricing</span><h2 id="price-h">Free to start. Plus when you want the full program.</h2></div>
+    <div class="prices">
+      <div class="card price-card"><h3>Free</h3><div class="p">$0</div><ul><li>Dose log, reminders & site rotation</li><li>Side-effect coach with red flags</li><li>Weight trend</li><li>Protein & water targets</li></ul></div>
+      <div class="card price-card featured"><h3>Kept Plus</h3><div class="p">$9.99<span class="small muted">/mo</span></div><p class="small muted">or $69 a year</p>
+        <ul><li>Strength program & muscle protection score</li><li>Off-ramp & maintenance plan</li><li>Cost finder & appeal letter</li><li>Doctor-ready reports</li></ul></div>
+      <div class="card price-card"><h3>Through work</h3><div class="p">Free to you</div><ul><li>Kept Plus paid by your employer or health plan</li><li>Same privacy promise</li><li><a href="<%= employers_path %>">Tell your benefits team</a></li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="band faq" aria-labelledby="faq-h">
+  <div class="wrap">
+    <span class="eyebrow">Questions</span><h2 id="faq-h">Fair questions.</h2>
+    <details><summary>Does Kept prescribe or sell medication?</summary><p>No. Kept works alongside whoever prescribes for you — your doctor, a telehealth service or a specialist. We don’t sell drugs, compounded or otherwise.</p></details>
+    <details><summary>Which medicines does it support?</summary><p>Zepbound and Mounjaro (tirzepatide), Wegovy and Ozempic (semaglutide), the Wegovy pill, Foundayo (orforglipron) and Saxenda (liraglutide). Each has its own dose ladder and missed-dose rules in the app.</p></details>
+    <details><summary>Why so much about protein and muscle?</summary><p>Because the scale doesn’t show what you’re losing. Without enough protein and resistance training, a large share of GLP-1 weight loss can be muscle — and muscle is what protects strength, metabolism and the result after treatment.</p></details>
+    <details><summary>What if I want to stop?</summary><p>That’s a conversation for you and your prescriber; Kept helps you plan it — maintenance dose, taper or stop — with daily habit targets and a guardrail that flags early regain.</p></details>
+    <details><summary>Is my health data safe?</summary><p>Your data is encrypted, never sold, never used for ads, and deletable at any time. If your employer sponsors Kept, they see only de-identified totals for groups of 10 or more.</p></details>
+  </div>
+</section>
+
+<section class="band alt" id="waitlist" aria-labelledby="wl-h">
+  <div class="wrap split">
+    <div>
+      <span class="eyebrow">Early access</span>
+      <h2 id="wl-h">iPhone and Android apps open in waves.</h2>
+      <p class="muted">The web app is live today. Join the list for the mobile apps with reminders on your lock screen — and move up five places for every friend who joins with your link.</p>
+      <% if @count.to_i >= 100 %><p class="small muted"><%= number_with_delimiter(@count.to_i.floor(-2)) %>+ people on the list.</p><% end %>
+    </div>
+    <%= render "pages/waitlist_form", signup: @signup %>
+  </div>
+</section>

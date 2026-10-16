@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= content_for(:title) || "Kept — the GLP-1 companion that keeps the results" %></title>
+    <meta name="description" content="Kept tracks your GLP-1 doses, coaches you through side effects, protects your muscle with protein and strength targets, and plans the off-ramp so the weight stays off.">
+    <meta property="og:title" content="Kept — keep the muscle, keep the results">
+    <%= render "shared/head" %>
+  </head>
+  <body>
+    <header class="site-head">
+      <div class="wrap">
+        <%= render "shared/logo" %>
+        <nav class="site-nav" aria-label="Primary">
+          <a class="hide-sm" href="<%= root_path(anchor: "features") %>">Features</a>
+          <a class="hide-sm" href="<%= employers_path %>">For employers</a>
+          <a class="hide-sm" href="<%= science_path %>">The science</a>
+          <% if authenticated? %><a href="<%= today_path %>">Open app</a><% else %><a class="hide-sm" href="<%= new_session_path %>">Sign in</a><% end %>
+          <a class="btn btn-primary btn-sm" href="<%= root_path(anchor: "waitlist") %>">Join the waitlist</a>
+        </nav>
+      </div>
+    </header>
+    <main id="main">
+      <% if notice.present? || alert.present? %><div class="wrap" style="padding-top:16px"><%= render "shared/flash" %></div><% end %>
+      <%= yield %>
+    </main>
+    <footer class="site-foot">
+      <div class="wrap">
+        <div><%= render "shared/logo" %><p style="margin-top:10px">Kept is a wellness companion, not a medical device or a substitute for your prescriber. Medication decisions belong to you and your clinician. In an emergency, call 911.</p></div>
+        <div><strong>Product</strong><a href="<%= root_path(anchor: "features") %>">Features</a><a href="<%= employers_path %>">For employers & plans</a><a href="<%= science_path %>">The science</a></div>
+        <div><strong>Company</strong><a href="<%= root_path(anchor: "waitlist") %>">Waitlist</a><a href="<%= privacy_path %>">Privacy</a><a href="<%= new_session_path %>">Sign in</a></div>
+      </div>
+    </footer>
+  </body>
+</html>

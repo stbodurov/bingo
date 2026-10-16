@@ -1,0 +1,10 @@
+<% content_for :title, "Choose a new password · Kept" %>
+<h1 class="auth-title">Choose a new password</h1>
+<section class="card">
+  <%= form_with url: password_path(params[:token]), method: :put do |form| %>
+    <div class="field"><%= form.label :password, "New password" %><%= form.password_field :password, required: true, autocomplete: "new-password", minlength: 10, maxlength: 72 %>
+      <p class="hint">At least 10 characters. You'll be signed out on every other device.</p></div>
+    <div class="field"><%= form.label :password_confirmation, "Repeat it" %><%= form.password_field :password_confirmation, required: true, autocomplete: "new-password", minlength: 10, maxlength: 72 %></div>
+    <%= form.submit "Save password", class: "btn btn-primary btn-block" %>
+  <% end %>
+</section>

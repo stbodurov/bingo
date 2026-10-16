@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= content_for(:title) || "Kept report" %></title>
+    <%= render "shared/head" %>
+  </head>
+  <body>
+    <div class="noprint wrap" style="padding:14px 20px;display:flex;gap:8px">
+      <a class="btn btn-ghost btn-sm" href="<%= today_path %>">← Back to Kept</a>
+      <button class="btn btn-primary btn-sm" data-controller="print" data-action="print#print">Print or save as PDF</button>
+    </div>
+    <article class="print"><%= yield %></article>
+  </body>
+</html>

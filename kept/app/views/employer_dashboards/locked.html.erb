@@ -1,0 +1,9 @@
+<% content_for :title, "#{@employer.name} · Kept" %>
+<section class="band"><div class="wrap" style="max-width:520px">
+  <h1 style="font-size:2rem"><%= @employer.name %></h1>
+  <%= form_with url: employer_access_path(@employer.slug), class: "card" do |f| %>
+    <div class="field"><%= f.label :code, "Access code" %><%= f.password_field :code, required: true, autocomplete: "off" %></div>
+    <%= f.submit "Open dashboard", class: "btn btn-primary btn-block" %>
+    <p class="hint">Demo code: northwind-demo</p>
+  <% end %>
+</div></section>

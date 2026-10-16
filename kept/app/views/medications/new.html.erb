@@ -1,0 +1,14 @@
+<% content_for :title, "Set up · Kept" %>
+<div class="topline"><div><span class="eyebrow">Step 1 of 1</span><h1>Your medicine and starting point</h1></div></div>
+<section class="card" style="max-width:720px">
+  <%= form_with model: @medication, url: medication_path do |f| %>
+    <%= render "form", f:, medication: @medication %>
+    <div class="row">
+      <div class="field"><%= label_tag "profile[height]", "Height (#{height_unit})" %><%= number_field_tag "profile[height]", height_value(current_user.height_cm), step: 0.5, required: true %></div>
+      <div class="field"><%= label_tag "profile[weight]", "Today’s weight (#{weight_unit})" %><%= number_field_tag "profile[weight]", nil, step: 0.1, required: true %></div>
+      <div class="field"><%= label_tag "profile[goal_weight]", "Goal weight (#{weight_unit}, optional)" %><%= number_field_tag "profile[goal_weight]", nil, step: 0.1 %></div>
+    </div>
+    <div class="field"><%= label_tag "profile[coverage]", "How it’s paid for" %><%= select_tag "profile[coverage]", options_for_select(CostOptions::COVERAGE.invert, current_user.coverage) %></div>
+    <%= f.submit "Start", class: "btn btn-primary" %>
+  <% end %>
+</section>

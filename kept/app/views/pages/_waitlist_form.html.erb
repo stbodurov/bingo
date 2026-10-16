@@ -1,0 +1,19 @@
+<%= form_with model: signup, url: waitlist_signups_path, class: "card" do |f| %>
+  <% if signup.errors.any? %><div class="errors"><%= signup.errors.full_messages.to_sentence %></div><% end %>
+  <div class="row">
+    <div class="field"><%= f.label :first_name %><%= f.text_field :first_name, maxlength: 80, autocomplete: "given-name" %></div>
+    <div class="field"><%= f.label :email %><%= f.email_field :email, required: true, autocomplete: "email" %></div>
+  </div>
+  <div class="field"><%= f.label :role, "I’m…" %><%= f.select :role, WaitlistSignup::ROLES.invert %></div>
+  <% if signup.role == "employer" %>
+    <div class="field"><%= f.label :company, "Company or health plan" %><%= f.text_field :company, maxlength: 80 %></div>
+  <% else %>
+    <div class="row">
+      <div class="field"><%= f.label :drug, "Medicine" %><%= f.select :drug, [["Not sure yet", "none"]] + DrugCatalog.options, include_blank: "Choose…" %></div>
+      <div class="field"><%= f.label :stage, "Where you are" %><%= f.select :stage, WaitlistSignup::STAGES.invert, include_blank: "Choose…" %></div>
+    </div>
+  <% end %>
+  <div class="hp" aria-hidden="true"><%= f.label :website %><%= f.text_field :website, tabindex: -1, autocomplete: "off" %></div>
+  <%= f.submit "Join the waitlist", class: "btn btn-primary btn-block" %>
+  <p class="hint">One email when your spot opens. We never sell your data.</p>
+<% end %>

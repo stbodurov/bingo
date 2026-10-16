@@ -1,0 +1,10 @@
+<% content_for :title, "Letter of medical necessity (draft)" %>
+<% med = @o.medication; tr = @o.trend %>
+<p style="color:#555;font-size:12px">Draft prepared by Kept for your prescriber to review, edit and sign. Kept does not submit appeals.</p>
+<p><%= Date.current.strftime("%B %-d, %Y") %></p>
+<p>To: Pharmacy Benefit Appeals<br>Re: <%= current_user.name.presence || "[Patient name]" %> — request for coverage of <%= med.info.brand %> (<%= med.info.generic %>)</p>
+<p>I am writing to request coverage of <%= med.info.brand %> <%= mg med.dose_mg %> for my patient, who has been treated since <%= med.started_on.strftime("%B %Y") %> for <%= med.info.indication.downcase %>.</p>
+<p>Before treatment, the patient weighed <%= weight(tr.start_weight) %><%= " (BMI #{Targets.new(current_user, tr.start_weight).bmi})" if tr.start_weight && current_user.height_cm %>. On therapy they have lost <%= tr.total_loss_pct %>% of body weight with <%= @o.schedule.adherence_pct %>% dose adherence, alongside a structured program of protein intake (<%= @o.targets.protein_g %> g/day target) and resistance training to preserve lean mass.</p>
+<p>Discontinuation is associated with regain of most lost weight within a year, which would reverse the clinical benefit already achieved. [Add comorbidities: e.g. hypertension, dyslipidemia, prediabetes/type 2 diabetes, obstructive sleep apnea, cardiovascular disease.] [Add prior interventions tried and dates.]</p>
+<p>I certify that this treatment is medically necessary and request that the coverage decision be reconsidered.</p>
+<p>Sincerely,<br><br>[Prescriber name, credentials, NPI]<br>[Practice, phone]</p>
