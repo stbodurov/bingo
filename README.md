@@ -59,3 +59,6 @@ npm test
 22 11 13  6  5
 2  0 12  3  7
 ```
+## Also in this repository
+
+Four startup builds, each self-contained in its own folder: [Singleton](singleton/), [Harbormaster](harbormaster/), [Sundial](sundial/) and [Kept](kept/). See [STARTUPS.md](STARTUPS.md) for the overview.
