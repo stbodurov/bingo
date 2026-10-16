@@ -112,9 +112,9 @@ td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; }
 .ring { position: relative; display: inline-grid; place-items: center; }
 .ring svg { position: absolute; inset: 0; }
 .ring circle { transition: stroke-dasharray .5s ease; }
-.ring-label { position: relative; text-align: center; line-height: 1.15; }
+.ring-label { position: relative; text-align: center; line-height: 1.15; max-width: calc(100% - 30px); }
 .ring-label strong { display: block; font-size: 1.3rem; font-variant-numeric: tabular-nums; }
-.ring-label span { font-size: .74rem; color: var(--muted); font-weight: 650; }
+.ring-label span { display: block; font-size: .7rem; text-wrap: balance; color: var(--muted); font-weight: 650; }
 .rings { display: flex; gap: 16px; flex-wrap: wrap; justify-content: space-around; }
 .bar { height: 10px; background: var(--track); border-radius: 999px; overflow: hidden; }
 .bar > i { display: block; height: 100%; background: var(--brand); border-radius: 999px; }
