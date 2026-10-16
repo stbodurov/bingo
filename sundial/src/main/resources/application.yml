@@ -1,0 +1,37 @@
+server:
+  port: ${PORT:4203}
+  forward-headers-strategy: framework
+  servlet:
+    session:
+      cookie:
+        name: SUNDIAL_SESSION
+        same-site: lax
+        http-only: true
+      timeout: 14d
+  compression:
+    enabled: true
+    mime-types: application/json,text/html,text/css,application/javascript
+spring:
+  application:
+    name: sundial
+  datasource:
+    url: ${SUNDIAL_DB_URL:jdbc:h2:file:./data/sundial;MODE=PostgreSQL;AUTO_SERVER=TRUE}
+    username: ${SUNDIAL_DB_USER:sa}
+    password: ${SUNDIAL_DB_PASSWORD:}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+  jackson:
+    default-property-inclusion: non_null
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+sundial:
+  monte-carlo-paths: ${SUNDIAL_PATHS:1000}
+  admin-token: ${SUNDIAL_ADMIN_TOKEN:dev-admin}
+  rate-limit: ${RATE_LIMIT:on}

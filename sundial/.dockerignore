@@ -1,0 +1,5 @@
+build
+.gradle
+data
+web/node_modules
+src/main/resources/static

@@ -1,0 +1,1 @@
+{"root":["./src/main.tsx","./src/components/Layout.tsx","./src/components/Results.tsx","./src/components/charts.tsx","./src/lib/api.ts","./src/lib/format.ts","./src/lib/types.ts","./src/pages/Account.tsx","./src/pages/Auth.tsx","./src/pages/Landing.tsx","./src/pages/Planner.tsx","./src/pages/Static.tsx","./src/pages/Waitlist.tsx"],"version":"5.6.3"}
