@@ -125,4 +125,25 @@ class EngineTest {
         var y0 = a.years().get(0);
         assertThat(y0.spendingMet()).isCloseTo(y0.spendingTarget(), within(1.0));
     }
+
+    @Test
+    void claimingTitleNamesEachSpouse() {
+        Person ellen = new Person("Ellen", 1963, 4, 14, Sex.FEMALE, Health.GOOD, 2_380, 64, 118_000, 0);
+        Person marcus = new Person("Marcus", 1965, 9, 3, Sex.MALE, Health.AVERAGE, 3_140, 65, 142_000, 0);
+        assertThat(Planner.claimingTitle(List.of(ellen, marcus), new int[]{66 * 12 + 1, 70 * 12}))
+                .isEqualTo("Claim Social Security: Ellen at 66 and 1 month, Marcus at 70");
+        assertThat(Planner.claimingTitle(List.of(ellen), new int[]{67 * 12 + 6}))
+                .isEqualTo("Claim Social Security at 67 and 6 months");
+    }
+
+    @Test
+    void paycheckDepositsAddUpToTheHeadlinePaycheck() {
+        var plan = new Planner(Samples.couple(), LocalDate.of(2026, 10, 16), 200).build();
+        var month = plan.paycheck().get(0);
+        System.out.printf("headline %.0f, deposits %.0f, lines %s%n", plan.summary().monthlyPaycheck(), month.total(), month.lines());
+        // Ellen collects her own full benefit; it must not be diluted by Marcus, who claims later.
+        var ellen = month.lines().stream().filter(l -> l.source().contains("Ellen")).findFirst().orElseThrow();
+        assertThat(ellen.amount()).isGreaterThan(1_500);
+        assertThat(month.total()).isCloseTo(plan.summary().monthlyPaycheck(), within(plan.summary().monthlyPaycheck() * 0.05));
+    }
 }

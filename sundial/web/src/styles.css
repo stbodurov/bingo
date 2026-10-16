@@ -46,7 +46,7 @@ a { color: var(--dusk); text-underline-offset: 3px; }
 .muted { color: var(--muted); }
 .small { font-size: .88rem; }
 .eyebrow { display: inline-block; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; font-size: .78rem; color: var(--sun-2); margin-bottom: 12px; }
-.num { font-variant-numeric: tabular-nums; }
+.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 2px solid transparent; border-radius: 999px;

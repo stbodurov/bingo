@@ -4,6 +4,14 @@
 Social Security, which account to draw from each year, how much to convert to Roth, how
 much income to guarantee — and turns it into a monthly paycheck with taxes set aside.
 
+![Sundial landing page](docs/img/landing.png)
+
+![A couple's plan](docs/img/plan-overview.png)
+
+| Social Security timing | Confidence over markets and lifespans | The monthly paycheck |
+|---|---|---|
+| ![Social Security](docs/img/tab-social_security.png) | ![Confidence](docs/img/tab-confidence.png) | ![Paycheck](docs/img/tab-paycheck.png) |
+
 ## What's inside
 | Area | Where |
 |---|---|

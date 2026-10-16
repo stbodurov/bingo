@@ -254,15 +254,24 @@ public final class Planner {
             LocalDate m = start.plusMonths(k);
             List<PaycheckLine> lines = new ArrayList<>();
             double total = 0;
-            for (int i = 0; i < h.people().size(); i++) {
+            // The year's Social Security, split into each person's monthly check: weights are each
+            // benefit (own or spousal, whichever is higher) times the months it's paid this year.
+            int n = h.people().size();
+            double[] weight = new double[n];
+            double denom = 0;
+            for (int i = 0; i < n; i++) {
                 Person p = h.people().get(i);
-                if (Simulator.monthsCollecting(p, claims[i], m.getYear()) == 0) continue;
+                int paid = Simulator.monthsCollecting(p, claims[i], y.year());
+                if (paid <= 0) continue;
+                weight[i] = n == 1 ? 1 : SocialSecurity.withSpousal(p, claims[i], h.people().get(1 - i));
+                denom += weight[i] * paid;
+            }
+            for (int i = 0; i < n; i++) {
+                Person p = h.people().get(i);
                 int claimIndex = p.birthYear() * 12 + p.birthMonth() - 1 + claims[i];
-                if (m.getYear() * 12 + m.getMonthValue() - 1 <= claimIndex) continue; // paid the month after
+                if (weight[i] <= 0 || denom <= 0 || m.getYear() * 12 + m.getMonthValue() - 1 <= claimIndex) continue; // paid the month after
                 LocalDate wed = m.with(TemporalAdjusters.dayOfWeekInMonth(SocialSecurity.depositWednesday(p.birthDay()), DayOfWeek.WEDNESDAY));
-                double share = h.people().size() == 1 ? 1 : SocialSecurity.withSpousal(p, claims[i], h.people().get(1 - i))
-                        / (SocialSecurity.withSpousal(h.people().get(0), claims[0], h.people().get(1)) + SocialSecurity.withSpousal(h.people().get(1), claims[1], h.people().get(0)));
-                double amt = y.socialSecurity() / 12 * share / I;
+                double amt = y.socialSecurity() * weight[i] / denom / I;
                 if (amt <= 0) continue;
                 lines.add(new PaycheckLine(wed.toString(), "Social Security — " + p.name(), amt, "Deposited on the " + ordinal(SocialSecurity.depositWednesday(p.birthDay())) + " Wednesday"));
                 total += amt;
@@ -303,7 +312,7 @@ public final class Planner {
     private List<Insight> insights(Summary s, ClaimingView c, List<StrategyView> strategies, StrategyView chosen,
                                    FloorView floor, List<Scenario> scenarios, Simulator.Run det, boolean userChose) {
         List<Insight> out = new ArrayList<>();
-        out.add(new Insight("claiming", "Claim Social Security at " + ages(c.recommended()),
+        out.add(new Insight("claiming", claimingTitle(h.people(), c.recommended()),
                 String.format("Compared with claiming as early as possible, this adds about $%,.0f of expected lifetime benefits in today's dollars, weighted by how long you're likely to live.%s", c.gainVsEarliest(),
                         h.married() ? " Delaying the higher earner also raises the survivor's check for life." : ""),
                 c.gainVsEarliest()));
@@ -340,13 +349,21 @@ public final class Planner {
         return out;
     }
 
-    static String ages(int[] months) {
-        StringBuilder sb = new StringBuilder();
+    /** "Claim Social Security at 70", or for a couple "Claim Social Security: Ellen at 66 and 1 month, Marcus at 70". */
+    static String claimingTitle(List<Model.Person> people, int[] months) {
+        if (months.length == 1) return "Claim Social Security at " + age(months[0]);
+        StringBuilder sb = new StringBuilder("Claim Social Security: ");
         for (int i = 0; i < months.length; i++) {
-            if (i > 0) sb.append(" and ");
-            int y = months[i] / 12, m = months[i] % 12;
-            sb.append(y).append(m > 0 ? " and " + m + " month" + (m > 1 ? "s" : "") : "");
+            if (i > 0) sb.append(", ");
+            String name = i < people.size() && people.get(i).name() != null && !people.get(i).name().isBlank()
+                    ? people.get(i).name() : (i == 0 ? "you" : "your spouse");
+            sb.append(name).append(" at ").append(age(months[i]));
         }
         return sb.toString();
+    }
+
+    static String age(int months) {
+        int y = months / 12, m = months % 12;
+        return y + (m > 0 ? " and " + m + " month" + (m > 1 ? "s" : "") : "");
     }
 }
