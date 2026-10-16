@@ -1,0 +1,15 @@
+{{define "title"}}Waitlist admin — Singleton{{end}}
+{{define "content"}}
+<header class="app-top"><a class="logo" href="/">{{template "logo"}}<span>Singleton <span class="muted" style="font-weight:500">Waitlist</span></span></a></header>
+<div class="wrap" style="padding:28px 0 80px">
+  {{if .Locked}}
+  <form method="get" class="panel panel-body stack" style="max-width:420px;margin:40px auto"><h1 style="font-size:22px">Admin token required</h1><label class="f">Token<input name="token" type="password" autocomplete="off"></label><button class="btn btn-lime">Open</button><p class="tiny muted">Set ADMIN_TOKEN in the environment (default dev-admin).</p></form>
+  {{else}}
+  <div class="row between wrap"><h1 style="font-size:28px">Waitlist</h1><a class="btn btn-sm" href="/admin/waitlist.csv?token={{.Token}}">Export CSV</a></div>
+  <div class="grid3 mt16"><div class="panel kpi"><div class="l">People</div><div class="v">{{num .People}}</div></div><div class="panel kpi"><div class="l">Platforms</div><div class="v">{{num .Platforms}}</div></div><div class="panel kpi"><div class="l">Total</div><div class="v">{{num (add .People .Platforms)}}</div></div></div>
+  <div class="panel mt16" style="overflow-x:auto"><table class="t"><thead><tr><th>Email</th><th>Track</th><th>Company</th><th>Use case</th><th>Volume</th><th>Region</th><th class="num">Priority</th><th class="num">Refs</th><th class="num">PoW bits</th><th>Joined</th></tr></thead><tbody>
+    {{range .Rows}}<tr><td>{{.Email}}</td><td><span class="badge {{if eq .Track "platform"}}lime{{else}}info{{end}}">{{.Track}}</span></td><td>{{.Company}}</td><td class="small">{{.UseCase}}</td><td class="small">{{.Volume}}</td><td class="small">{{upper .Region}}</td><td class="num">{{.Priority}}</td><td class="num">{{.Referrals}}</td><td class="num">{{.PowBits}}</td><td class="small muted">{{ago .CreatedAt}}</td></tr>{{else}}<tr><td colspan="10" class="empty">No signups yet.</td></tr>{{end}}
+  </tbody></table></div>
+  {{end}}
+</div>
+{{end}}

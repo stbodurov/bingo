@@ -1,0 +1,23 @@
+{{define "title"}}Billing{{end}}
+{{define "crumb"}}Billing{{end}}
+{{define "content"}}
+<div class="c-head"><div><h1>Billing</h1><p>Usage for {{.Inv.Period}}. Only live-mode verified and duplicate sessions are billable; failures and test mode are free.</p></div></div>
+<div class="grid4">
+  <div class="panel kpi"><div class="l">Billable verifications</div><div class="v">{{num .Inv.Billable}}</div><div class="d">{{num .Inv.Plan.Included}} included</div></div>
+  <div class="panel kpi"><div class="l">Premium predicates</div><div class="v">{{num .Inv.Premium}}</div><div class="d">age &amp; region proofs</div></div>
+  <div class="panel kpi"><div class="l">Test mode</div><div class="v">{{num .Inv.TestMode}}</div><div class="d">free</div></div>
+  <div class="panel kpi"><div class="l">Estimated invoice</div><div class="v">{{money .Inv.Total}}</div><div class="d">platform {{money .Inv.Platform}} + usage {{money .Inv.UsageCost}}</div></div>
+</div>
+{{if .Inv.OverLimit}}<div class="notice warn mt16">You are over the Developer plan's free allowance this month — upgrade to Growth to keep verifying without interruption.</div>{{end}}
+<div class="pricing mt16">
+  {{range .Plans}}
+  <div class="price {{if eq .ID $.Inv.Plan.ID}}pop{{end}}">
+    <h3>{{.Name}}</h3>
+    <div class="amt" style="font-size:28px">{{if eq .ID "enterprise"}}Custom{{else if eq .ID "growth"}}$0.05<small> / human</small>{{else}}{{money .MonthlyFee}}<small> / mo</small>{{end}}</div>
+    <p>{{.Description}}</p>
+    {{if eq .ID $.Inv.Plan.ID}}<span class="badge lime plain" style="margin-top:auto">Current plan</span>{{else}}
+    <form method="post" action="/console/billing/plan" style="margin-top:auto"><input type="hidden" name="_csrf" value="{{$.C.CSRF}}"><input type="hidden" name="plan" value="{{.ID}}"><button class="btn btn-sm" style="width:100%">Switch to {{.Name}}</button></form>{{end}}
+  </div>
+  {{end}}
+</div>
+{{end}}

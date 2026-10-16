@@ -1,0 +1,6 @@
+/data/
+/bin/
+web/static/wasm/wallet.wasm
+*.db
+*.db-shm
+*.db-wal

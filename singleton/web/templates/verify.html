@@ -1,0 +1,24 @@
+{{define "title"}}Verify with Singleton · {{.App.Name}}{{end}}
+{{define "content"}}
+<header class="app-top">
+  <a class="logo" href="/" target="_blank" rel="noopener">{{template "logo"}}<span>Singleton</span></a>
+  {{if eq .App.Mode "test"}}<span class="badge info">test mode</span>{{else}}<span class="badge good plain">secure consent</span>{{end}}
+</header>
+<div class="app-wrap">
+  <div class="consent" id="consent"
+       data-session="{{.Session.ID}}" data-scope="{{.Session.Scope}}" data-challenge="{{.Session.Challenge}}"
+       data-required='{{json .Session.Required}}' data-status="{{.Session.Status}}" data-origin="{{.Session.Origin}}"
+       data-return="{{.Session.ReturnURL}}" data-app="{{.App.Name}}">
+    <div class="who"><i style="background:{{.App.Color}}">{{slice .App.Name 0 1}}</i><div><h1>{{.App.Name}}</h1><p class="small muted">wants to confirm{{if .Session.Action}} for <span class="mono">{{.Session.Action}}</span>{{end}}</p></div></div>
+    <div class="share-list">
+      {{range .Defs}}<div><span class="y">✓</span><span><b>{{.Label}}</b> <span class="muted small">— {{.Description}}</span></span></div>{{end}}
+      <div><span class="n">✕</span><span class="lbl-n">Your name, birthday, address or ID document</span></div>
+      <div><span class="n">✕</span><span class="lbl-n">Which other apps you use, or your pseudonym there</span></div>
+      <div><span class="n">✕</span><span class="lbl-n">Which Singleton Pass you hold</span></div>
+    </div>
+    <div id="v-body"><div class="center muted"><span class="spinner"></span> Checking your Pass…</div></div>
+  </div>
+  <p class="tiny muted center mt16">Your proof is generated on this device. {{.App.Name}} receives a yes/no and a pseudonym that exists only inside {{.App.Name}}.</p>
+</div>
+{{end}}
+{{define "scripts"}}<script src="/static/js/core.js" defer></script><script src="/static/js/verify.js" defer></script>{{end}}

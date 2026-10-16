@@ -1,0 +1,39 @@
+{{define "title"}}Partner console — Singleton{{end}}
+{{define "content"}}
+<header class="app-top"><a class="logo" href="/">{{template "logo"}}<span>Singleton <span class="muted" style="font-weight:500">Partner</span></span></a><span class="badge info">In-person attestation</span></header>
+<div class="app-wrap" style="width:min(640px,100% - 32px)">
+  {{if not .LoggedIn}}
+  <div class="panel panel-body stack">
+    <h1 style="font-size:24px">Partner sign-in</h1>
+    <p class="soft small">For trained staff at partner pharmacies and post offices. You inspect a physical ID; Singleton keeps only keyed hashes.</p>
+    {{if .Error}}<div class="notice bad">{{.Error}}</div>{{end}}
+    <form method="post" action="/attester/login" class="stack"><label class="f">Partner token<input type="password" name="token" autocomplete="off"></label><button class="btn btn-lime">Sign in</button></form>
+    <form method="post" action="/attester/login"><input type="hidden" name="demo" value="1"><button class="btn" style="width:100%">Continue as demo agent</button></form>
+  </div>
+  {{else}}
+  <h1 style="font-size:26px">Waiting customers</h1>
+  <p class="soft small mt8">Ask for the customer's 6-character code and a physical ID. Check the photo matches the person in front of you. Enter details exactly as printed.</p>
+  {{if .OK}}<div class="notice good mt16">{{.OK}}</div>{{end}}
+  {{if .Error}}<div class="notice bad mt16">{{.Error}}</div>{{end}}
+  <div class="stack mt16">
+  {{range .Pending}}
+    <form class="panel panel-body stack" method="post" action="/attester/decide">
+      <input type="hidden" name="_csrf" value="{{$.CSRF}}"><input type="hidden" name="code" value="{{.Code}}">
+      <div class="row between"><div class="share-code" style="font-size:22px;padding:8px 14px">{{.Code}}</div><span class="small muted">requested {{ago .CreatedAt}} · key {{fp .PubKey}}</span></div>
+      <div class="form-grid">
+        <label class="f">Given name<input name="given_name" required></label>
+        <label class="f">Family name<input name="family_name" required></label>
+        <label class="f">Date of birth<input name="birth_date" type="date" required></label>
+        <label class="f">Document number<input name="document_number" required></label>
+        <label class="f">Issuing country<select name="issuing_country"><option value="US">United States</option><option value="GB">United Kingdom</option><option value="AU">Australia</option><option value="DE">Germany</option><option value="FR">France</option><option value="CA">Canada</option></select></label>
+        <label class="f">Document type<select name="doc_type"><option value="drivers_licence">Driver's licence</option><option value="passport">Passport</option><option value="national_id">National ID card</option></select></label>
+      </div>
+      <div class="row"><button class="btn btn-lime" name="decision" value="approve">Approve — ID checked in person</button><button class="btn btn-danger" name="decision" value="reject" formnovalidate>Reject</button></div>
+    </form>
+  {{else}}
+    <div class="panel empty">No one is waiting. Customers get a code from <a href="/pass">their Pass</a> → "In person".</div>
+  {{end}}
+  </div>
+  {{end}}
+</div>
+{{end}}

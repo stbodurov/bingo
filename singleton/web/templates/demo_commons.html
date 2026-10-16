@@ -1,0 +1,24 @@
+{{define "title"}}Commons — demo{{end}}
+{{define "content"}}
+{{template "demobar" .}}
+<div id="demo" data-pk="{{.PK}}" data-app="commons" data-act="{{.D.Action}}" data-required='["human"]' style="min-height:100vh;background:radial-gradient(900px 500px at 50% -10%, rgba(157,180,255,.15), transparent 60%)">
+  <div class="app-wrap" style="width:min(560px,100% - 32px)">
+    <span class="eyebrow" style="color:var(--blue)">Commons · neighbourhood poll</span>
+    <h1 style="font-size:36px;margin-top:10px;letter-spacing:-0.035em">What should replace the old car park?</h1>
+    <p class="soft mt16">One vote per person, verified — and anonymous. Commons learns that a unique human voted, never who. Vouched passes count too, so neighbours without ID can take part.</p>
+    {{$total := add (add (index .Tally "meadow") (index .Tally "playground")) (index .Tally "courts")}}
+    <div class="stack mt24">
+      {{range $opt := sliceOf "meadow" "playground" "courts"}}
+      <div class="panel" style="padding:16px">
+        <div class="row between"><b>{{if eq $opt "meadow"}}🌼 Wildflower meadow{{else if eq $opt "playground"}}🛝 Adventure playground{{else}}🏀 Basketball courts{{end}}</b><span class="mono small">{{index $.Tally $opt}} votes</span></div>
+        <div class="hbar" style="grid-template-columns:1fr 50px;margin-top:6px"><div class="bar" style="background:var(--blue);width:{{widthPct (index $.Tally $opt) (add $total 0)}}%"></div><span class="val">{{if $total}}{{pct (div (index $.Tally $opt) $total)}}{{else}}0%{{end}}</span></div>
+        <button class="btn btn-sm mt8" data-go data-choice="{{$opt}}">Vote for this</button>
+      </div>
+      {{end}}
+    </div>
+    <div id="demo-out" class="mt16"></div>
+    <p class="tiny muted mt16">Your vote is bound to a pseudonym that exists only inside <span class="mono">{{.D.Action}}</span>. A different poll gets a different pseudonym, so even your voting history can't be linked.</p>
+  </div>
+</div>
+{{end}}
+{{define "scripts"}}<script src="/sdk/singleton.js"></script><script src="/static/js/demo.js" defer></script>{{end}}

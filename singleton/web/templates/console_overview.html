@@ -1,0 +1,68 @@
+{{define "title"}}Overview{{end}}
+{{define "crumb"}}Overview{{end}}
+{{define "content"}}
+<div class="c-head">
+  <div><h1>Overview</h1><p>Every human verified across your apps in the last {{.Range}} days. Pseudonyms are app-scoped; no personal data reaches you or us.</p></div>
+  <div class="row"><a class="btn btn-sm {{if eq .Range 7}}btn-lime{{end}}" href="/console?range=7">7 days</a><a class="btn btn-sm {{if eq .Range 30}}btn-lime{{end}}" href="/console">30 days</a></div>
+</div>
+
+{{if eq .Stats.Sessions 0}}
+<div class="panel mb16"><div class="panel-body">
+  <h3>Get to your first verified human</h3>
+  <ol class="soft" style="margin:10px 0 0 18px;line-height:2">
+    <li><a href="/console/apps">Create an app</a> and copy its keys.</li>
+    <li>Add your site's origin and pick the predicates you need.</li>
+    <li>Drop in <code>/sdk/singleton.js</code> or call <code>POST /v1/sessions</code> — <a href="/docs">quickstart</a>.</li>
+    <li>Use "Run a test verification" on the app page with your own <a href="/pass">Singleton Pass</a>.</li>
+  </ol>
+</div></div>
+{{end}}
+
+<div class="grid4">
+  <div class="panel kpi"><div class="l">Verified humans</div><div class="v">{{num .Stats.Verified}}</div><div class="d">{{pct .Stats.Conversion}} of sessions completed</div>{{sparkline .Stats.Days}}</div>
+  <div class="panel kpi"><div class="l">Duplicate accounts caught</div><div class="v">{{num .Stats.Duplicates}}</div><div class="d">same human, different account</div></div>
+  <div class="panel kpi"><div class="l">Unique humans (all time)</div><div class="v">{{num .Stats.UniqueHumans}}</div><div class="d">distinct app-scoped pseudonyms</div></div>
+  <div class="panel kpi"><div class="l">Median time to verify</div><div class="v">{{printf "%.1f" .Stats.MedianSeconds}}s</div><div class="d">from session start to proof</div></div>
+</div>
+
+<div class="panel mt16">
+  <div class="panel-head">
+    <div><h2>Outcomes per day</h2><p>Stacked by result</p></div>
+    <div class="legend" aria-label="Legend">
+      <span><i style="background:var(--good)"></i>✓ Verified</span>
+      <span><i style="background:var(--warning)"></i>⚠ Duplicate</span>
+      <span><i style="background:var(--critical)"></i>✕ Failed</span>
+      <span><i style="background:var(--neutral)"></i>○ Abandoned</span>
+    </div>
+  </div>
+  <div class="panel-body chart-wrap" data-chart>{{stacked .Stats.Days}}</div>
+</div>
+
+<div class="grid2 mt16">
+  <div class="panel">
+    <div class="panel-head"><h2>Predicates proven</h2><p>{{.Range}} days</p></div>
+    <div class="panel-body">
+      {{$max := maxOf .Stats.Predicates}}
+      {{range .Preds}}<div class="hbar"><span class="soft">{{.Label}}</span><div class="bar" style="width:{{widthPct .N $max}}%"></div><span class="val">{{num .N}}</span></div>{{else}}<p class="muted">No proofs yet.</p>{{end}}
+    </div>
+  </div>
+  <div class="panel">
+    <div class="panel-head"><h2>This month's bill</h2><a class="btn btn-sm" href="/console/billing">Billing</a></div>
+    <div class="panel-body">
+      <dl class="kv">
+        <dt>Plan</dt><dd>{{.Invoice.Plan.Name}}</dd>
+        <dt>Billable verifications</dt><dd>{{num .Invoice.Billable}}</dd>
+        <dt>Premium predicates</dt><dd>{{num .Invoice.Premium}}</dd>
+        <dt>Test-mode (free)</dt><dd>{{num .Invoice.TestMode}}</dd>
+        <dt>Estimated total</dt><dd><b style="font-size:20px">{{money .Invoice.Total}}</b></dd>
+      </dl>
+      <p class="tiny muted mt16">The same volume through document + selfie KYC at $1.35 a check would cost about <b>{{money (mulf .Invoice.Billable 1.35)}}</b>.</p>
+    </div>
+  </div>
+</div>
+
+<div class="panel mt16">
+  <div class="panel-head"><h2>Latest verifications</h2><a class="btn btn-sm" href="/console/sessions">View all</a></div>
+  <div style="overflow-x:auto">{{template "sessionsTable" dict "Sessions" .Recent "Apps" .Apps}}</div>
+</div>
+{{end}}

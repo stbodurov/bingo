@@ -1,0 +1,14 @@
+{{define "title"}}Singleton Pass{{end}}
+{{define "content"}}
+<header class="app-top">
+  <a class="logo" href="/">{{template "logo"}}<span>Singleton <span class="muted" style="font-weight:500">Pass</span></span></a>
+  <a class="btn btn-sm btn-ghost" href="/demo/driftwood">Try a demo app →</a>
+</header>
+<div class="app-wrap">
+  <div id="pass-root" data-issuers='{{json .Issuers}}' data-sets='{{json .Sets}}'>
+    <div class="center muted" style="padding:80px 0"><span class="spinner"></span> Loading your pass…</div>
+  </div>
+  <p class="tiny muted center mt32">Your key is generated and kept in this browser. Singleton's servers never see it. This sandbox uses simulated issuers — don't enter real ID numbers.</p>
+</div>
+{{end}}
+{{define "scripts"}}<script src="/static/js/core.js" defer></script><script src="/static/js/pass.js" defer></script>{{end}}

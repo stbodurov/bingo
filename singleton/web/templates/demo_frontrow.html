@@ -1,0 +1,22 @@
+{{define "title"}}Front Row — demo{{end}}
+{{define "content"}}
+{{template "demobar" .}}
+<div id="demo" data-pk="{{.PK}}" data-app="frontrow" data-act="{{.D.Action}}" data-required='["human_doc"]' style="min-height:100vh;background:radial-gradient(900px 500px at 20% -10%, rgba(255,184,107,.16), transparent 60%)">
+  <div class="app-wrap" style="width:min(560px,100% - 32px)">
+    <span class="eyebrow" style="color:var(--amber)">Fall Tour 2026 · ticket drop</span>
+    <h1 style="font-size:42px;margin-top:10px;letter-spacing:-0.04em">One ticket per human.</h1>
+    <p class="soft mt16">Front Row scopes each drop to a single action, so a person can claim exactly once — however many accounts, emails or bots they bring. Scalper bots can't get a Pass; a real person can't get two.</p>
+    <div class="grid3 mt24">
+      <div class="panel kpi"><div class="l">Claimed</div><div class="v">{{len .Records}}{{if ge (len .Records) 12}}+{{end}}</div></div>
+      <div class="panel kpi"><div class="l">Price</div><div class="v">$45</div><div class="d">face value, always</div></div>
+      <div class="panel kpi"><div class="l">Requires</div><div class="v" style="font-size:16px;margin-top:12px">Doc-verified human</div></div>
+    </div>
+    <button class="btn btn-lime btn-lg mt24" style="width:100%;background:var(--amber);border-color:var(--amber)" data-go>Claim my ticket</button>
+    <div id="demo-out" class="mt16"></div>
+    <div class="panel mt24"><div class="panel-head"><h3>Recent claims</h3><span class="tiny muted mono">scope {{.D.Action}}</span></div>
+      <div class="list" style="border:0;border-radius:0">{{range .Records}}<div class="li"><div class="ico">🎟</div><div class="grow"><b>Seat {{.Value}}</b><small class="mono">{{pseudonym .Nullifier}}</small></div><small>{{ago .CreatedAt}}</small></div>{{else}}<div class="li"><div class="grow muted small">No claims yet.</div></div>{{end}}</div>
+    </div>
+  </div>
+</div>
+{{end}}
+{{define "scripts"}}<script src="/sdk/singleton.js"></script><script src="/static/js/demo.js" defer></script>{{end}}

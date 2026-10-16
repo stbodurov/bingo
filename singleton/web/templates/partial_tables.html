@@ -1,0 +1,20 @@
+{{define "sessionsTable"}}
+{{if .Sessions}}
+<table class="t">
+  <thead><tr><th>Status</th><th>App</th><th>Predicates</th><th>Pseudonym</th><th>Reference</th><th class="num">Time</th><th>When</th></tr></thead>
+  <tbody>
+  {{range .Sessions}}
+    <tr>
+      <td><a href="/console/sessions/{{.ID}}"><span class="badge {{statusClass .Status}}">{{.Status}}</span></a></td>
+      <td>{{with index $.Apps .AppID}}{{.Name}}{{end}}{{if .Action}}<div class="tiny muted mono">{{.Action}}</div>{{end}}</td>
+      <td class="small soft">{{range $i, $p := .Required}}{{if $i}}, {{end}}{{setLabel $p}}{{end}}</td>
+      <td class="hex">{{if .Nullifier}}{{pseudonym .Nullifier}}{{else}}—{{end}}</td>
+      <td class="small">{{if .DuplicateOf}}<span class="soft">{{.Reference}}</span> <span class="muted">→ already</span> {{.DuplicateOf}}{{else}}{{.Reference}}{{end}}</td>
+      <td class="num small">{{if .DurationMS}}{{printf "%.1f" (div .DurationMS 1000)}}s{{else}}—{{end}}</td>
+      <td class="small muted nowrap">{{ago .CreatedAt}}</td>
+    </tr>
+  {{end}}
+  </tbody>
+</table>
+{{else}}<div class="empty">No verifications yet.</div>{{end}}
+{{end}}

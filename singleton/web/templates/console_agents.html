@@ -1,0 +1,23 @@
+{{define "title"}}Agents{{end}}
+{{define "crumb"}}Agent delegations{{end}}
+{{define "content"}}
+<div class="c-head"><div><h1>Agent delegations</h1><p>AI agents acting for verified humans. Each delegation is signed inside your app's scope, so you know a real person stands behind the agent — and which of your users — without learning who they are.</p></div></div>
+<div class="grid3 mb16">
+  <div class="panel kpi"><div class="l">Active delegations</div><div class="v">{{.Active}}</div></div>
+  <div class="panel kpi"><div class="l">All time</div><div class="v">{{len .Delegations}}</div></div>
+  <div class="panel kpi"><div class="l">Verify endpoint</div><div class="v" style="font-size:15px;font-family:var(--mono);margin-top:12px">POST /v1/agents/verify</div></div>
+</div>
+<div class="panel" style="overflow-x:auto">
+  {{if .Delegations}}<table class="t"><thead><tr><th>Agent</th><th>App</th><th>For pseudonym</th><th>Permissions</th><th>Expires</th><th>Status</th><th></th></tr></thead><tbody>
+  {{range .Delegations}}<tr>
+    <td><b>{{.Label}}</b><div class="hex tiny">{{short .Agent 20}}</div></td>
+    <td>{{with index $.Apps .AppID}}{{.Name}}{{end}}</td>
+    <td class="hex">{{pseudonym .Nullifier}}</td>
+    <td class="small">{{join .Permissions ", "}}</td>
+    <td class="small muted">{{date .NotAfter}}</td>
+    <td>{{if .RevokedAt}}<span class="badge muted">revoked</span>{{else if isActive .NotAfter .RevokedAt}}<span class="badge good">active</span>{{else}}<span class="badge muted">expired</span>{{end}}</td>
+    <td>{{if isActive .NotAfter .RevokedAt}}<form method="post" action="/console/agents/{{.ID}}/revoke"><input type="hidden" name="_csrf" value="{{$.C.CSRF}}"><button class="btn btn-sm btn-danger" data-confirm="Revoke this agent's delegation?">Revoke</button></form>{{end}}</td>
+  </tr>{{end}}
+  </tbody></table>{{else}}<div class="empty">No agents yet. Humans create delegations from their Singleton Pass, or your app can request one via <code>POST /v1/delegations</code>.</div>{{end}}
+</div>
+{{end}}

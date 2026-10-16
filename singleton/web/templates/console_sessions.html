@@ -1,0 +1,14 @@
+{{define "title"}}Verifications{{end}}
+{{define "crumb"}}Verifications{{end}}
+{{define "content"}}
+<div class="c-head"><div><h1>Verifications</h1><p>The latest 200 sessions. Click a status for the full trace and the signed result token.</p></div></div>
+<div class="filters">
+  {{$app := .AppFilter}}
+  <a class="btn btn-sm {{if eq .Status ""}}btn-lime{{end}}" href="/console/sessions?app={{$app}}">All</a>
+  {{range $s := (sliceOf "verified" "duplicate" "failed" "expired" "pending")}}<a class="btn btn-sm {{if eq $.Status $s}}btn-lime{{end}}" href="/console/sessions?status={{$s}}&app={{$app}}">{{title $s}}</a>{{end}}
+  <span style="flex:1"></span>
+  <a class="btn btn-sm {{if eq $app ""}}btn-lime{{end}}" href="/console/sessions?status={{.Status}}">All apps</a>
+  {{range .C.Apps}}<a class="btn btn-sm {{if eq $app .ID}}btn-lime{{end}}" href="/console/sessions?status={{$.Status}}&app={{.ID}}">{{.Name}}</a>{{end}}
+</div>
+<div class="panel" style="overflow-x:auto">{{template "sessionsTable" dict "Sessions" .Sessions "Apps" .Apps}}</div>
+{{end}}

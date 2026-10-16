@@ -1,0 +1,62 @@
+{{define "layout"}}<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{block "title" .}}Console{{end}} · Singleton</title>
+<meta name="theme-color" content="#08080a">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/static/css/singleton.css">
+</head>
+<body>
+{{if .C}}
+<div class="c-shell" id="shell">
+  <aside class="c-side" aria-label="Console navigation">
+    <a class="logo" href="/console">{{template "logo"}}<span>Singleton</span></a>
+    <div class="c-org"><b>{{.C.Org.Name}}</b><span>{{title .C.Org.Plan}} plan{{if .C.Org.Demo}} · demo data{{end}}</span></div>
+    <nav class="c-nav">
+      <a href="/console" class="{{if eq .Active "overview"}}on{{end}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>Overview</a>
+      <a href="/console/apps" class="{{if eq .Active "apps"}}on{{end}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>Apps &amp; keys</a>
+      <a href="/console/sessions" class="{{if eq .Active "sessions"}}on{{end}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 6h13M8 12h13M8 18h13M3.5 6h.01M3.5 12h.01M3.5 18h.01"/></svg>Verifications</a>
+      <a href="/console/humans" class="{{if eq .Active "humans"}}on{{end}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>Humans &amp; duplicates</a>
+      <a href="/console/agents" class="{{if eq .Active "agents"}}on{{end}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9.5 13h.01M14.5 13h.01"/></svg>Agent delegations</a>
+      <div class="sep">Operate</div>
+      <a href="/console/webhooks" class="{{if eq .Active "webhooks"}}on{{end}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>Webhooks</a>
+      <a href="/console/compliance" class="{{if eq .Active "compliance"}}on{{end}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/></svg>Compliance</a>
+      <a href="/console/billing" class="{{if eq .Active "billing"}}on{{end}}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg>Billing</a>
+      <a href="/docs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M8 7l-5 5 5 5M16 7l5 5-5 5"/></svg>Docs</a>
+    </nav>
+    <div class="foot c-nav">
+      <a href="/transparency">Transparency</a>
+      <a href="/">Landing page</a>
+      <form method="post" action="/console/logout"><input type="hidden" name="_csrf" value="{{.C.CSRF}}"><button class="btn btn-ghost btn-sm" style="width:100%;justify-content:flex-start">Sign out · {{.C.User.Name}}</button></form>
+    </div>
+  </aside>
+  <div class="c-main">
+    <header class="c-top">
+      <button class="btn btn-ghost btn-sm c-burger" id="c-burger" aria-label="Menu">☰</button>
+      <div class="crumbs">{{.C.Org.Name}} / <b>{{block "crumb" .}}Console{{end}}</b></div>
+      <div class="sp"></div>
+      <a class="btn btn-sm" href="/demo/driftwood" target="_blank" rel="noopener">Demo apps ↗</a>
+      <a class="btn btn-sm btn-lime" href="/console/apps">+ New app</a>
+    </header>
+    <div class="c-body">
+      {{with .Flash}}
+        {{if .error}}<div class="flash err" role="alert">{{.error}}</div>{{end}}
+        {{if .ok}}<div class="flash ok" role="status">{{.ok}}
+          {{if .secret}}<div class="secret"><code id="secret-key">{{.secret}}</code><button class="btn btn-sm" type="button" data-copy="#secret-key">Copy</button></div>{{end}}
+          {{if .publishable}}<div class="secret"><code id="pk-key">{{.publishable}}</code><button class="btn btn-sm" type="button" data-copy="#pk-key">Copy</button></div>{{end}}
+        </div>{{end}}
+      {{end}}
+      {{template "content" .}}
+    </div>
+  </div>
+</div>
+{{else}}
+{{template "content" .}}
+{{end}}
+<script src="/static/js/console.js" defer></script>
+</body>
+</html>{{end}}

@@ -1,0 +1,21 @@
+{{define "title"}}Driftwood — demo{{end}}
+{{define "content"}}
+{{template "demobar" .}}
+<div id="demo" data-pk="{{.PK}}" data-app="driftwood" data-required='["human","age_over_16"]' style="min-height:100vh;background:radial-gradient(900px 500px at 80% -10%, rgba(124,242,196,.14), transparent 60%)">
+  <div class="app-wrap" style="width:min(520px,100% - 32px)">
+    <div class="row" style="gap:12px"><div class="ico" style="background:var(--mint);color:#063;width:44px;height:44px;font-size:20px">D</div><div><h1 style="font-size:26px">Driftwood</h1><p class="small muted">{{.D.Tagline}}</p></div></div>
+    <div class="panel mt24" style="padding:22px">
+      <h2 style="font-size:20px">Create your account</h2>
+      <p class="soft small mt8">Driftwood asks Singleton two questions: are you a real, unique person, and are you over 16? It never sees your name or ID.</p>
+      <label class="f mt16">Choose a handle<input id="value" placeholder="your_handle" maxlength="20" autocomplete="off"></label>
+      <button class="btn btn-lime btn-lg mt16" style="width:100%" data-go>Sign up · verify with Singleton</button>
+      <div id="demo-out" class="mt16"></div>
+    </div>
+    <div class="panel mt16"><div class="panel-head"><h3>Newest members</h3><span class="tiny muted">each is a distinct human</span></div>
+      <div class="list" style="border:0;border-radius:0">{{range .Records}}<div class="li"><div class="ico">@</div><div class="grow"><b>@{{.Value}}</b><small class="mono">pseudonym {{pseudonym .Nullifier}}</small></div><small>{{ago .CreatedAt}}</small></div>{{else}}<div class="li"><div class="grow muted small">No members yet — be the first.</div></div>{{end}}</div>
+    </div>
+    <p class="tiny muted mt16">Try it twice. The second signup with the same Pass gets flagged as a duplicate — even with a different handle — because your pseudonym inside Driftwood never changes.</p>
+  </div>
+</div>
+{{end}}
+{{define "scripts"}}<script src="/sdk/singleton.js"></script><script src="/static/js/demo.js" defer></script>{{end}}

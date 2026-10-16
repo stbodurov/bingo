@@ -1,0 +1,14 @@
+{{define "title"}}Transaction {{short .Tx.Hash 14}} — Singleton{{end}}
+{{define "content"}}
+<div class="page wrap">
+  <div class="page-head"><span class="eyebrow">{{.Network}}</span><h1 style="font-size:32px;word-break:break-all">{{.Tx.Hash}}</h1><p>{{.Tx.Summary}}</p></div>
+  <div class="panel panel-body"><dl class="kv">
+    <dt>Block</dt><dd>{{num .Tx.Block}}</dd><dt>Method</dt><dd><code>{{.Tx.Method}}</code></dd>
+    <dt>From</dt><dd class="hex">{{.Tx.From}} <span class="muted">(registry anchor signer)</span></dd><dt>To</dt><dd class="hex">{{.Tx.To}} <span class="muted">(HumanRegistry)</span></dd>
+    <dt>Time</dt><dd>{{date .Tx.CreatedAt}}</dd>
+  </dl></div>
+  <div class="panel mt16"><div class="panel-head"><h2>Calldata (ABI words)</h2><p>anchorEpoch(uint64 epoch, bytes32[] setIds, bytes32[] roots, uint64[] sizes)</p></div><div class="panel-body"><div class="calldata">{{range .Words}}{{.}}
+{{end}}</div></div></div>
+  <p class="mt16"><a class="btn btn-sm" href="/transparency">← Transparency</a></p>
+</div>
+{{end}}

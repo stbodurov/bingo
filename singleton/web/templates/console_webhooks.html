@@ -1,0 +1,22 @@
+{{define "title"}}Webhooks{{end}}
+{{define "crumb"}}Webhooks{{end}}
+{{define "content"}}
+<div class="c-head"><div><h1>Webhooks</h1><p>Signed POSTs for every outcome. Configure the URL on each app's settings page. Deliveries are retried three times with backoff.</p></div></div>
+<div class="grid2 mb16">
+  <div class="panel"><div class="panel-head"><h2>Verify the signature</h2></div><div class="panel-body">
+    <p class="soft small">Header <code>Singleton-Signature: t=&lt;unix&gt;,v1=&lt;hex&gt;</code> where v1 = HMAC-SHA256(secret, "&lt;t&gt;." + body). Reject if t is older than 5 minutes.</p>
+    <pre class="json mt16">Singleton-Signature: {{.Example}}</pre>
+  </div></div>
+  <div class="panel"><div class="panel-head"><h2>Events</h2></div><div class="panel-body small soft">
+    <div class="row between"><code>session.verified</code><span>a new or returning human proved the predicates</span></div>
+    <div class="row between mt8"><code>session.duplicate</code><span>human already holds another account</span></div>
+    <div class="row between mt8"><code>session.failed</code><span>proof invalid, expired epoch, or declined</span></div>
+    <div class="row between mt8"><code>delegation.created</code><span>a human deputised an agent</span></div>
+  </div></div>
+</div>
+<div class="panel" style="overflow-x:auto">
+  {{if .Deliveries}}<table class="t"><thead><tr><th>Event</th><th>App</th><th>Status</th><th class="num">HTTP</th><th class="num">Attempts</th><th>When</th></tr></thead><tbody>
+  {{range .Deliveries}}<tr><td class="mono small">{{.Event}}</td><td>{{with index $.Apps .AppID}}{{.Name}}{{end}}</td><td><span class="badge {{statusClass .Status}}">{{.Status}}</span></td><td class="num">{{if .Code}}{{.Code}}{{else}}—{{end}}</td><td class="num">{{.Attempts}}</td><td class="small muted">{{ago .CreatedAt}}</td></tr>{{end}}
+  </tbody></table>{{else}}<div class="empty">No deliveries yet. Set a webhook URL on an app and complete a verification.</div>{{end}}
+</div>
+{{end}}

@@ -1,0 +1,50 @@
+{{define "layout"}}<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{block "title" .}}Singleton — Prove you're human. Reveal nothing else.{{end}}</title>
+<meta name="description" content="{{block "description" .}}Singleton turns the ID already in your wallet into a private, reusable proof that you're a real, unique person — and old enough. No orb, no ID uploads, no tracking.{{end}}">
+<meta property="og:title" content="Singleton — Prove you're human. Reveal nothing else.">
+<meta property="og:description" content="Private proof-of-human and age assurance for the AI internet. One human, one account, zero exposure.">
+<meta name="theme-color" content="#08080a">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/static/css/singleton.css">
+</head>
+<body>
+<header class="nav" id="nav">
+  <div class="wrap">
+    <a class="logo" href="/">{{template "logo"}}<span>Singleton</span></a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="/#how">How it works</a>
+      <a href="/#platforms">For platforms</a>
+      <a href="/docs">Developers</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="/transparency">Transparency</a>
+    </nav>
+    <div class="nav-cta">
+      <a class="btn btn-ghost btn-sm" href="/console">Console</a>
+      <a class="btn btn-lime btn-sm" href="/#join">Get early access</a>
+      <button class="btn btn-ghost btn-sm nav-burger" aria-label="Menu" id="burger">☰</button>
+    </div>
+  </div>
+</header>
+<main>{{template "content" .}}</main>
+<footer class="footer">
+  <div class="wrap">
+    <div>
+      <a class="logo" href="/">{{template "logo"}}<span>Singleton</span></a>
+      <p class="mt16" style="max-width:320px">Private proof-of-human for the AI internet. One human, one account, zero exposure.</p>
+      <p class="mt16 tiny">Pre-launch. The network shown on this site is a sandbox populated with synthetic holders.</p>
+    </div>
+    <div><h4>Product</h4><a href="/pass">Singleton Pass</a><a href="/demo/driftwood">Live demo</a><a href="/#pricing">Pricing</a><a href="/console">Console</a></div>
+    <div><h4>Developers</h4><a href="/docs">Docs &amp; API</a><a href="/docs#sdk">JavaScript SDK</a><a href="/.well-known/jwks.json">JWKS</a><a href="/transparency">Transparency</a></div>
+    <div><h4>Company</h4><a href="/#faq">FAQ</a><a href="/#join">Waitlist</a><a href="/attester">Attester partners</a><a href="mailto:hello@singleton.example">Contact</a></div>
+  </div>
+</footer>
+<script src="/static/js/site.js" defer></script>
+{{block "scripts" .}}{{end}}
+</body>
+</html>{{end}}

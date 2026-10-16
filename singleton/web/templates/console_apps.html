@@ -1,0 +1,34 @@
+{{define "title"}}Apps{{end}}
+{{define "crumb"}}Apps &amp; keys{{end}}
+{{define "content"}}
+<div class="c-head"><div><h1>Apps &amp; keys</h1><p>Each app has its own scope — the namespace that makes pseudonyms unique inside it and unlinkable outside it.</p></div></div>
+<div class="grid2">
+  <div class="panel">
+    <div class="panel-head"><h2>Your apps</h2><p>{{len .C.Apps}} total</p></div>
+    {{if .C.Apps}}
+    <table class="t">
+      <thead><tr><th>App</th><th>Mode</th><th>Requires</th><th class="num">30-day sessions</th></tr></thead>
+      <tbody>{{range .C.Apps}}
+        <tr><td><a href="/console/apps/{{.ID}}"><span class="row"><span style="width:10px;height:10px;border-radius:3px;background:{{.Color}}"></span><b>{{.Name}}</b></span></a><div class="tiny muted mono">{{.Scope}}</div></td>
+          <td><span class="badge {{if eq .Mode "live"}}good{{else}}info{{end}}">{{.Mode}}</span></td>
+          <td class="small soft">{{range $i, $p := .RequiredList}}{{if $i}}, {{end}}{{setLabel $p}}{{end}}</td>
+          <td class="num">{{num (index $.Stats.ByApp .ID)}}</td></tr>
+      {{end}}</tbody>
+    </table>
+    {{else}}<div class="empty">No apps yet — create your first one.</div>{{end}}
+  </div>
+  <div class="panel">
+    <div class="panel-head"><h2>Create an app</h2></div>
+    <form class="panel-body stack" method="post" action="/console/apps">
+      <input type="hidden" name="_csrf" value="{{.C.CSRF}}">
+      <label class="f">Name<input name="name" required maxlength="60" placeholder="Acme Social"></label>
+      <label class="f">Category<select name="category">{{range .Categories}}<option value="{{.}}">{{title .}}</option>{{end}}</select></label>
+      <label class="f">Allowed origins <small>for the browser SDK — one per line, e.g. https://acme.com</small><textarea name="origins" rows="2" placeholder="https://acme.com"></textarea></label>
+      <div class="f"><span class="small" style="font-weight:600;color:var(--text-2)">Default predicates</span>
+        <div class="chips mt8">{{range .Sets}}<label class="chip"><input type="checkbox" name="required" value="{{.Name}}" {{if eq .Name "human"}}checked{{end}}><span>{{.Label}}</span></label>{{end}}</div>
+      </div>
+      <button class="btn btn-lime" type="submit">Create app and keys</button>
+    </form>
+  </div>
+</div>
+{{end}}

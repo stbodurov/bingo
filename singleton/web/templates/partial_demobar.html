@@ -1,0 +1,1 @@
+{{define "demobar"}}<div class="demo-bar"><span>Demo relying parties built on the public SDK:</span>{{range $k, $d := .Demos}}<a href="/demo/{{$k}}" class="{{if eq $k $.D.Key}}on{{end}}">{{$d.Name}}</a>{{end}}<a href="/pass">My Pass</a><a href="/console">Console</a></div>{{end}}

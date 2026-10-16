@@ -1,0 +1,321 @@
+{{define "content"}}
+<section class="hero" aria-labelledby="hero-title">
+  <canvas id="field" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <div>
+      <span class="eyebrow"><span class="pulse"></span>Proof of human · now in private beta</span>
+      <h1 id="hero-title">Prove you're human.<br><em>Reveal nothing else.</em></h1>
+      <p class="lede">Singleton turns the ID already in your phone into a private, reusable proof that you're a real, unique person — and old enough. Platforms keep bots, sock puppets and under-age users out without ever holding anyone's identity.</p>
+      <div class="hero-cta">
+        <a class="btn btn-lime btn-lg" href="#join" data-track="person">Get your Pass <span class="arrow">→</span></a>
+        <a class="btn btn-lg" href="#join" data-track="platform">Integrate Singleton</a>
+      </div>
+      <div class="hero-note"><span>No orb, no face scan</span><span>No ID uploads to apps</span><span>Different pseudonym on every app</span></div>
+    </div>
+    <div class="proof-card" aria-label="Example of what an app learns">
+      <span class="badge lime plain pc-tag">What Driftwood learns</span>
+      <div class="pc-head">
+        <div class="pc-app"><i>D</i><span>Driftwood · sign up</span></div>
+        <span class="badge good">verified in 1.8s</span>
+      </div>
+      <div class="pc-row"><b>Real, unique human</b><span class="yes">✓ Yes</span></div>
+      <div class="pc-row"><b>Over 16</b><span class="yes">✓ Yes</span></div>
+      <div class="pc-row"><span>Your name</span><span class="no">never shared</span></div>
+      <div class="pc-row"><span>Your birthday</span><span class="no">never shared</span></div>
+      <div class="pc-row"><span>Your ID document</span><span class="no">never shared</span></div>
+      <div class="pc-row"><span>Your other apps</span><span class="no">never linked</span></div>
+      <div class="pc-foot">pseudonym at Driftwood <b>3f9a·c21e·77b0</b><br>at Front Row it's <b>a04d·19fe·e2c8</b> — unlinkable</div>
+    </div>
+  </div>
+</section>
+
+<section class="strip" aria-label="Why now">
+  <div class="wrap">
+    <div class="stat"><b>57.5%</b><span>of web traffic is now automated — machines passed humans this year</span><cite><a href="https://www.techtimes.com/articles/317877/20260605/bot-traffic-passes-humans-online-cloudflare-says-agentic-ai-drove-575-share.htm" rel="noopener" target="_blank">Cloudflare Radar · Jun 2026</a></cite></div>
+    <div class="stat"><b>100%</b><span>of reCAPTCHA v2 image challenges solved by an off-the-shelf vision model</span><cite><a href="https://decrypt.co/251107/ai-can-best-googles-bot-detection-system-swiss-researchers-find" rel="noopener" target="_blank">ETH Zürich · 2024</a></cite></div>
+    <div class="stat"><b>70,000</b><span>government ID photos exposed by one platform's age-check support vendor</span><cite><a href="https://www.nbcnews.com/tech/tech-news/70000-government-id-photos-exposed-discord-user-hack-rcna236714" rel="noopener" target="_blank">NBC News · 2025</a></cite></div>
+    <div class="stat"><b>A$49.5M</b><span>maximum fine for letting under-16s hold social media accounts</span><cite><a href="https://www.esafety.gov.au/about-us/industry-regulation/social-media-age-restrictions" rel="noopener" target="_blank">eSafety Commissioner · in force Dec 2025</a></cite></div>
+  </div>
+</section>
+
+<section class="sec" aria-labelledby="problem-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">The problem</span>
+      <h2 id="problem-title">Every "are you human?" test either fails or leaks.</h2>
+      <p>The internet's defenses ask you to do something a computer can't. Computers caught up. The fallback — "upload your ID" — turned every platform into a honeypot.</p>
+    </div>
+    <div class="problem">
+      <div><span class="tag">Fails</span><h3>CAPTCHAs and bot scores</h3><p>Vision models solve them. Real people get the puzzles, the friction and the cookie tracking that "risk scores" depend on. Bots get in anyway.</p></div>
+      <div><span class="tag">Leaks</span><h3>ID upload and selfie checks</h3><p>$1–2 a check, minutes of friction, and a database of passports that someone will eventually steal. Deepfakes now beat the selfie step too.</p></div>
+      <div><span class="tag">Excludes</span><h3>Iris and palm scanners</h3><p>Special hardware, a body-part scan, regulators in pursuit — and nothing for people whose eyes or hands a scanner can't read.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="how" aria-labelledby="how-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">How it works</span>
+      <h2 id="how-title">Verify once. Prove anywhere. Be no one in particular.</h2>
+      <p>Singleton is an acceptance network for the credentials people already have, and a cryptographic protocol that turns them into one-bit answers.</p>
+    </div>
+    <div class="steps">
+      <article class="step">
+        <h3>Verify once, with what you already carry.</h3>
+        <p>Present a mobile driver's licence, tap your passport's chip, use an EU identity wallet — or take a two-minute check at a partner pharmacy. No documents? Three verified people can vouch for you.</p>
+        <div class="visual ids"><span>Apple / Google Wallet ID</span><span>ePassport NFC</span><span>EU wallet</span><span>In person</span><span>Vouching</span></div>
+      </article>
+      <article class="step">
+        <h3>Your phone keeps a key. Not your ID.</h3>
+        <p>We check the issuer's signature, keep a keyed hash so nobody enrols twice, and throw the rest away. Your public key joins an anonymity set whose Merkle root is anchored on-chain every epoch.</p>
+        <div class="visual keyline">holder key <span class="lime">d1f0…9a3c</span><br>→ epoch {{if .T}}{{.T.epoch.ID}}{{else}}42{{end}} · root {{if .T}}{{short (index .T.epoch.Sets "human").Root 14}}{{else}}9c1e…{{end}}</div>
+      </article>
+      <article class="step">
+        <h3>Apps get a yes — and a pseudonym that changes everywhere.</h3>
+        <p>A linkable ring signature proves "one of these thousands of verified humans, over 16" without saying which. Same person, same app: same pseudonym, so one account each. Different apps: unlinkable.</p>
+        <div class="visual pseud"><div><span>driftwood</span><b>3f9a·c21e·77b0</b></div><div><span>front row</span><b>a04d·19fe·e2c8</b></div><div><span>commons</span><b>7be2·0c41·5d19</b></div></div>
+      </article>
+    </div>
+    <div class="row wrap mt24">
+      <a class="btn" href="/demo/driftwood">Try it: sign up to Driftwood twice <span class="arrow">→</span></a>
+      <a class="btn btn-ghost" href="/docs#protocol">Read the protocol</a>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="platforms" aria-labelledby="plat-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">For platforms</span>
+      <h2 id="plat-title">Real people in. Liability out.</h2>
+      <p>One integration answers the three questions every signup now has to ask — and leaves you holding nothing a breach could expose.</p>
+    </div>
+    <div class="bento">
+      <div class="tile t-3 hl">
+        <span class="k">Integrity</span>
+        <h3>One human, one account</h3>
+        <p>Every verified person gets a stable pseudonym inside your app. Ban evasion, sock-puppet rings, review farms and referral fraud stop at the second signup — we tell you which account they already have.</p>
+        <div class="dupes" aria-label="Example duplicate detection">
+          <div><span>@maya_r signs up</span><code>3f9a·c21e</code><span class="badge good">verified</span></div>
+          <div><span>@maya_alt signs up</span><code>3f9a·c21e</code><span class="badge warn">duplicate of @maya_r</span></div>
+          <div><span>@leo_k signs up</span><code>b71c·04aa</code><span class="badge good">verified</span></div>
+          <div><span>bot farm (412 attempts)</span><code>—</code><span class="badge bad">no Pass, no proof</span></div>
+        </div>
+      </div>
+      <div class="tile t-3">
+        <span class="k">Compliance</span>
+        <h3>Age assurance without the ID honeypot</h3>
+        <p>Ask for over-13, 16, 18 or 21. Proofs come from issuer-signed credentials, never a guess from a selfie.</p>
+        <div class="law">
+          <div><b>AU</b><span>Social Media Minimum Age · under-16s</span><span>in force</span></div>
+          <div><b>UK</b><span>Online Safety Act · highly effective age assurance</span><span>in force</span></div>
+          <div><b>US</b><span>State age-verification &amp; app store laws</span><span>rolling</span></div>
+          <div><b>EU</b><span>Digital Identity Wallets accepted</span><span>2026</span></div>
+        </div>
+      </div>
+      <div class="tile t-2">
+        <span class="k">Fairness</span>
+        <h3>One per human drops &amp; votes</h3>
+        <p>Scope a proof to a single action — a ticket drop, a giveaway, a poll — and each person can take part exactly once. Nobody learns who.</p>
+      </div>
+      <div class="tile t-2">
+        <span class="k">Agents</span>
+        <h3>Know Your Agent</h3>
+        <p>A verified human can deputise an AI agent with scoped, expiring permissions. You see "agent acting for pseudonym 3f9a…", never the person.</p>
+        <div class="agent-flow"><span>human</span><i>→ signs →</i><span>agent key</span><i>→</i><span>your API</span></div>
+      </div>
+      <div class="tile t-2">
+        <span class="k">Privacy</span>
+        <h3>Nothing to breach</h3>
+        <p>You store a pseudonym and a yes. We store public keys and keyed hashes. No names, birthdays or document images exist anywhere in the system.</p>
+      </div>
+      <div class="tile t-4">
+        <span class="k">Developer experience</span>
+        <h3>Ten minutes to "Verify with Singleton"</h3>
+        <p>Drop in the SDK, verify a signed result token on your server with our public JWKS, and get webhooks for every outcome. Test mode, live mode, console analytics and compliance evidence exports included.</p>
+      </div>
+      <div class="tile t-2">
+        <span class="k">Trust</span>
+        <h3>Verifiable, not "trust us"</h3>
+        <p>Set roots are anchored on an Ethereum L2 each epoch. Anyone can download a set and recompute its root.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" aria-labelledby="cmp-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Compared</span>
+      <h2 id="cmp-title">The only option that's AI-proof <em class="muted" style="font-style:normal">and</em> private.</h2>
+    </div>
+    <div class="table-scroll">
+      <table class="compare">
+        <thead><tr><th></th><th>CAPTCHA / bot score</th><th>ID upload + selfie</th><th>Iris / palm scan</th><th class="us">Singleton</th></tr></thead>
+        <tbody>
+          <tr><th>Stops AI bots</th><td class="n">No — solved by models</td><td class="m">Mostly — deepfakes rising</td><td class="y">Yes</td><td class="us y">Yes — issuer signatures, not imitation tests</td></tr>
+          <tr><th>One account per person</th><td class="n">No</td><td class="m">Only if you store IDs</td><td class="y">Yes</td><td class="us y">Yes — per-app pseudonyms</td></tr>
+          <tr><th>Age assurance</th><td class="n">No</td><td class="y">Yes</td><td class="n">No</td><td class="us y">Yes — 13 / 16 / 18 / 21</td></tr>
+          <tr><th>What the platform stores</th><td class="m">Behavioural data, cookies</td><td class="n">Document images, selfies</td><td class="m">Biometric-derived ID</td><td class="us y">A pseudonym and a yes</td></tr>
+          <tr><th>Cost per check</th><td class="y">≈ free</td><td class="n">$1.35–$2.30</td><td class="m">Per-verification fees</td><td class="us y">$0.05, reusable forever</td></tr>
+          <tr><th>Hardware needed</th><td class="y">None</td><td class="y">Phone camera</td><td class="n">Special scanner</td><td class="us y">None — the ID you have</td></tr>
+          <tr><th>Works without documents</th><td class="y">Yes</td><td class="n">No</td><td class="m">If the scan works</td><td class="us y">Yes — in person or vouching</td></tr>
+          <tr><th>Cross-site tracking risk</th><td class="n">High</td><td class="n">High</td><td class="y">Low</td><td class="us y">None — unlinkable by design</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="developers" aria-labelledby="dev-title">
+  <div class="wrap dev">
+    <div>
+      <span class="eyebrow">Developers</span>
+      <h2 id="dev-title" style="font-size:clamp(30px,4vw,48px);margin-top:14px">A button, a token, a yes.</h2>
+      <p class="soft mt16" style="font-size:17px">The SDK opens Singleton's consent screen; the holder's wallet builds the proof on their device; your server verifies a signed token offline.</p>
+      <ul>
+        <li><span><b>Predicates</b> — human, document-verified human, over 13/16/18/21, issuing region.</span></li>
+        <li><span><b>Scopes &amp; actions</b> — one pseudonym per app, or one per drop, poll or giveaway.</span></li>
+        <li><span><b>Duplicates</b> — flagged with the account the human already holds.</span></li>
+        <li><span><b>Agents</b> — verify requests signed by agents a human delegated.</span></li>
+        <li><span><b>Webhooks</b> — signed, retried, logged in the console.</span></li>
+      </ul>
+      <div class="row wrap mt24"><a class="btn btn-lime" href="/docs">Read the docs</a><a class="btn" href="/console">Open the console</a></div>
+    </div>
+    <div class="code" id="code">
+      <div class="code-tabs" role="tablist">
+        <button class="on" data-tab="browser" role="tab">Browser</button>
+        <button data-tab="server" role="tab">Server (Node)</button>
+        <button data-tab="curl" role="tab">cURL</button>
+      </div>
+<pre data-pane="browser"><span class="c">&lt;!-- 1. load the SDK --&gt;</span>
+&lt;script src="<span class="s">{{.BaseURL}}/sdk/singleton.js</span>"&gt;&lt;/script&gt;
+
+<span class="c">// 2. ask for exactly what you need</span>
+<span class="k">const</span> result = <span class="k">await</span> Singleton.<span class="f">verify</span>({
+  publishableKey: <span class="s">"pk_live_…"</span>,
+  required: [<span class="s">"human"</span>, <span class="s">"age_over_16"</span>],
+  reference: user.id,   <span class="c">// your account id</span>
+});
+
+<span class="c">// 3. send the signed token to your backend</span>
+<span class="k">await</span> fetch(<span class="s">"/signup"</span>, { method: <span class="s">"POST"</span>, body: result.token });</pre>
+<pre data-pane="server" hidden><span class="k">import</span> { jwtVerify, createRemoteJWKSet } <span class="k">from</span> <span class="s">"jose"</span>;
+
+<span class="k">const</span> jwks = createRemoteJWKSet(<span class="k">new</span> URL(<span class="s">"{{.BaseURL}}/.well-known/jwks.json"</span>));
+
+<span class="k">const</span> { payload } = <span class="k">await</span> <span class="f">jwtVerify</span>(token, jwks, { audience: <span class="s">"app_…"</span> });
+
+<span class="k">if</span> (payload.duplicate) {
+  <span class="c">// same human already has payload.duplicate_of</span>
+}
+db.users.update(id, { singleton: payload.sub }); <span class="c">// app-scoped pseudonym</span></pre>
+<pre data-pane="curl" hidden><span class="c"># create a verification session from your server</span>
+curl {{.BaseURL}}/v1/sessions \
+  -H <span class="s">"Authorization: Bearer sk_live_…"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d <span class="s">'{"required":["human_doc"],"action":"drop:fall-tour","reference":"user_123"}'</span>
+
+<span class="c"># → { "id": "vs_…", "url": "{{.BaseURL}}/verify/vs_…" }</span>
+<span class="c"># redirect the user there, then GET /v1/sessions/vs_… for the result + token</span></pre>
+    </div>
+  </div>
+</section>
+
+{{if .T}}
+<section class="sec" aria-labelledby="net-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Sandbox network · live</span>
+      <h2 id="net-title">Don't trust us. Check the root.</h2>
+      <p>Every epoch the registry seals each predicate set into a Merkle tree and anchors the roots in a <code>HumanRegistry</code> contract. These numbers come from this node's sandbox, populated with synthetic holders.</p>
+    </div>
+    <div class="network">
+      <div class="n"><b>{{num .T.epoch.Holders}}</b><span>verified holders (sandbox)</span></div>
+      <div class="n"><b>#{{.T.epoch.ID}}</b><span>current epoch</span></div>
+      <div class="n"><b>{{num (index .T.epoch.Sets "age_over_18").Size}}</b><span>in the over-18 set</span></div>
+      <div class="n"><b>{{len .T.attesters}}</b><span>attestation paths</span></div>
+    </div>
+    <div class="root-line"><span>human set root</span><b>{{(index .T.epoch.Sets "human").Root}}</b><span>anchored in <a href="/transparency/tx/{{.T.epoch.TxHash}}">{{short .T.epoch.TxHash 18}}</a> on {{.T.network}}</span></div>
+  </div>
+</section>
+{{end}}
+
+<section class="sec" id="pricing" aria-labelledby="price-title">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Pricing</span>
+      <h2 id="price-title">Free for people. Pennies for platforms.</h2>
+      <p>Holders never pay and never see ads. Platforms pay per verified human — a fraction of a KYC check, because the hard verification happens once and is reused.</p>
+    </div>
+    <div class="pricing">
+      <div class="price"><h3>Developer</h3><div class="amt">$0</div><p>Build and launch. 1,000 live verifications a month, unlimited test mode.</p><ul><li>All predicates</li><li>Hosted consent + SDK</li><li>Console &amp; webhooks</li></ul><a class="btn" href="/console/login?mode=signup">Start building</a></div>
+      <div class="price pop"><h3>Growth</h3><div class="amt">$0.05 <small>/ verified human</small></div><p>Pay as you grow. +$0.02 per age or region predicate. First 1,000 each month free.</p><ul><li>Duplicate-account detection</li><li>Action scopes (drops, polls)</li><li>Agent delegation</li></ul><a class="btn btn-lime" href="#join" data-track="platform">Join as a platform</a></div>
+      <div class="price"><h3>Scale</h3><div class="amt">$2,000 <small>/ month</small></div><p>80,000 verifications included, then $0.025. For regulated launches.</p><ul><li>Compliance evidence packs (AU / UK / US)</li><li>99.95% SLA</li><li>Priority attester routing</li></ul><a class="btn" href="#join" data-track="platform">Talk to us</a></div>
+      <div class="price"><h3>Enterprise</h3><div class="amt">Custom</div><p>Annual contracts for networks with tens of millions of users.</p><ul><li>On-prem verifier</li><li>Custom attesters &amp; regions</li><li>DPA, audit support</li></ul><a class="btn" href="#join" data-track="platform">Contact sales</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="faq" aria-labelledby="faq-title">
+  <div class="wrap">
+    <div class="sec-head"><span class="eyebrow">FAQ</span><h2 id="faq-title">Questions people ask first.</h2></div>
+    <div class="faq">
+      <details><summary>Is there a token or a coin?</summary><p>No. Singleton uses a public blockchain only as a notary: set roots and revocation lists are anchored so anyone can audit them. There is no token, no airdrop, no speculation — holders are free forever and platforms pay in dollars.</p></details>
+      <details><summary>Do you store my ID?</summary><p>No. We verify the issuer's signature on your credential, compute keyed hashes of the document number and of name + date of birth (so nobody can enrol twice), and discard everything else. For adults we don't even keep a birthday — only the fact that age thresholds have passed.</p></details>
+      <details><summary>Can apps track me across sites?</summary><p>No. Your pseudonym is derived from your key and the app's scope. Two apps comparing notes see two unrelated values. Even Singleton cannot tell which holder produced a proof — the signature only shows it came from one member of an anonymity set.</p></details>
+      <details><summary>What if I lose my phone?</summary><p>Split your recovery seed between trusted guardians (any 3 of 5 can restore it). Recovery brings back the same key — so every app sees the same pseudonym, and you keep your accounts. You can also revoke a lost key instantly.</p></details>
+      <details><summary>I don't have a passport or driver's licence.</summary><p>Visit a partner location for a two-minute in-person check, or have three document-verified people vouch for you. Vouched passes prove "human" (not age), and each voucher's pseudonym is rate-limited so vouching can't be farmed.</p></details>
+      <details><summary>How is this different from World ID?</summary><p>No orb and no biometrics. Singleton accepts the government credentials and wallets people already have, works on any phone, and never scans a body. Like World, it gives apps an anonymous, per-app unique-human proof.</p></details>
+      <details><summary>Can a teenager borrow a parent's ID?</summary><p>One document can back exactly one Pass. If a parent's licence is used for a child's Pass, the parent cannot get one without revoking the child's — a strong deterrent. Platforms can additionally require document-verified passes for high-risk features.</p></details>
+      <details><summary>Is this compatible with GDPR?</summary><p>It is designed around data minimisation: platforms receive no personal data, only a pseudonym and predicates. Singleton processes credential data transiently at enrolment and retains keyed hashes for de-duplication only.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="join" aria-labelledby="join-title">
+  <div class="wrap">
+    <div class="join">
+      <div class="join-grid">
+        <div>
+          <span class="eyebrow">Early access</span>
+          <h2 id="join-title" class="mt16">Be one of the first humans in.</h2>
+          <p class="soft mt16" style="font-size:17px">Passes roll out region by region; platforms onboard as design partners. Platforms facing the Australian or UK deadlines get priority.</p>
+          {{if or .People .Platforms}}<p class="mt24 small muted">{{num .People}} people and {{num .Platforms}} platforms are already waiting.</p>{{end}}
+          <p class="mt24 small muted">This form has no CAPTCHA. Your browser solves a tiny proof-of-work (about a second) instead — the same idea we use to keep bots honest elsewhere.</p>
+        </div>
+        <div>
+          <div class="tracks" role="tablist">
+            <button class="on" data-track-btn="person" type="button">I want a Pass</button>
+            <button data-track-btn="platform" type="button">I run a platform</button>
+          </div>
+          <form id="wl" novalidate>
+            <input type="hidden" name="track" value="person">
+            <input type="hidden" name="ref" value="{{.Ref}}">
+            <div class="hp" aria-hidden="true"><label>Website <input name="website" tabindex="-1" autocomplete="off"></label></div>
+            <label class="f">Email<input name="email" type="email" required autocomplete="email" placeholder="you@company.com"></label>
+            <div class="platform-only hidden stack">
+              <div class="row2">
+                <label class="f">Company<input name="company" autocomplete="organization" placeholder="Acme Social"></label>
+                <label class="f">Your role<input name="role" placeholder="Head of Trust &amp; Safety"></label>
+              </div>
+              <div class="row2">
+                <label class="f">Monthly signups<select name="volume"><option value="<10k">Under 10k</option><option value="10k-100k">10k – 100k</option><option value="100k-1m">100k – 1M</option><option value=">1m">Over 1M</option></select></label>
+                <label class="f">Main market<select name="region"><option value="us">United States</option><option value="au">Australia</option><option value="gb">United Kingdom</option><option value="eu">European Union</option><option value="other">Elsewhere</option></select></label>
+              </div>
+              <label class="f">Use case<select name="useCase"><option value="social">Social / community</option><option value="dating">Dating</option><option value="marketplace">Marketplace / reviews</option><option value="ticketing">Ticketing / drops</option><option value="gaming">Gaming</option><option value="ai_agents">AI agents / APIs</option><option value="fintech">Fintech</option><option value="civic">Civic / voting</option></select></label>
+            </div>
+            <div class="pow" id="pow"><i></i><span>Waiting to prove you're not a bot…</span></div>
+            <div class="err" id="wl-err" role="alert"></div>
+            <button class="btn btn-lime btn-lg" type="submit" id="wl-btn">Join the waitlist <span class="arrow">→</span></button>
+          </form>
+          <div id="wl-result" class="result hidden" aria-live="polite"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{{end}}
+
+{{define "scripts"}}<script src="/static/js/landing.js" defer></script>{{end}}

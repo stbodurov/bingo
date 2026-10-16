@@ -1,0 +1,44 @@
+{{define "title"}}Transparency — Singleton{{end}}
+{{define "content"}}
+<div class="page wrap">
+  <div class="page-head"><span class="eyebrow">Transparency</span><h1>Every set, every epoch, on the record.</h1><p>Singleton publishes each predicate set as a Merkle root and anchors it in the <code>HumanRegistry</code> contract. Verifiers only accept proofs against anchored sets, so the registry can't quietly add fake humans or drop real ones. This node runs the sandbox network with synthetic holders.</p></div>
+  <div class="grid4">
+    <div class="panel kpi"><div class="l">Holders</div><div class="v">{{num .T.epoch.Holders}}</div><div class="d">active keys, epoch {{.T.epoch.ID}}</div></div>
+    <div class="panel kpi"><div class="l">Current epoch</div><div class="v">#{{.T.epoch.ID}}</div><div class="d">sealed {{ago .T.epoch.SealedAt}}</div></div>
+    <div class="panel kpi"><div class="l">Revoked keys</div><div class="v">{{num .T.revoked}}</div><div class="d">removed from future epochs</div></div>
+    <div class="panel kpi"><div class="l">Registry contract</div><div class="v hex" style="font-size:13px;margin-top:12px">{{short .T.registry 18}}</div><div class="d">{{.T.network}}</div></div>
+  </div>
+
+  <div class="panel mt16"><div class="panel-head"><h2>Sets in epoch #{{.T.epoch.ID}}</h2><a class="btn btn-sm" href="/transparency/tx/{{.T.epoch.TxHash}}">Anchor tx →</a></div>
+    <div style="overflow-x:auto"><table class="t"><thead><tr><th>Set</th><th>Meaning</th><th class="num">Members</th><th>Merkle root</th><th></th></tr></thead><tbody>
+      {{range .T.sets}}{{$r := index $.T.epoch.Sets .Name}}<tr><td><code>{{.Name}}</code></td><td class="small soft">{{.Label}}</td><td class="num">{{num $r.Size}}</td><td class="hex">{{short $r.Root 26}}</td><td><a class="btn btn-sm" href="/api/sets/{{$.T.epoch.ID}}/{{.Name}}">Download</a></td></tr>{{end}}
+    </tbody></table></div>
+  </div>
+
+  <div class="grid2 mt16">
+    <div class="panel"><div class="panel-head"><h2>Recent epochs</h2></div>
+      <table class="t"><thead><tr><th>Epoch</th><th class="num">Holders</th><th>Sealed</th><th>Anchor</th></tr></thead><tbody>
+        {{range .T.epochs}}<tr><td>#{{.ID}}</td><td class="num">{{num .Holders}}</td><td class="small muted">{{ago .SealedAt}}</td><td class="hex">{{if .TxHash}}<a href="/transparency/tx/{{.TxHash}}">{{short .TxHash 16}}</a>{{end}}</td></tr>{{end}}
+      </tbody></table>
+    </div>
+    <div class="panel"><div class="panel-head"><h2>Registry transactions</h2></div>
+      <table class="t"><thead><tr><th>Block</th><th>Method</th><th>Summary</th></tr></thead><tbody>
+        {{range .T.txs}}<tr><td class="mono small"><a href="/transparency/tx/{{.Hash}}">{{num .Block}}</a></td><td><code>{{.Method}}</code></td><td class="small soft">{{.Summary}}</td></tr>{{end}}
+      </tbody></table>
+    </div>
+  </div>
+
+  <div class="panel mt16"><div class="panel-head"><h2>Attesters</h2><p>Who is allowed to vouch for a human, how strongly, and how they've performed</p></div>
+    <div style="overflow-x:auto"><table class="t"><thead><tr><th>Attester</th><th>Assurance</th><th>Region</th><th class="num">Active holders</th><th class="num">Revoked</th><th class="num">Rejected attempts</th></tr></thead><tbody>
+      {{range .T.attesters}}<tr><td><b>{{.Name}}</b><div class="small muted" style="max-width:520px">{{.Description}}</div></td><td><span class="badge {{if eq .Assurance "IAL2"}}good{{else}}info{{end}}">{{.Assurance}}</span></td><td class="small">{{.Region}}</td><td class="num">{{num .Enrolled}}</td><td class="num">{{num .Revoked}}</td><td class="num">{{num .Rejected}}</td></tr>{{end}}
+    </tbody></table></div>
+  </div>
+
+  <div class="panel mt16 panel-body">
+    <h2>Verify it yourself</h2>
+    <p class="soft mt8">Download a set, rebuild the Merkle tree (sorted SHA-256 leaves of <code>0x00‖pubkey</code>, nodes <code>0x01‖left‖right</code>) and compare the root with the anchored calldata.</p>
+<pre class="json mt16">curl -s {{.BaseURL}}/api/sets/{{.T.epoch.ID}}/human | jq '.root, (.members | length)'
+go run ./cmd/singleton verify-root -url {{.BaseURL}} -epoch {{.T.epoch.ID}} -set human</pre>
+  </div>
+</div>
+{{end}}

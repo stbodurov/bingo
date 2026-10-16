@@ -1,0 +1,22 @@
+{{define "title"}}Humans{{end}}
+{{define "crumb"}}Humans &amp; duplicates{{end}}
+{{define "content"}}
+<div class="c-head"><div><h1>Humans &amp; duplicates</h1><p>One row per real person per scope. You see an app-scoped pseudonym and your own account reference — never who the person is.</p></div></div>
+<div class="grid3">
+  <div class="panel kpi"><div class="l">Unique humans</div><div class="v">{{num .Stats.UniqueHumans}}</div></div>
+  <div class="panel kpi"><div class="l">Duplicate attempts (30d)</div><div class="v">{{num .Stats.Duplicates}}</div><div class="d">second accounts by an existing human</div></div>
+  <div class="panel kpi"><div class="l">Duplicate rate</div><div class="v">{{pct (div .Stats.Duplicates (add .Stats.Verified .Stats.Duplicates))}}</div><div class="d">of completed verifications</div></div>
+</div>
+<div class="grid2 mt16">
+  <div class="panel" style="overflow-x:auto"><div class="panel-head"><h2>Recent duplicate attempts</h2></div>
+    {{if .Dups}}<table class="t"><thead><tr><th>App</th><th>New account</th><th>Already holds</th><th>When</th></tr></thead><tbody>
+      {{range .Dups}}<tr><td>{{with index $.Apps .AppID}}{{.Name}}{{end}}</td><td>{{.Reference}}</td><td><span class="badge warn">{{.DuplicateOf}}</span></td><td class="small muted">{{ago .CreatedAt}}</td></tr>{{end}}
+    </tbody></table>{{else}}<div class="empty">No duplicates yet.</div>{{end}}
+  </div>
+  <div class="panel" style="overflow-x:auto"><div class="panel-head"><h2>Bindings</h2><p>latest 150</p></div>
+    <table class="t"><thead><tr><th>Pseudonym</th><th>Account</th><th class="num">Uses</th><th>Last seen</th></tr></thead><tbody>
+      {{range .Bindings}}<tr><td class="hex" title="{{.Scope}}">{{pseudonym .Nullifier}}</td><td class="small">{{.Reference}}</td><td class="num">{{.Uses}}</td><td class="small muted">{{ago .LastSeen}}</td></tr>{{end}}
+    </tbody></table>
+  </div>
+</div>
+{{end}}

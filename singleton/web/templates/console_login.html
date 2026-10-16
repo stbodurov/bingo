@@ -1,0 +1,33 @@
+{{define "title"}}Sign in{{end}}
+{{define "content"}}
+<div style="min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(800px 400px at 50% -10%, rgba(212,255,79,.12), transparent 70%)">
+  <div style="width:min(420px,100%)">
+    <a class="logo" href="/" style="justify-content:center;display:flex;margin-bottom:10px">{{template "logo"}}<span>Singleton</span></a>
+    <p class="muted center" style="margin-bottom:22px">Console for platforms that verify humans</p>
+    <div class="panel" style="padding:24px">
+      <div class="tabs" style="margin:0 0 18px">
+        <button type="button" data-auth-tab="login" class="{{if ne .Mode "signup"}}on{{end}}">Sign in</button>
+        <button type="button" data-auth-tab="signup" class="{{if eq .Mode "signup"}}on{{end}}">Create account</button>
+      </div>
+      {{if .Error}}<div class="notice bad mb16" role="alert">{{.Error}}</div>{{end}}
+      <form method="post" action="/console/login" class="stack {{if eq .Mode "signup"}}hidden{{end}}" data-auth="login">
+        <input type="hidden" name="next" value="{{.Next}}">
+        <label class="f">Email<input name="email" type="email" required autocomplete="email"></label>
+        <label class="f">Password<input name="password" type="password" required autocomplete="current-password"></label>
+        <button class="btn btn-lime" type="submit">Sign in</button>
+      </form>
+      <form method="post" action="/console/signup" class="stack {{if ne .Mode "signup"}}hidden{{end}}" data-auth="signup">
+        <input type="hidden" name="next" value="{{.Next}}">
+        <label class="f">Your name<input name="name" required autocomplete="name"></label>
+        <label class="f">Company<input name="company" autocomplete="organization" placeholder="Acme Social"></label>
+        <label class="f">Work email<input name="email" type="email" required autocomplete="email"></label>
+        <label class="f">Password <small>10+ characters</small><input name="password" type="password" required minlength="10" autocomplete="new-password"></label>
+        <button class="btn btn-lime" type="submit">Create account</button>
+      </form>
+      <div class="row" style="margin:18px 0 12px;color:var(--text-3);font-size:12px"><hr style="flex:1;border:0;border-top:1px solid var(--line)"><span>or</span><hr style="flex:1;border:0;border-top:1px solid var(--line)"></div>
+      <form method="post" action="/console/demo"><input type="hidden" name="next" value="{{.Next}}"><button class="btn" style="width:100%" type="submit">Open the demo workspace →</button></form>
+      <p class="tiny muted center mt16">Demo login: {{.DemoEmail}} · singleton-demo</p>
+    </div>
+  </div>
+</div>
+{{end}}

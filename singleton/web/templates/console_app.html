@@ -1,0 +1,59 @@
+{{define "title"}}{{.App.Name}}{{end}}
+{{define "crumb"}}{{.App.Name}}{{end}}
+{{define "content"}}
+<div class="c-head">
+  <div><h1>{{.App.Name}}</h1><p class="mono small">{{.App.Scope}}</p></div>
+  <form method="post" action="/console/apps/{{.App.ID}}/test"><input type="hidden" name="_csrf" value="{{.C.CSRF}}"><button class="btn btn-lime" type="submit">Run a test verification →</button></form>
+</div>
+<div class="grid4">
+  <div class="panel kpi"><div class="l">Verified (30d)</div><div class="v">{{num .Stats.Verified}}</div>{{sparkline .Stats.Days}}</div>
+  <div class="panel kpi"><div class="l">Duplicates caught</div><div class="v">{{num .Stats.Duplicates}}</div></div>
+  <div class="panel kpi"><div class="l">Unique humans</div><div class="v">{{num .Stats.UniqueHumans}}</div></div>
+  <div class="panel kpi"><div class="l">Completion rate</div><div class="v">{{pct .Stats.Conversion}}</div></div>
+</div>
+<div class="grid2 mt16">
+  <div class="panel">
+    <div class="panel-head"><h2>Settings</h2><span class="badge {{if eq .App.Mode "live"}}good{{else}}info{{end}}">{{.App.Mode}} mode</span></div>
+    <form class="panel-body stack" method="post" action="/console/apps/{{.App.ID}}">
+      <input type="hidden" name="_csrf" value="{{.C.CSRF}}">
+      <label class="f">Name<input name="name" value="{{.App.Name}}" maxlength="60"></label>
+      <label class="f">Allowed origins <small>exact scheme://host[:port], one per line</small><textarea name="origins" rows="3">{{.App.Origins}}</textarea></label>
+      <div class="f"><span class="small" style="font-weight:600;color:var(--text-2)">Default predicates</span>
+        <div class="chips mt8">{{range .Sets}}<label class="chip"><input type="checkbox" name="required" value="{{.Name}}" {{if has $.Req .Name}}checked{{end}}><span>{{.Label}}</span></label>{{end}}</div>
+      </div>
+      <div class="form-grid">
+        <label class="f">When a human already has an account<select name="duplicatePolicy"><option value="flag" {{if eq .App.DuplicatePolicy "flag"}}selected{{end}}>Flag it (you decide)</option><option value="block" {{if eq .App.DuplicatePolicy "block"}}selected{{end}}>Mark as blocked</option></select></label>
+        <label class="f">Mode<select name="mode"><option value="test" {{if eq .App.Mode "test"}}selected{{end}}>Test (free)</option><option value="live" {{if eq .App.Mode "live"}}selected{{end}}>Live (billable)</option></select></label>
+      </div>
+      <label class="f">Webhook URL <small>receives session.verified, session.duplicate, session.failed, delegation.created</small><input name="webhookUrl" value="{{.App.WebhookURL}}" placeholder="https://acme.com/webhooks/singleton"></label>
+      <button class="btn btn-lime" type="submit">Save settings</button>
+    </form>
+  </div>
+  <div class="stack">
+    <div class="panel">
+      <div class="panel-head"><h2>API keys</h2>
+        <form method="post" action="/console/apps/{{.App.ID}}/rotate"><input type="hidden" name="_csrf" value="{{.C.CSRF}}"><button class="btn btn-sm btn-danger" type="submit" data-confirm="Rotate the secret key? The current one stops working immediately.">Rotate secret</button></form>
+      </div>
+      <table class="t"><thead><tr><th>Key</th><th>Type</th><th>Last used</th><th>Status</th></tr></thead><tbody>
+        {{range .Keys}}<tr><td class="hex">{{.Prefix}}…</td><td class="small">{{.Kind}}</td><td class="small muted">{{if .LastUsedAt}}{{ago .LastUsedAt}}{{else}}never{{end}}</td><td>{{if .RevokedAt}}<span class="badge muted">revoked</span>{{else}}<span class="badge good">active</span>{{end}}</td></tr>{{end}}
+      </tbody></table>
+      <div class="panel-body tiny muted">Secret keys are shown once and stored hashed. Publishable keys only work from allowed origins.</div>
+    </div>
+    <div class="panel">
+      <div class="panel-head"><h2>Quickstart</h2><a class="btn btn-sm" href="/docs">Docs</a></div>
+      <div class="panel-body">
+<pre class="json">&lt;script src="{{.BaseURL}}/sdk/singleton.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+  const r = await Singleton.verify({
+    publishableKey: "{{if .DemoPK}}{{.DemoPK}}{{else}}pk_test_…{{end}}",
+    required: [{{range $i, $p := .App.RequiredList}}{{if $i}}, {{end}}"{{$p}}"{{end}}],
+    reference: currentUser.id,
+  });
+  // POST r.token to your server and verify it with
+  // {{.BaseURL}}/.well-known/jwks.json  (aud = "{{.App.ID}}")
+&lt;/script&gt;</pre>
+      </div>
+    </div>
+  </div>
+</div>
+{{end}}

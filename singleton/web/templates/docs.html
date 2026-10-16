@@ -1,0 +1,127 @@
+{{define "title"}}Docs — Singleton{{end}}
+{{define "content"}}
+<div class="page wrap">
+  <div class="page-head"><span class="eyebrow">Developers</span><h1>Singleton docs</h1><p>Verify that a user is a real, unique human — and old enough — in about ten minutes. No personal data ever reaches your servers.</p></div>
+  <div class="doc">
+    <nav aria-label="Docs sections">
+      <a href="#quickstart">Quickstart</a><a href="#concepts">Concepts</a><a href="#predicates">Predicates</a><a href="#sdk">JavaScript SDK</a>
+      <a href="#sessions">Sessions API</a><a href="#tokens">Result tokens</a><a href="#stateless">Stateless verify</a><a href="#agents">Agent delegation</a>
+      <a href="#webhooks">Webhooks</a><a href="#errors">Errors &amp; limits</a><a href="#protocol">Protocol</a><a href="#audit">Auditing the network</a>
+    </nav>
+    <article>
+      <h2 id="quickstart">Quickstart</h2>
+      <p>1. Create an app in the <a href="/console">console</a> and add your site's origin. You get a <code>pk_test_…</code> publishable key and a <code>sk_test_…</code> secret key.</p>
+      <p>2. Add the button:</p>
+<pre>&lt;script src="{{.BaseURL}}/sdk/singleton.js"&gt;&lt;/script&gt;
+&lt;div id="verify"&gt;&lt;/div&gt;
+&lt;script&gt;
+  Singleton.button("#verify", {
+    publishableKey: "pk_test_…",
+    required: ["human", "age_over_18"],
+    reference: currentUser.id
+  }, async (err, result) =&gt; {
+    if (err) return showError(err.message);
+    await fetch("/singleton/complete", { method: "POST", body: result.token });
+  });
+&lt;/script&gt;</pre>
+      <p>3. Verify the token on your server (any JOSE library that supports EdDSA):</p>
+<pre>import { jwtVerify, createRemoteJWKSet } from "jose";
+const JWKS = createRemoteJWKSet(new URL("{{.BaseURL}}/.well-known/jwks.json"));
+
+app.post("/singleton/complete", async (req, res) =&gt; {
+  const { payload } = await jwtVerify(req.body, JWKS, { audience: "app_…", issuer: "{{.BaseURL}}" });
+  if (payload.status === "duplicate") return res.status(409).send(`Already registered as ${payload.duplicate_of}`);
+  await users.update(payload.reference, { humanId: payload.sub, verified: payload.predicates });
+  res.sendStatus(204);
+});</pre>
+
+      <h2 id="concepts">Concepts</h2>
+      <table><thead><tr><th>Term</th><th>Meaning</th></tr></thead><tbody>
+        <tr><td><b>Holder</b></td><td>A person with a Singleton Pass: a key on their device that was enrolled after one verification.</td></tr>
+        <tr><td><b>Scope</b></td><td>Your app's namespace (e.g. <code>app:acme-4f1a</code>). Pseudonyms are unique inside a scope and unlinkable across scopes.</td></tr>
+        <tr><td><b>Action</b></td><td>An optional sub-scope (<code>drop:fall-tour</code>, <code>poll:42</code>) that gives each human one participation per action.</td></tr>
+        <tr><td><b>Nullifier / pseudonym</b></td><td>The stable 32-byte identifier of a holder inside one scope. Store it as your "human id".</td></tr>
+        <tr><td><b>Predicate</b></td><td>A yes/no fact proven by membership in a published set: human, over 18, issued in AU…</td></tr>
+        <tr><td><b>Epoch</b></td><td>A sealed snapshot of every set, committed with Merkle roots anchored on-chain. Proofs reference an epoch; the current and {{"previous"}} epochs are accepted.</td></tr>
+      </tbody></table>
+
+      <h2 id="predicates">Predicates</h2>
+      <table><thead><tr><th>Name</th><th>Label</th><th>Description</th></tr></thead><tbody>
+        {{range .Sets}}<tr><td><code>{{.Name}}</code></td><td>{{.Label}}</td><td>{{.Description}}</td></tr>{{end}}
+      </tbody></table>
+      <p>Ask for at most four predicates per session. Age and region predicates are billed as premium predicates.</p>
+
+      <h2 id="sdk">JavaScript SDK</h2>
+      <p><code>Singleton.verify(options) → Promise&lt;Result&gt;</code> opens the hosted consent screen in a popup (falling back to a redirect) and resolves when the holder finishes.</p>
+      <table><thead><tr><th>Option</th><th>Type</th><th></th></tr></thead><tbody>
+        <tr><td><code>publishableKey</code></td><td>string</td><td>Required. Works only from origins allowed on the app.</td></tr>
+        <tr><td><code>required</code></td><td>string[]</td><td>Predicates; defaults to the app's defaults.</td></tr>
+        <tr><td><code>action</code></td><td>string</td><td>Optional one-per-human action scope.</td></tr>
+        <tr><td><code>reference</code></td><td>string</td><td>Your account id; enables duplicate detection.</td></tr>
+      </tbody></table>
+      <p>Rejections carry <code>error.code</code>: <code>declined</code>, <code>closed</code> or <code>unqualified</code> (with <code>error.missing</code>).</p>
+
+      <h2 id="sessions">Sessions API</h2>
+      <h3>POST /v1/sessions</h3>
+      <p>Authorization: <code>Bearer sk_…</code> (server) or <code>Bearer pk_…</code> (browser, allowed origins only).</p>
+<pre>{
+  "required": ["human_doc", "age_over_18"],
+  "action": "drop:fall-tour",       // optional
+  "reference": "user_123",          // optional, enables duplicate detection
+  "returnUrl": "https://acme.com/after"  // optional, for redirect flows
+}
+→ 201 { "id": "vs_…", "url": "{{.BaseURL}}/verify/vs_…", "challenge": "…", "status": "pending", "expiresAt": "…" }</pre>
+      <h3>GET /v1/sessions/:id</h3>
+      <p>Secret key only. Returns the session; once <code>status</code> is <code>verified</code> or <code>duplicate</code> it includes a fresh <code>token</code>.</p>
+      <table><thead><tr><th>status</th><th>meaning</th></tr></thead><tbody>
+        <tr><td><code>pending</code></td><td>Waiting for the holder.</td></tr>
+        <tr><td><code>verified</code></td><td>Predicates proven. <code>returning: true</code> if this human was seen in this scope before.</td></tr>
+        <tr><td><code>duplicate</code></td><td>Proven, but the human is already bound to another <code>reference</code> (<code>duplicateOf</code>).</td></tr>
+        <tr><td><code>failed</code></td><td>Invalid proof, expired epoch, replay, or missing predicate.</td></tr>
+        <tr><td><code>expired</code></td><td>Not completed within 15 minutes.</td></tr>
+      </tbody></table>
+
+      <h2 id="tokens">Result tokens</h2>
+      <p>Compact JWS, <code>alg: EdDSA</code> (Ed25519), key id <code>{{.KeyID}}</code>, valid 10 minutes. Verify against <a href="/.well-known/jwks.json">/.well-known/jwks.json</a>.</p>
+<pre>{
+  "iss": "{{.BaseURL}}", "aud": "app_…", "sub": "&lt;nullifier&gt;", "sid": "vs_…",
+  "scope": "app:acme-4f1a#drop:fall-tour", "predicates": ["human_doc"],
+  "status": "verified", "duplicate": false, "duplicate_of": "", "returning": false,
+  "reference": "user_123", "iat": 1760000000, "exp": 1760000600
+}</pre>
+
+      <h2 id="stateless">Stateless verify</h2>
+      <p>Native apps can run their own challenge and post the holder's presentation directly: <code>POST /v1/presentations/verify</code> with <code>{ presentation, challenge, required, action }</code>. The challenge must be ≥ 16 random characters you generated and never reused.</p>
+
+      <h2 id="agents">Agent delegation</h2>
+      <p>A holder can deputise an AI agent inside your scope. The agent holds an Ed25519 key; the delegation is a ring-signature presentation bound to the statement's hash, so you learn the pseudonym it acts for — not who that is.</p>
+<pre>POST /v1/delegations   (pk or sk)
+{ "delegation": { "v": 1, "scope": "app:acme-4f1a", "agent": "&lt;ed25519 pubkey hex&gt;", "label": "Scheduling assistant",
+                  "permissions": ["events:create"], "issuedAt": 1760000000, "notAfter": 1760604800 },
+  "presentation": { … } }
+
+POST /v1/agents/verify (sk)
+{ "delegationId": "dlg_…", "message": "&lt;the exact request bytes&gt;", "signature": "&lt;base64url Ed25519&gt;" }
+→ { "valid": true, "nullifier": "…", "permissions": ["events:create"], "notAfter": "…" }</pre>
+
+      <h2 id="webhooks">Webhooks</h2>
+      <p>Events: <code>session.verified</code>, <code>session.duplicate</code>, <code>session.failed</code>, <code>delegation.created</code>. Header <code>Singleton-Signature: t=&lt;unix&gt;,v1=&lt;hex HMAC-SHA256(secret, "t." + body)&gt;</code>. Reject signatures older than five minutes. Retries: 3 attempts, 1s / 3s backoff.</p>
+
+      <h2 id="errors">Errors &amp; limits</h2>
+      <p>Errors are JSON <code>{ "error": "…" }</code> with conventional status codes (400 validation, 401 bad key, 403 origin not allowed, 404, 409 duplicate enrolment, 429 rate limited). Default limits: 600 session or verify calls per minute per IP; contact us for more.</p>
+
+      <h2 id="protocol">Protocol</h2>
+      <p>Group: ristretto255. A holder key is <code>x</code>, <code>P = x·G</code>. For scope <code>s</code>, <code>H_s = HashToGroup(s)</code> and the key image is <code>I = x·H_s</code>; the nullifier is <code>SHA-256("singleton/nullifier/v1" ‖ I)</code>.</p>
+      <p>A proof is a bLSAG-style linkable ring signature over a ring <code>R</code> drawn from the epoch's predicate set. It shows knowledge of <code>x</code> with <code>P_j = x·G</code> for some <code>P_j ∈ R</code> and <code>I = x·H_s</code>, and binds the scope, the verifier's challenge, the epoch, the set name and the bucket prefix into every challenge hash.</p>
+      <p>Rings are canonical <em>anonymity buckets</em>: holders are placed in a prefix tree by <code>SHA-256("singleton/bucket/v1" ‖ P)</code>; a bucket is all set members sharing the first <code>b</code> bits, with at least 32 members. Because buckets are stable across epochs, repeated proofs reveal at most the bucket. Verifiers rebuild the ring from the published set and reject buckets below the minimum size.</p>
+      <p>Properties: same holder + same scope ⇒ identical nullifier; different scopes ⇒ unlinkable (DDH); no holder can forge membership or another holder's key image; replays fail because the challenge is session-bound. v2 replaces buckets with a zk-SNARK over the whole set.</p>
+
+      <h2 id="audit">Auditing the network</h2>
+      <p>Each epoch's set roots are anchored by <code>HumanRegistry.anchorEpoch(uint64, bytes32[], bytes32[], uint64[])</code>. Download any set and recompute its Merkle root:</p>
+<pre>curl {{.BaseURL}}/api/sets/&lt;epoch&gt;/human | jq .root
+go run ./cmd/singleton verify-root -url {{.BaseURL}} -set age_over_18</pre>
+      <p>See the <a href="/transparency">transparency explorer</a> for epochs, anchor transactions, attesters and revocations.</p>
+    </article>
+  </div>
+</div>
+{{end}}
