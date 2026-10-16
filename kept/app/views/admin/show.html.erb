@@ -1,0 +1,42 @@
+<% content_for :title, "Admin · Kept" %>
+<div class="topline"><h1>Admin</h1><a class="btn btn-ghost btn-sm" href="<%= admin_path(format: :csv) %>">Export waitlist (CSV)</a></div>
+<div class="grid g3">
+  <div class="card stat"><div class="k">Waitlist</div><div class="v"><%= number_with_delimiter(@signups.size) %></div><div class="s"><%= @referred %> came by referral</div></div>
+  <div class="card stat"><div class="k">Members</div><div class="v"><%= number_with_delimiter(@metrics[:members]) %></div><div class="s"><%= @metrics[:plus] %> on Plus (paid or through work)</div></div>
+  <div class="card stat"><div class="k">Active, 7 days</div><div class="v"><%= @metrics[:active_7d] %></div><div class="s">logged a dose · <%= @metrics[:logging_7d] %> logged weight · <%= @metrics[:off_ramp] %> on an off-ramp</div></div>
+</div>
+<div class="grid g3 mt">
+  <% [["By role", @by_role.map { |k, n| [WaitlistSignup::ROLES[k] || k, n] }], ["By medicine", @by_drug.map { |k, n| [k == "none" ? "None yet" : (DrugCatalog::DRUGS[k]&.brand || k), n] }], ["By stage", @by_stage.map { |k, n| [WaitlistSignup::STAGES[k] || k, n] }]].each do |title, rows| %>
+    <section class="card">
+      <h3><%= title %></h3>
+      <% max = rows.map(&:last).max.to_i %>
+      <% if rows.empty? %><p class="small muted">No sign-ups yet.</p><% end %>
+      <% rows.each do |label, n| %>
+        <div class="meter-head"><span><%= label %></span><strong><%= n %></strong></div>
+        <div class="bar" style="margin-bottom:10px"><i style="width:<%= max.zero? ? 0 : (100.0 * n / max).round %>%"></i></div>
+      <% end %>
+    </section>
+  <% end %>
+</div>
+<section class="card mt">
+  <h3>Latest sign-ups</h3>
+  <div class="table-wrap"><table><thead><tr><th>When</th><th>Email</th><th>Role</th><th>Medicine</th><th>Stage</th><th>Company</th><th class="r">Position</th></tr></thead><tbody>
+    <% @signups.first(25).each do |s| %><tr><td><%= s.created_at.strftime("%b %-d %H:%M") %></td><td><%= s.email %></td><td><%= s.role %></td><td><%= s.drug.presence || "—" %></td><td><%= s.stage.presence || "—" %></td><td><%= s.company.presence || "—" %></td><td class="r"><%= link_to "status", waitlist_status_path(s.code) %></td></tr><% end %>
+    <% if @signups.empty? %><tr><td colspan="7" class="muted">No sign-ups yet.</td></tr><% end %>
+  </tbody></table></div>
+</section>
+<section class="card mt" id="employers">
+  <h3>Employers & plans</h3>
+  <div class="table-wrap"><table><thead><tr><th>Name</th><th class="r">Covered lives</th><th class="r">PMPM</th><th class="r">Members</th><th class="r">ARR</th><th>Enrollment code</th><th></th></tr></thead><tbody>
+    <% @employers.each do |e| %><tr><td><%= e.name %></td><td class="r"><%= number_with_delimiter(e.covered_lives) %></td><td class="r"><%= number_to_currency(e.pmpm) %></td><td class="r"><%= e.members_count %></td><td class="r"><%= number_to_currency(e.covered_lives.to_i * e.pmpm.to_f * 12, precision: 0) %></td><td><code><%= e.enrollment_code %></code></td><td class="r"><%= link_to "Dashboard", employer_dashboard_path(e.slug) %></td></tr><% end %>
+  </tbody></table></div>
+  <h4 class="mt">Add an employer or plan</h4>
+  <%= form_with url: admin_employers_path, scope: :employer, class: "row row-end" do |f| %>
+    <div><%= f.label :name %><%= f.text_field :name, required: true %></div>
+    <div><%= f.label :slug, "URL slug" %><%= f.text_field :slug, required: true, pattern: "[a-z0-9-]+" %></div>
+    <div><%= f.label :covered_lives %><%= f.number_field :covered_lives, min: 1, required: true %></div>
+    <div><%= f.label :pmpm, "PMPM ($)" %><%= f.number_field :pmpm, step: 0.01, value: 0.85 %></div>
+    <div><%= f.label :monthly_drug_cost, "Drug cost / member / mo ($)" %><%= f.number_field :monthly_drug_cost, value: 1050 %></div>
+    <div><%= f.submit "Create", class: "btn btn-primary btn-block" %></div>
+  <% end %>
+</section>

@@ -1,13 +1,28 @@
 <% content_for :title, "Protein & water · Kept" %>
 <div class="topline"><h1>Protein & water</h1></div>
 <div id="nutrition-summary"><%= render "nutrition/summary", o: @o %></div>
-<section class="card" style="margin-top:14px">
-  <div class="card-head"><h3>Quick add</h3><span class="small muted">Protein-first, easy on a small appetite</span></div>
+<% if @recent.any? %>
+<section class="card mt">
+  <div class="card-head"><h3>Again?</h3><span class="small muted">Your foods from the last 30 days</span></div>
   <div class="quick">
-    <% @foods.each do |f| %>
-      <%= button_to foods_path(food_key: f.key), class: "", form: { data: { turbo_stream: true } } do %><b><%= f.protein_g %> g</b><%= f.name %><span class="small muted"> · <%= f.serving %></span><% end %>
+    <% @recent.each do |e| %>
+      <%= button_to foods_path, params: { food_entry: { name: e.name, protein_g: e.protein_g, fiber_g: e.fiber_g, calories: e.calories } }, form: { data: { turbo_stream: true } } do %><b><%= e.protein_g.to_f.round %> g</b><%= e.name %><% end %>
     <% end %>
   </div>
+</section>
+<% end %>
+<section class="card mt" data-controller="food-search">
+  <div class="card-head"><h3>Quick add</h3><span class="small muted">Protein-first, easy on a small appetite</span></div>
+  <label class="sr-only" for="food-q">Search foods</label>
+  <input id="food-q" type="search" placeholder="Search <%= FoodCatalog::FOODS.size %> foods — e.g. shrimp, skyr, beans, fiber" autocomplete="off"
+    data-food-search-target="input" data-action="input->food-search#filter keydown.esc->food-search#clear">
+  <p class="hint" data-food-search-target="status" aria-live="polite">Showing favourites. Type to search everything.</p>
+  <div class="quick mt">
+    <% @foods.each do |f| %>
+      <%= button_to foods_path(food_key: f.key), form: { data: { turbo_stream: true, food_search_target: "item", name: "#{f.name} #{f.category}#{' high fiber' if f.fiber_g >= 4}#{' high protein' if f.protein_g >= 20}".downcase, featured: f.featured }, hidden: !f.featured } do %><b><%= f.protein_g %> g</b><%= f.name %><span class="small muted"> · <%= f.serving %><%= " · #{f.fiber_g} g fiber" if f.fiber_g >= 4 %></span><% end %>
+    <% end %>
+  </div>
+  <p class="hint" data-food-search-target="empty" hidden>Nothing matches — add it below with its protein from the label.</p>
 </section>
 <div class="grid g2" style="margin-top:14px">
   <section class="card">
@@ -21,7 +36,7 @@
   </section>
   <section class="card">
     <h3>Water</h3>
-    <div class="row">
+    <div class="row cols-3">
       <% (current_user.imperial? ? [237, 473, 710] : [250, 500, 750]).each do |ml| %><%= button_to "+ #{water_label(ml)}", waters_path(ml: ml), class: "btn btn-ghost btn-block", form: { data: { turbo_stream: true } } %><% end %>
     </div>
     <p class="hint">Fiber and fluids together prevent the constipation many people get on GLP-1s.</p>

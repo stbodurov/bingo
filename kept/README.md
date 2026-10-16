@@ -38,7 +38,9 @@ Safety and dose alerts sit at the top, red flags first.
 
 **Protein & water** (`/app/nutrition`):
 - targets from adjusted body weight (2025 joint advisory, 1.2–1.6 g/kg);
-- appetite-friendly quick-add foods via Turbo Streams;
+- a searchable catalog of 104 appetite-friendly foods with protein, fiber and calories;
+- one-tap "Again?" re-logging of your own recent foods;
+- quick-add via Turbo Streams;
 - a 14-day chart against target.
 
 **Strength** (`/app/strength`): a three-day full-body program (gym or home) that rotates A/B/C, plus walks and cardio.
@@ -50,7 +52,7 @@ Safety and dose alerts sit at the top, red flags first.
 
 **Plan & cost** (`/app/plan`):
 - the cost finder for your coverage: savings card, the $50 Medicare program, manufacturer and TrumpRx cash prices, cheaper FDA-approved alternatives, or an appeal, with the annual saving;
-- the **off-ramp** planner: maintain, taper (stepping down the label ladder) or stop, with regain guardrails.
+- the **off-ramp**: maintain, taper (stepping down the label ladder) or stop. Start a plan and Kept tracks the week, records each step down and your last dose, then runs **maintenance mode** off medication. A regain guardrail raises a critical alert if your trend rises 2% above where the plan started.
 
 **Doctor report** (`/app/report`) and **coverage appeal letter** (`/app/appeal`): print-ready pages built from your logs.
 
@@ -59,6 +61,12 @@ Safety and dose alerts sit at the top, red flags first.
 - **calendar dose reminders**: a private iCalendar feed with a recurring dose event, an alarm, and a "talk to your prescriber" event at the label's step-up window;
 - full data export (JSON and CSV);
 - account deletion.
+
+**Admin** (`/admin`, admin accounts only):
+- waitlist segments by role, medicine and stage;
+- CSV export with referral counts;
+- product health: members, Plus, active in the last 7 days, members on an off-ramp;
+- employer accounts with ARR, and creating new employers with generated dashboard and enrollment codes.
 
 **Employer dashboard** (`/employer/northwind`, access code `northwind-demo`). Everything is aggregate and suppressed below 10 members:
 - persistence at 3/6/12 months against the ~35% benchmark;
@@ -98,7 +106,7 @@ Run the tests:
 bin/rails test
 ```
 
-There are 57 tests: domain math, models, every screen, the logging flows, export and deletion, employer suppression, calendar feed and auth.
+There are 66 tests: domain math, models, every screen, the logging flows, the off-ramp through maintenance and restart, export and deletion, employer suppression, admin, calendar feed and auth.
 
 ### Production
 

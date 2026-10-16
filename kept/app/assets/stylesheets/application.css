@@ -178,6 +178,7 @@ td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; }
   font: 600 .88rem var(--font); color: var(--ink); }
 .quick button:hover { border-color: var(--accent); }
 .quick form { display: flex; }
+.quick form[hidden] { display: none; }
 .quick button { width: 100%; }
 .quick b { display: block; color: var(--accent); font-size: 1rem; }
 .list { list-style: none; padding: 0; margin: 0; }
@@ -293,3 +294,4 @@ form.inline { display: inline; }
 .path { display: flex; flex-direction: column; }
 .path form { margin-top: auto; padding-top: 12px; }
 @media (max-width: 720px) { .ramp-now { grid-template-columns: 1fr; } }
+.row.cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }

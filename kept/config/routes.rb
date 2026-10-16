@@ -40,6 +40,8 @@ Rails.application.routes.draw do
   end
 
   get "calendar/:token", to: "calendars#show", as: :dose_calendar, constraints: { format: :ics }
+  get "admin", to: "admin#show", as: :admin
+  post "admin/employers", to: "admin#create_employer", as: :admin_employers
   get "employer/:slug", to: "employer_dashboards#show", as: :employer_dashboard
   post "employer/:slug/access", to: "employer_dashboards#access", as: :employer_access
 
