@@ -1,0 +1,32 @@
+[project]
+name = "harbormaster"
+version = "1.0.0"
+description = "Landed cost and tariff recovery for importers"
+requires-python = ">=3.11"
+dependencies = [
+  "fastapi>=0.115",
+  "uvicorn[standard]>=0.30",
+  "jinja2>=3.1",
+  "sqlalchemy>=2.0",
+  "python-multipart>=0.0.9",
+  "itsdangerous>=2.2",
+  "anthropic>=1.15",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "httpx>=0.27"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+filterwarnings = ["ignore::DeprecationWarning"]
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["harbormaster*"]
+
+[tool.setuptools.package-data]
+harbormaster = ["web/templates/**/*", "web/static/**/*"]

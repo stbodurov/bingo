@@ -1,0 +1,20 @@
+{% extends "app/layout.html" %}
+{% block page_title %}Drawback{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Duty drawback</h1><p>Exports matched to duty-paid imports of the same 8-digit HTS within five years (unused-merchandise substitution, 19 U.S.C. 1313(j)(2)). Highest-duty lots are designated first.</p></div>
+</div>
+<div class="grid g3">
+  <div class="card stat"><span class="label">Claimable drawback</span><span class="value">{{ claim.refund|compact }}</span><span class="sub">99% of eligible MFN, 301 & 232 duty</span></div>
+  <div class="card stat"><span class="label">Units matched</span><span class="value">{{ claim.units|int }}</span><span class="sub">{{ claim.matches|length }} designations</span></div>
+  <div class="card stat"><span class="label">Exports without a match</span><span class="value">{{ claim.unmatched_exports|length }}</span><span class="sub">no eligible import in window</span></div>
+</div>
+<div class="card table-wrap" style="margin-top:18px">
+  <table>
+    <thead><tr><th>HTS</th><th>Product</th><th class="r">Units</th><th class="r">Exports</th><th class="r">Drawback</th></tr></thead>
+    <tbody>{% for r in rows %}{% set s = skus.get(r.hts) %}<tr><td class="mono">{{ r.hts }}</td><td>{{ s.description if s else '' }}</td><td class="r num">{{ r.units|int }}</td><td class="r num">{{ r.exports|length }}</td><td class="r num">{{ r.refund|money }}</td></tr>
+    {% else %}<tr><td colspan="5" class="empty">No exports recorded. Upload export shipments (AES/EEI) to find drawback.</td></tr>{% endfor %}</tbody>
+  </table>
+  <p class="hint">IEEPA duty is excluded (barred from drawback and refunded through CAPE); Section 122 is excluded until its drawback treatment is settled. Claims are filed by a licensed drawback specialist; the filing window is five years from import.</p>
+</div>
+{% endblock %}

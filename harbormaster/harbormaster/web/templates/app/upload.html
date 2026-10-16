@@ -1,0 +1,35 @@
+{% extends "app/layout.html" %}
+{% block page_title %}Upload entries{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Upload entries</h1><p>Entry-summary line data from the ACE ES-003 report or your broker's 7501 export. Existing entries are replaced and re-audited; new ones are added.</p></div>
+  <a class="btn btn-ghost" href="/app/upload/sample.csv">Download a sample file</a>
+</div>
+{% if result %}
+<section class="card" style="margin-bottom:18px">
+  <h3>Import complete</h3>
+  <div class="grid g4" style="margin:10px 0">
+    <div class="stat"><span class="label">Entries created</span><span class="value">{{ result.entries_created }}</span></div>
+    <div class="stat"><span class="label">Entries updated</span><span class="value">{{ result.entries_updated }}</span></div>
+    <div class="stat"><span class="label">Lines</span><span class="value">{{ result.lines }}</span></div>
+    <div class="stat"><span class="label">New findings</span><span class="value">{{ result.findings }}</span></div>
+  </div>
+  {% if result.errors %}<details open><summary>{{ result.errors|length }} warnings</summary><ul class="small">{% for e in result.errors[:50] %}<li>{{ e }}</li>{% endfor %}</ul></details>{% endif %}
+  <a class="btn btn-primary" href="/app/recovery">See findings</a>
+</section>
+{% endif %}
+<div class="split">
+  <form class="card" method="post" action="/app/upload" enctype="multipart/form-data">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <div class="field"><label for="file">CSV file (up to 20 MB)</label><input id="file" name="file" type="file" accept=".csv,text/csv" required></div>
+    <button class="btn btn-primary" type="submit">Import and audit</button>
+  </form>
+  <section class="card">
+    <h3>Columns</h3>
+    <p class="small muted">Required: <code>entry_number, entry_date, hts, origin, value</code>. Paid duty either per measure (<code>paid_mfn</code>, <code>paid_s301_cn</code>…) or as Chapter 99 pairs in <code>ch99</code>, e.g. <code>9903.01.25=1000; 9903.88.03=2500</code>.</p>
+    <p class="small mono" style="word-break:break-word">{{ columns|join(', ') }}</p>
+    <h3>Getting the ES-003 report</h3>
+    <ol class="small muted"><li>ACE Portal → Reports → Entry Summary → ES-003 Entry Summary Line Details.</li><li>Date range: Jan 1, 2025 to today; include Chapter 99 lines.</li><li>Export as CSV and upload here — or ask your broker for the same data.</li></ol>
+  </section>
+</div>
+{% endblock %}

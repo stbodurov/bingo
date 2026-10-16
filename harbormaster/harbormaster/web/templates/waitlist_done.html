@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}You're on the list — Harbormaster{% endblock %}
+{% block body %}
+<header class="site-head"><div class="wrap">{% include "partials/logo.html" %}<nav class="site-nav"><a href="/">Home</a></nav></div></header>
+<main class="band"><div class="wrap" style="max-width:820px">
+  <span class="kicker">You're on the list</span>
+  <h1>Thanks, {{ s.company }}.</h1>
+  <p class="lede">We onboard in deadline order, so the importers with protest windows closing soonest and the largest refunds go first.</p>
+  <div class="grid g3" style="margin:28px 0">
+    <div class="card stat"><span class="label">Onboarding position</span><span class="value">#{{ p.position }}</span><span class="sub">of {{ p.of }}</span></div>
+    <div class="card stat"><span class="label">Estimated refund</span><span class="value">{{ (s.estimate.refund_total if s.estimate else 0)|compact }}</span><span class="sub">{{ 'from your estimate' if s.estimate else 'run the estimator to add one' }}</span></div>
+    <div class="card stat"><span class="label">Referrals</span><span class="value">{{ p.referrals }}</span><span class="sub">$25k fee-free each</span></div>
+  </div>
+  <div class="card">
+    <h3>Move up: refer another importer</h3>
+    <p class="muted">Both of you get the first $25,000 recovered fee-free, and each referral moves you up the queue.</p>
+    <label for="share">Your link</label>
+    <input id="share" type="text" readonly value="{{ share }}">
+  </div>
+  <div class="card" style="margin-top:18px">
+    <h3>What happens next</h3>
+    <ol class="muted">
+      <li>We'll email {{ s.email }} to schedule a 20-minute kickoff.</li>
+      <li>You (or your broker) pull the ACE ES-003 report for Jan 2025 to today — we send step-by-step instructions.</li>
+      <li>Within 48 hours you get an entry-by-entry audit: refunds by route, errors, deadlines.</li>
+    </ol>
+  </div>
+</div></main>
+{% endblock %}

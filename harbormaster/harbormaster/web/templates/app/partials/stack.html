@@ -1,0 +1,27 @@
+{% from "app/macros.html" import status_badge %}
+{% set st = lc.stack %}
+<section class="card">
+  <span class="kicker">{{ inputs.hts }} · {{ inputs.origin|country }} · {{ inputs.entry_date|date }}</span>
+  <div class="grid g3" style="margin:6px 0 14px">
+    <div class="stat"><span class="label">Total duty</span><span class="value">{{ st.rate|pct(2) }}</span><span class="sub">{{ st.duty|money(true) }}</span></div>
+    <div class="stat"><span class="label">Landed per unit</span><span class="value">{{ lc.per_unit|money(true) }}</span><span class="sub">duty {{ lc.duty_per_unit|money(true) }} / unit</span></div>
+    <div class="stat"><span class="label">Fees</span><span class="value">{{ lc.fee_total|money(true) }}</span><span class="sub">MPF{{ ' + HMF' if lc.fees|length > 1 }}</span></div>
+  </div>
+  {% if st.line %}<p class="small muted" style="margin-top:-6px">{{ st.line.description }} · MFN {{ st.line.mfn }}%</p>{% endif %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>Layer</th><th>Status</th><th class="r">Rate</th><th class="r">Base</th><th class="r">Amount</th></tr></thead>
+    <tbody>
+    {% for c in st.charges %}
+      <tr><td><strong>{{ c.label }}</strong>{% if c.heading %} <span class="mono small muted">{{ c.heading }}</span>{% endif %}<br><span class="small muted">{{ c.note or c.authority }}</span></td>
+        <td>{{ status_badge(status_of(c.measure)) }}</td><td class="r num">{{ c.rate }}%</td><td class="r num">{{ c.base|money }}</td><td class="r num">{{ c.amount|money(true) }}</td></tr>
+    {% endfor %}
+    {% for f in lc.fees %}<tr><td>{{ f.label }}<br><span class="small muted">{{ f.note }}</span></td><td>{{ status_badge('fee') }}</td><td class="r num">{{ f.rate|round(4) }}%</td><td class="r num">{{ f.base|money }}</td><td class="r num">{{ f.amount|money(true) }}</td></tr>{% endfor %}
+    </tbody>
+    <tfoot><tr><td colspan="4">Duty + fees</td><td class="r num">{{ (st.duty + lc.fee_total)|money(true) }}</td></tr></tfoot>
+  </table></div>
+  {% if st.exclusions %}
+  <h3 style="margin-top:16px">Considered and not applied</h3>
+  <ul class="small" style="padding-left:18px">{% for x in st.exclusions %}<li><strong>{{ x.label }}:</strong> {{ x.reason }}</li>{% endfor %}</ul>
+  {% endif %}
+  {% for w in st.warnings %}<p class="callout small"><span class="status-icon" style="color:var(--warn)" aria-hidden="true">⚠</span> {{ w }}</p>{% endfor %}
+</section>

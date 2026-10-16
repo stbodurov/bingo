@@ -1,0 +1,15 @@
+Metadata-Version: 2.4
+Name: harbormaster
+Version: 1.0.0
+Summary: Landed cost and tariff recovery for importers
+Requires-Python: >=3.11
+Requires-Dist: fastapi>=0.115
+Requires-Dist: uvicorn[standard]>=0.30
+Requires-Dist: jinja2>=3.1
+Requires-Dist: sqlalchemy>=2.0
+Requires-Dist: python-multipart>=0.0.9
+Requires-Dist: itsdangerous>=2.2
+Requires-Dist: anthropic>=1.15
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"
+Requires-Dist: httpx>=0.27; extra == "dev"

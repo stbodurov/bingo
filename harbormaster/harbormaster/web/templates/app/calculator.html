@@ -1,0 +1,32 @@
+{% extends "app/layout.html" %}
+{% block page_title %}Duty calculator{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Duty calculator</h1><p>Any HTS line, any origin, any date from January 2025 — including dates in the future that already have scheduled changes.</p></div>
+</div>
+<div class="split">
+  <form class="card" hx-post="/app/calculator" hx-target="#stack" hx-trigger="change delay:200ms, submit">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <div class="field"><label for="hts">HTS subheading</label>
+      <select id="hts" name="hts">{% for l in lines %}<option value="{{ l.code }}" {{ 'selected' if l.code == inputs.hts }}>{{ l.code }} — {{ l.description|truncate(60) }}</option>{% endfor %}</select></div>
+    <div class="row">
+      <div class="field"><label for="origin">Country of origin</label><select id="origin" name="origin">{% for c in countries.values()|sort(attribute='name') %}<option value="{{ c.code }}" {{ 'selected' if c.code == inputs.origin }}>{{ c.name }}</option>{% endfor %}</select></div>
+      <div class="field"><label for="entry_date">Entry date</label><input id="entry_date" name="entry_date" type="date" value="{{ inputs.entry_date }}" min="2025-01-01" max="2027-12-31"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label for="unit_cost">Unit cost (FOB, $)</label><input id="unit_cost" name="unit_cost" type="number" step="0.01" min="0.01" value="{{ inputs.unit_cost }}"></div>
+      <div class="field"><label for="units">Units</label><input id="units" name="units" type="number" min="1" value="{{ inputs.units }}"></div>
+      <div class="field"><label for="freight">Freight & insurance ($)</label><input id="freight" name="freight" type="number" step="1" min="0" value="0"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label for="loaded_date">Loaded on vessel <span class="hint">(in-transit rules)</span></label><input id="loaded_date" name="loaded_date" type="date"></div>
+      <div class="field"><label for="metal_share">Metal content % <span class="hint">(232 derivatives)</span></label><input id="metal_share" name="metal_share" type="number" min="0" max="100" placeholder="not declared"></div>
+      <div class="field"><label for="mode">Mode</label><select id="mode" name="mode"><option value="ocean">Ocean</option><option value="air">Air</option><option value="truck">Truck / rail</option></select></div>
+    </div>
+    <label class="check"><input type="checkbox" name="usmca"> USMCA preference claimed (qualifying)</label>
+    <label class="check"><input type="checkbox" name="patented"> Patented pharmaceutical</label>
+    <div style="margin-top:12px"><button class="btn btn-primary" type="submit">Calculate</button></div>
+  </form>
+  <div id="stack" aria-live="polite">{% include "app/partials/stack.html" %}</div>
+</div>
+{% endblock %}

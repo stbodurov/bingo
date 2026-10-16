@@ -1,0 +1,27 @@
+{% extends "app/layout.html" %}
+{% block page_title %}Broker scorecard{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Broker scorecard</h1><p>How often each broker's filings differ from the law on the entry date, and in which direction. Share it in your next quarterly review.</p></div>
+</div>
+<div class="grid g2">
+{% for c in cards %}
+  <section class="card">
+    <div class="card-head"><div><h3>{{ c.broker.name }}</h3><span class="mono small muted">Filer {{ c.broker.filer_code }}</span></div>
+      <span class="badge {{ 'b-now' if c.error_rate > 20 else 'b-soon' if c.error_rate > 8 else 'b-good' }}">{{ c.error_rate|pct(0) }} of entries with errors</span></div>
+    <dl class="kv">
+      <dt>Entries</dt><dd class="num">{{ c.entries }} · {{ c.value|compact }} value</dd>
+      <dt>Entries with errors</dt><dd class="num">{{ c.error_entries }}</dd>
+      <dt>Overpaid</dt><dd class="num">{{ c.overpaid|money }}</dd>
+      <dt>Underpaid (exposure)</dt><dd class="num">{{ c.underpaid|money }}</dd>
+    </dl>
+    <h3 style="margin-top:14px">By measure</h3>
+    {% set top = (c.by_measure|map(attribute=1)|map('abs')|max) if c.by_measure else 1 %}
+    <table><tbody>{% for m, v in c.by_measure[:6] %}<tr><td>{{ m|measure }}</td>
+      <td style="width:45%"><span class="bar-inline" style="width:{{ (100 * v|abs / top)|round(1) }}%;background:{{ 'var(--s3)' if v > 0 else 'var(--s2)' }}" data-tip="{{ m|measure }}: {{ v|money }}"></span></td>
+      <td class="r num {{ 'delta-down' if v > 0 else 'delta-up' }}">{{ '+' if v > 0 }}{{ v|money }}</td></tr>{% endfor %}</tbody></table>
+    <p class="hint">Positive = charged more than owed (recoverable). Negative = underpaid (exposure). IEEPA lines are excluded from error rates.</p>
+  </section>
+{% else %}<p class="card empty">No brokers yet.</p>{% endfor %}
+</div>
+{% endblock %}

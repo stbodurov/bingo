@@ -1,0 +1,84 @@
+{% extends "app/layout.html" %}
+{% from "app/macros.html" import urgency, kind_badge, status_badge, liq %}
+{% block page_title %}Entry {{ e.entry_number }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><span class="kicker"><a href="/app/entries">Entries</a> / {{ e.origin|country }}</span>
+    <h1 class="mono" style="font-family:var(--mono);font-size:1.7rem">{{ e.entry_number }}</h1>
+    <p>Entered {{ e.entry_date|date }} at port {{ e.port }} by {{ e.broker.name if e.broker else 'unknown broker' }} · {{ e.mode }} · {{ liq(e) }}</p></div>
+  <form method="post" action="/app/entries/{{ e.id }}/audit"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn btn-ghost" type="submit">Re-audit</button></form>
+</div>
+
+<div class="grid g4">
+  <div class="card stat"><span class="label">Entered value</span><span class="value">{{ e.entered_value|compact }}</span></div>
+  <div class="card stat"><span class="label">Duty paid</span><span class="value">{{ e.duty_paid|compact }}</span><span class="sub">{{ (100 * e.duty_paid / e.entered_value if e.entered_value else 0)|pct }} effective</span></div>
+  <div class="card stat"><span class="label">Duty owed by law</span><span class="value">{{ e.duty_correct|compact }}</span><span class="sub">per Harbormaster's stack</span></div>
+  <div class="card stat"><span class="label">Owed back</span><span class="value">{{ findings|selectattr('kind','in',['refund','overpayment'])|sum(attribute='amount')|compact }}</span><span class="sub">before interest</span></div>
+</div>
+
+<div class="split" style="margin-top:18px">
+  <section class="card">
+    <div class="card-head"><h3>Paid vs. owed by measure</h3></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Measure</th><th>Status</th><th class="r">Paid</th><th class="r">Owed</th><th class="r">Difference</th></tr></thead>
+      <tbody>
+      {% for m in measures %}
+        {% set paid = (e.paid_by_measure or {}).get(m, 0) %}{% set owed = (e.correct_by_measure or {}).get(m, 0) %}
+        <tr><td>{{ m|measure }}</td><td>{{ status_badge(status_of(m)) }}</td><td class="r num">{{ paid|money(true) }}</td><td class="r num">{{ owed|money(true) }}</td>
+          <td class="r num {{ 'delta-down' if paid - owed > 0.5 else 'delta-up' if owed - paid > 0.5 }}">{{ (paid - owed)|money(true) if (paid - owed)|abs > 0.5 else '—' }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+    <p class="hint">IEEPA duty is owed back in full: the measure itself was invalidated, so "owed" is what the law said at the time and the whole amount is refundable.</p>
+  </section>
+  <section class="card">
+    <div class="card-head"><h3>Recovery routes</h3></div>
+    {% for f in findings %}
+    <div class="finding">
+      {{ kind_badge(f.kind) }}
+      <div><strong>{{ f.title }}</strong><p>{{ f.detail }}</p><p class="small muted">{{ f.authority }}</p>
+        {% if f.status != 'open' %}<span class="badge b-closed">{{ f.status|replace('_',' ') }}</span>{% endif %}</div>
+      <div class="amt">{{ (f.amount + f.interest)|money }}{% if f.interest %}<br><span class="small muted">incl. {{ f.interest|money }} interest</span>{% endif %}<br>{{ urgency(f.urgency, f.deadline) }}</div>
+    </div>
+    {% else %}<p class="empty">This entry was filed correctly and has nothing to recover.</p>{% endfor %}
+    <h3 style="margin-top:18px">Deadlines</h3>
+    <dl class="kv">
+      <dt>PSC window closes</dt><dd class="num">{{ dl.psc_close|date if dl.psc_close else 'closed (liquidated)' }}</dd>
+      <dt>Liquidation</dt><dd class="num">{{ e.liquidation_date|date if e.liquidation_status == 'liquidated' else (dl.projected_liquidation|date ~ ' (projected)') }}</dd>
+      <dt>Protest window closes</dt><dd class="num">{{ dl.protest_close|date if dl.protest_close else 'opens at liquidation' }}</dd>
+      <dt>CIT two-year limit</dt><dd class="num">{{ dl.cit_close|date }}</dd>
+      <dt>Drawback window</dt><dd class="num">{{ dl.drawback_close|date }}</dd>
+    </dl>
+  </section>
+</div>
+
+<section class="card" style="margin-top:18px">
+  <div class="card-head"><h3>Line-by-line stack</h3><span class="small muted">Each layer shows its rate, base and reason; layers not applied show why.</span></div>
+  {% for line in e.lines %}
+  <details {{ 'open' if loop.first }} style="border-top:1px solid var(--grid);padding:12px 0">
+    <summary style="cursor:pointer"><strong>Line {{ line.line_no }}</strong> · <span class="mono">{{ line.hts }}</span> · {{ line.description }} · {{ line.quantity|int }} units · {{ line.value|money }}
+      {% set lp = (line.paid or {}).values()|sum %}{% set lc = (line.correct or {}).values()|sum %}
+      · paid <span class="num">{{ lp|money }}</span> / owed <span class="num">{{ lc|money }}</span></summary>
+    <div class="table-wrap"><table style="margin-top:10px">
+      <thead><tr><th>Layer</th><th>Heading</th><th class="r">Rate</th><th class="r">Base</th><th class="r">Owed</th><th class="r">Paid</th><th>Why</th></tr></thead>
+      <tbody>
+      {% for x in line.explanation %}
+        {% if x.type == 'charge' %}
+        <tr><td>{{ x.measure|measure }}</td><td class="mono small">{{ x.heading or '—' }}</td><td class="r num">{{ x.rate }}%</td><td class="r num">{{ x.base|money }}</td>
+          <td class="r num">{{ x.amount|money(true) }}</td><td class="r num">{{ (line.paid or {}).get(x.measure, 0)|money(true) }}</td><td class="small">{{ x.note }}</td></tr>
+        {% elif x.type == 'exclusion' %}
+        <tr><td class="muted">{{ x.measure|measure }}</td><td></td><td class="r muted">not applied</td><td></td><td class="r num">$0.00</td>
+          <td class="r num {{ 'delta-down' if (line.paid or {}).get(x.measure, 0) > 0.5 }}">{{ (line.paid or {}).get(x.measure, 0)|money(true) }}</td><td class="small">{{ x.reason }}</td></tr>
+        {% else %}
+        <tr><td colspan="7" class="small"><span class="status-icon" style="color:var(--warn)" aria-hidden="true">⚠</span> {{ x.text }}</td></tr>
+        {% endif %}
+      {% endfor %}
+      {% for m, v in (line.paid or {}).items() if m not in (line.correct or {}) and v > 0.5 and not (line.explanation|selectattr('measure', 'equalto', m)|list) %}
+        <tr><td>{{ m|measure }}</td><td></td><td class="r muted">not owed</td><td></td><td class="r num">$0.00</td><td class="r num delta-down">{{ v|money(true) }}</td><td class="small">Charged but not applicable to this line.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+  </details>
+  {% endfor %}
+</section>
+{% endblock %}

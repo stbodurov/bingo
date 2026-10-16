@@ -1,0 +1,21 @@
+<section class="card">
+  <div class="card-head"><h3>Candidates</h3><span class="badge plain {{ 'b-later' if r.engine == 'claude' else '' }}">{{ 'Claude' if r.engine == 'claude' else 'Catalog match' }}</span></div>
+  <p class="muted small">{{ r.summary }}</p>
+  {% if r.rate_spread %}<p class="callout small">The candidates differ by <strong>{{ r.rate_spread }} points</strong> of duty from {{ r.origin|country }} — this classification decision is worth getting right.</p>{% endif %}
+  {% for c in r.candidates %}
+  <div class="finding">
+    <span class="badge plain">{{ (c.confidence * 100)|round|int }}%</span>
+    <div><strong class="mono">{{ c.code }}</strong> — {{ c.description }}<p>{{ c.reasoning }}</p><p class="small muted">{{ c.gri }}</p></div>
+    <div class="amt">{% if c.duty_rate is not none %}{{ c.duty_rate }}%<br><span class="small muted">duty today</span>{% else %}—{% endif %}
+      {% if c.code != 'OUTSIDE_CATALOG' and skus %}
+      <form method="post" action="/app/classify/{{ rec.id }}/apply" style="margin-top:6px;display:flex;gap:6px;justify-content:flex-end">
+        <input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="code" value="{{ c.code }}">
+        <label class="visually-hidden" for="sku-{{ loop.index }}">SKU</label>
+        <select id="sku-{{ loop.index }}" name="sku_id" style="width:auto;padding:6px">{% for s in skus %}<option value="{{ s.id }}" {{ 'selected' if preselect and s.id|string == preselect }}>{{ s.sku }}</option>{% endfor %}</select>
+        <button class="btn btn-ghost btn-sm" type="submit">Approve</button>
+      </form>{% endif %}
+    </div>
+  </div>
+  {% endfor %}
+  {% if r.missing_facts %}<h3 style="margin-top:14px">To be sure, confirm</h3><ul class="small">{% for m in r.missing_facts %}<li>{{ m }}</li>{% endfor %}</ul>{% endif %}
+</section>

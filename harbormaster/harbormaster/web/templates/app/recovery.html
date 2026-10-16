@@ -1,0 +1,59 @@
+{% extends "app/layout.html" %}
+{% from "app/macros.html" import urgency, kind_badge %}
+{% block page_title %}Recovery{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Recovery</h1><p>Every open finding, grouped by the path that gets the money back. Select findings and bundle them into a filing — Harbormaster drafts it, your broker submits it.</p></div>
+</div>
+<div class="grid g3">
+  <div class="card stat"><span class="label">Recoverable now</span><span class="value">{{ d.recoverable|compact }}</span></div>
+  <div class="card stat"><span class="label">Due within 30 days</span><span class="value" style="color:var(--crit)">{{ d.due30_amount|compact }}</span></div>
+  <div class="card stat"><span class="label">Recovered to date</span><span class="value">{{ d.recovered|compact }}</span></div>
+</div>
+<section class="card" style="margin-top:18px">
+  <div class="card-head"><h3>Open findings by route</h3><span class="muted small">single series · amounts include interest</span></div>
+  {{ bars }}
+</section>
+
+{% if cases %}
+<section class="card" style="margin-top:18px">
+  <div class="card-head"><h3>Filings</h3></div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Filing</th><th>Status</th><th>Created</th><th class="r">Amount</th><th class="r">Recovered</th></tr></thead>
+    <tbody>{% for c in cases %}<tr><td><a href="/app/cases/{{ c.id }}">{{ c.title }}</a></td><td><span class="badge {{ 'b-good' if c.status == 'recovered' else 'b-later' }}">{{ c.status }}</span></td>
+      <td class="num">{{ c.created_at|date }}</td><td class="r num">{{ c.amount|money }}</td><td class="r num">{{ c.recovered|money }}</td></tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+{% endif %}
+
+<form method="post" action="/app/cases">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  {% for route, label, items in grouped %}
+  <section class="card" style="margin-top:18px" id="route-{{ route }}">
+    <div class="card-head">
+      <div><h3>{{ label }}</h3><span class="muted small">{{ items|length }} findings · {{ items|sum(attribute='amount')|money }} + {{ items|sum(attribute='interest')|money }} interest</span></div>
+      {% if route not in ('CLOSED', 'PRESERVE') %}<div style="display:flex;gap:8px"><button class="btn btn-ghost btn-sm" type="button" data-check-all="route-{{ route }}">Select all</button>
+        <button class="btn btn-primary btn-sm" type="submit">Create filing from selected</button></div>{% endif %}
+    </div>
+    <div class="table-wrap"><table>
+      <thead><tr><th></th><th>Entry</th><th>Finding</th><th>Origin</th><th class="r">Amount</th><th>Deadline</th><th></th></tr></thead>
+      <tbody>
+      {% for f in items %}
+      <tr id="f-{{ f.id }}">
+        <td>{% if route not in ('CLOSED', 'PRESERVE') %}<input type="checkbox" name="finding" value="{{ f.id }}" aria-label="Select finding on {{ f.entry.entry_number }}">{% endif %}</td>
+        <td><a class="mono" href="/app/entries/{{ f.entry_id }}">{{ f.entry.entry_number }}</a><br><span class="small muted">{{ f.entry.entry_date|date }}</span></td>
+        <td>{{ kind_badge(f.kind) }} {{ f.title }}<br><span class="small muted">{{ f.detail|truncate(150) }}</span></td>
+        <td>{{ f.entry.origin|country }}</td>
+        <td class="r num">{{ (f.amount + f.interest)|money }}</td>
+        <td>{{ urgency(f.urgency, f.deadline) }}<br><span class="small muted num">{{ f.deadline|date if f.deadline else '' }}</span></td>
+        <td><button class="btn-link small" type="button" hx-post="/app/findings/{{ f.id }}/dismiss" hx-target="#f-{{ f.id }}" hx-swap="outerHTML" hx-confirm="Dismiss this finding?">Dismiss</button></td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table></div>
+  </section>
+  {% else %}
+  <p class="card empty" style="margin-top:18px">No open findings. Upload more entries to audit.</p>
+  {% endfor %}
+</form>
+{% endblock %}

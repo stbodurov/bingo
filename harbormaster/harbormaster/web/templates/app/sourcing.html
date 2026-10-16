@@ -1,0 +1,12 @@
+{% extends "app/layout.html" %}
+{% block page_title %}Sourcing{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Sourcing simulator</h1><p>Landed cost per unit for the same product made elsewhere: scaled unit cost, lane freight, every duty layer and fees — on today's law or a scenario.</p></div>
+</div>
+<form class="card filters" hx-get="/app/sourcing" hx-target="#sourcing" hx-trigger="change" hx-push-url="true">
+  <div class="grow"><label for="sku">SKU</label><select id="sku" name="sku">{% for s in skus %}<option value="{{ s.sku }}" {{ 'selected' if s.id == chosen.id }}>{{ s.sku }} — {{ s.description }} ({{ s.origin }})</option>{% endfor %}</select></div>
+  <div class="grow"><label for="scenario">Scenario</label><select id="scenario" name="scenario">{% for k, sc in scenarios.items() %}<option value="{{ k }}" {{ 'selected' if k == scenario }}>{{ sc.name }}</option>{% endfor %}</select></div>
+</form>
+<div id="sourcing" style="margin-top:18px">{% include "app/partials/sourcing_result.html" %}</div>
+{% endblock %}

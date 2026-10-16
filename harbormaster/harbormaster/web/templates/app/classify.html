@@ -1,0 +1,27 @@
+{% extends "app/layout.html" %}
+{% block page_title %}Classification{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Classification</h1><p>Describe a product the way your supplier would. You get ranked HTS candidates, the reasoning under the General Rules of Interpretation, what's missing to be sure — and what each choice costs in duty.</p></div>
+</div>
+<div class="split">
+  <form class="card" hx-post="/app/classify" hx-target="#classify-out" hx-indicator="#classify-spin">
+    <input type="hidden" name="csrf" value="{{ csrf }}">
+    <div class="field"><label for="description">Product description</label>
+      <textarea id="description" name="description" required placeholder="e.g. 20 oz double-wall vacuum-insulated drinking bottle, 18/8 stainless steel body, polypropylene lid, for household use">20 oz double-wall vacuum-insulated drinking bottle, 18/8 stainless steel body, polypropylene screw lid, for household use</textarea></div>
+    <div class="row">
+      <div class="field"><label for="origin">Country of origin</label><select id="origin" name="origin">{% for c in countries.values()|sort(attribute='name') %}<option value="{{ c.code }}" {{ 'selected' if c.code == 'CN' }}>{{ c.name }}</option>{% endfor %}</select></div>
+      <div class="field"><label for="sku">Apply to SKU (optional)</label><select id="sku" name="sku"><option value="">—</option>{% for s in skus %}<option value="{{ s.id }}">{{ s.sku }}</option>{% endfor %}</select></div>
+    </div>
+    <button class="btn btn-primary" type="submit">Classify</button> <span id="classify-spin" class="htmx-indicator small muted">Reading the schedule…</span>
+    <p class="hint">{{ 'Claude ranks candidates; duty is computed by the engine. A reviewer approves every change.' if ai_on else 'AI is off: candidates come from keyword matching against the reference catalog.' }}</p>
+  </form>
+  <div id="classify-out" aria-live="polite">
+    <section class="card"><h3>Recent classifications</h3>
+      {% for h in history %}<div class="finding"><span class="badge plain">{{ h.engine }}</span><div><strong>{{ h.description|truncate(90) }}</strong><p>{{ h.origin|country }} · {{ h.created_at|date }}{% if h.chosen %} · applied <span class="mono">{{ h.chosen }}</span> by {{ h.reviewed_by }}{% endif %}</p></div>
+        <div class="amt mono">{{ (h.result.candidates[0].code if h.result.candidates else '—') }}</div></div>
+      {% else %}<p class="empty">No classifications yet.</p>{% endfor %}
+    </section>
+  </div>
+</div>
+{% endblock %}

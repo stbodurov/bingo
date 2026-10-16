@@ -1,0 +1,16 @@
+{% extends "app/layout.html" %}
+{% block page_title %}Entries{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Entries</h1><p>Every entry summary, re-rated line by line on its own entry date.</p></div>
+  <a class="btn btn-primary" href="/app/upload">Upload ES-003 / 7501 data</a>
+</div>
+<form class="filters" hx-get="/app/entries" hx-target="#entries-table" hx-trigger="change, keyup changed delay:300ms from:input[name=q]" hx-push-url="true">
+  <div class="grow"><label for="q">Search</label><input id="q" type="search" name="q" value="{{ f.q }}" placeholder="Entry number or product"></div>
+  <div><label for="origin">Origin</label><select id="origin" name="origin"><option value="">All</option>{% for o in origins %}<option value="{{ o }}" {{ 'selected' if o == f.origin }}>{{ o|country }}</option>{% endfor %}</select></div>
+  <div><label for="status">Liquidation</label><select id="status" name="status"><option value="">All</option>{% for s in ['unliquidated','liquidated','extended'] %}<option {{ 'selected' if s == f.status }}>{{ s }}</option>{% endfor %}</select></div>
+  <div><label for="broker">Broker</label><select id="broker" name="broker"><option value="">All</option>{% for b in brokers %}<option {{ 'selected' if b == f.broker }}>{{ b }}</option>{% endfor %}</select></div>
+  <div><label for="flag">Show</label><select id="flag" name="flag"><option value="">All entries</option><option value="errors" {{ 'selected' if f.flag == 'errors' }}>With filing errors</option><option value="refund" {{ 'selected' if f.flag == 'refund' }}>With IEEPA refunds</option></select></div>
+</form>
+<div id="entries-table">{% include "app/partials/entries_table.html" %}</div>
+{% endblock %}

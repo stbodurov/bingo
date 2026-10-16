@@ -1,0 +1,29 @@
+{% extends "app/layout.html" %}
+{% block page_title %}Tariff changes{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Tariff changes</h1><p>Every change in the 2025–26 regime, newest first, with what it did to the duty on your catalog at planned volumes. Measured by running the engine the day before and the day of each change.</p></div>
+</div>
+<ul class="timeline">
+{% for ev, imp in events %}
+  <li class="{{ 'future' if ev.on > today_ }}">
+    <div class="card">
+      <div class="card-head"><div><span class="kicker" style="margin-bottom:6px">{{ ev.on|date }}{{ ' · scheduled' if ev.on > today_ }} · {{ ev.measure|measure }}</span><h3>{{ ev.title }}</h3></div>
+        {% set delta = imp|sum(attribute='annual_delta') %}
+        {% if imp %}<div class="amt num {{ 'delta-up' if delta > 0 else 'delta-down' }}" style="font-size:1.2rem;font-weight:700">{{ '+' if delta > 0 }}{{ delta|compact }}<span class="small muted"> / yr</span></div>{% endif %}</div>
+      {% if ev.summary %}<p class="muted small">{{ ev.summary }}</p>{% endif %}
+      {% if ev.countries %}<p class="small muted">Origins: {{ ev.countries|map('country')|join(', ') }}</p>{% endif %}
+      {% if imp %}
+      <details><summary class="small">{{ imp|length }} of your SKUs affected</summary>
+        <div class="table-wrap"><table>
+          <thead><tr><th>SKU</th><th>Origin</th><th class="r">Before</th><th class="r">After</th><th class="r">Annual effect</th></tr></thead>
+          <tbody>{% for i in imp[:15] %}<tr><td><strong class="mono">{{ i.sku }}</strong> {{ i.description }}</td><td>{{ i.origin }}</td><td class="r num">{{ i.before_rate|pct }}</td><td class="r num">{{ i.after_rate|pct }}</td>
+            <td class="r num {{ 'delta-up' if i.annual_delta > 0 else 'delta-down' }}">{{ '+' if i.annual_delta > 0 }}{{ i.annual_delta|money }}</td></tr>{% endfor %}</tbody>
+        </table></div>
+      </details>
+      {% elif ev.measure != 'CAPE' %}<p class="small muted">No effect on your current catalog.</p>{% endif %}
+    </div>
+  </li>
+{% endfor %}
+</ul>
+{% endblock %}

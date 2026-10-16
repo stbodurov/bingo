@@ -1,0 +1,2 @@
+<div class="msg user">{{ q.content }}</div>
+<div class="msg assistant">{{ a.content|md }}<div class="meta">{{ a.meta.engine }} · {{ (a.meta.tools or [])|map(attribute='tool')|join(', ') or 'no tools' }}</div></div>

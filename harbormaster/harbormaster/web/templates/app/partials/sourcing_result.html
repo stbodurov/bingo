@@ -1,0 +1,17 @@
+{% from "app/macros.html" import legend %}
+<div class="grid g3">
+  <div class="card stat"><span class="label">Current — {{ chosen.origin|country }}</span><span class="value">{{ current.landed_per_unit|money(true) if current else '—' }}</span><span class="sub">{{ current.effective_rate if current else '—' }}% duty</span></div>
+  <div class="card stat"><span class="label">Cheapest — {{ best.name }}</span><span class="value">{{ best.landed_per_unit|money(true) }}</span><span class="sub">{{ best.effective_rate }}% duty · {{ best.lead_time_days }} days</span></div>
+  <div class="card stat"><span class="label">Annual saving if moved</span><span class="value" style="color:{{ 'var(--good)' if saving > 0 else 'var(--ink)' }}">{{ saving|compact if saving > 0 else '$0' }}</span><span class="sub">on {{ "{:,}".format(chosen.annual_units) }} units / yr</span></div>
+</div>
+<section class="card" style="margin-top:18px">
+  <div class="card-head"><h3>Landed cost per unit by origin</h3><span class="small muted">current origin in bold</span></div>
+  {{ legend(series) }}
+  {{ chart }}
+  <details class="dataview"><summary>Show as table</summary>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Origin</th><th class="r">Unit cost</th><th class="r">Freight</th><th class="r">Duty</th><th class="r">Fees</th><th class="r">Scenario</th><th class="r">Landed</th><th class="r">Duty rate</th><th class="r">Lead time</th></tr></thead>
+    <tbody>{% for o in options %}<tr {% if o.current %}style="font-weight:700"{% endif %}><td>{{ o.name }}</td><td class="r num">{{ o.unit_cost|money(true) }}</td><td class="r num">{{ o.freight_per_unit|money(true) }}</td><td class="r num">{{ o.duty_per_unit|money(true) }}</td><td class="r num">{{ o.fees_per_unit|money(true) }}</td><td class="r num">{{ o.scenario_per_unit|money(true) }}</td><td class="r num">{{ o.landed_per_unit|money(true) }}</td><td class="r num">{{ o.effective_rate }}%</td><td class="r num">{{ o.lead_time_days }} d</td></tr>{% endfor %}</tbody>
+  </table></div></details>
+  <p class="hint">Unit cost scaled by a planning labour/overhead index relative to {{ chosen.origin|country }}; freight from lane assumptions. Use it to rank options, then get quotes.</p>
+</section>

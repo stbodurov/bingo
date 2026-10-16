@@ -1,0 +1,27 @@
+{% from "app/macros.html" import liq %}
+<div class="card table-wrap">
+  <p class="muted small" style="margin:0 0 8px">{{ total }} entries{% if total > rows|length %} · showing first {{ rows|length }}{% endif %}</p>
+  <table>
+    <thead><tr><th>Entry</th><th>Date</th><th>Origin</th><th>Broker</th><th class="r">Value</th><th class="r">Duty paid</th><th class="r">Should be</th><th>Status</th><th class="r">Owed back</th></tr></thead>
+    <tbody>
+    {% for e, fs in rows %}
+      {% set back = fs|selectattr('kind', 'in', ['refund','overpayment'])|sum(attribute='amount') %}
+      {% set paid_duty = e.duty_paid %}
+      <tr>
+        <td><a class="mono" href="/app/entries/{{ e.id }}">{{ e.entry_number }}</a><br><span class="small muted">{{ e.lines|length }} line{{ 's' if e.lines|length != 1 }} · {{ e.mode }}</span></td>
+        <td class="num">{{ e.entry_date|date }}</td>
+        <td>{{ e.origin|country }}</td>
+        <td class="mono small">{{ e.broker.filer_code if e.broker else '—' }}</td>
+        <td class="r num">{{ e.entered_value|money }}</td>
+        <td class="r num">{{ paid_duty|money }}</td>
+        <td class="r num">{{ e.duty_correct|money }}</td>
+        <td>{{ liq(e) }}</td>
+        <td class="r num">{% if back %}<strong>{{ back|money }}</strong>{% else %}—{% endif %}
+          {% if fs|selectattr('kind', 'equalto', 'underpayment')|list %}<br><span class="badge b-now">Underpaid</span>{% endif %}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="9" class="empty">No entries match those filters.</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>

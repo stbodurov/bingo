@@ -1,0 +1,54 @@
+{% extends "app/layout.html" %}
+{% from "app/macros.html" import urgency, kind_badge, legend %}
+{% block page_title %}Overview{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Overview</h1><p>{{ d.entries }} entries audited across 21 months. Every figure below is recomputed from your filed lines.</p></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn btn-ghost" href="/app/upload">Upload entries</a><a class="btn btn-primary" href="/app/recovery">Review recovery</a></div>
+</div>
+
+<div class="grid g4">
+  <div class="card stat"><span class="label">Recoverable now</span><span class="value">{{ d.recoverable|compact }}</span><span class="sub">refunds + overpayments, with interest</span></div>
+  <div class="card stat"><span class="label">Deadline ≤ 30 days</span><span class="value" style="color:var(--crit)">{{ d.due30_amount|compact }}</span><span class="sub"><span class="status-icon" aria-hidden="true">⚠</span> {{ d.due30|length }} filings to make</span></div>
+  <div class="card stat"><span class="label">Already recovered</span><span class="value">{{ d.recovered|compact }}</span><span class="sub">CAPE refunds received</span></div>
+  <div class="card stat"><span class="label">Duty paid {{ today().year }} YTD</span><span class="value">{{ d.paid_ytd|compact }}</span><span class="sub">{{ d.rate_ytd|pct }} effective on {{ d.value_ytd|compact }}</span></div>
+</div>
+
+<div class="split" style="margin-top:18px">
+  <section class="card" aria-labelledby="chart-h">
+    <div class="card-head"><h3 id="chart-h">Duty paid by month</h3><span class="muted small">hover a bar for detail</span></div>
+    {{ legend(d.series) }}
+    {{ chart }}
+    <details class="dataview"><summary>Show as table</summary>
+      <div class="table-wrap"><table><thead><tr><th>Month</th>{% for s in d.series %}<th class="r">{{ s.label }}</th>{% endfor %}</tr></thead>
+      <tbody>{% for row in d.chart %}<tr><td>{{ row.month|month }}</td>{% for s in d.series %}<td class="r num">{{ row["values"][s.key]|money }}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div>
+    </details>
+  </section>
+  <section class="card" aria-labelledby="route-h">
+    <div class="card-head"><h3 id="route-h">Where the money is</h3><a class="small" href="/app/recovery">All findings →</a></div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Route</th><th class="r">Amount</th><th class="r">Findings</th><th>Next deadline</th></tr></thead>
+      <tbody>{% for r in d.by_route %}<tr><td>{{ r.label }}</td><td class="r num">{{ r.amount|money }}</td><td class="r num">{{ r.count }}</td><td class="num">{{ r.next|date if r.next else '—' }}</td></tr>{% endfor %}</tbody>
+    </table></div>
+    {% if d.exposure %}<p class="callout crit small" style="margin-top:14px"><strong>{{ d.exposure|money }}</strong> underpaid on some entries — correct it with a PSC before CBP finds it.</p>{% endif %}
+    {% if d.contested %}<p class="callout small" style="margin-top:10px"><strong>{{ d.contested|money }}</strong> of Section 122 surcharge is contested on appeal. We'll open protests as entries liquidate.</p>{% endif %}
+  </section>
+</div>
+
+<div class="split" style="margin-top:18px">
+  <section class="card" aria-labelledby="up-h">
+    <div class="card-head"><h3 id="up-h">Next deadlines</h3><a class="small" href="/app/deadlines">Calendar →</a></div>
+    {% for f in d.upcoming %}
+    <div class="finding">
+      {{ kind_badge(f.kind) }}
+      <div><a href="/app/entries/{{ f.entry_id }}"><strong>{{ f.title }}</strong></a><p>Entry <span class="mono">{{ f.entry.entry_number }}</span> · {{ f.entry.origin|country }} · closes {{ f.deadline|date }}</p></div>
+      <div class="amt">{{ (f.amount + f.interest)|money }}<br>{{ urgency(f.urgency, f.deadline) }}</div>
+    </div>
+    {% else %}<p class="empty">Nothing due. Nice.</p>{% endfor %}
+  </section>
+  <section class="card" aria-labelledby="act-h">
+    <div class="card-head"><h3 id="act-h">Activity</h3></div>
+    <ul class="timeline">{% for a in activity %}<li><strong>{{ a.actor }}</strong> <span class="muted small">{{ a.created_at|date }}</span><br><span class="small">{{ a.action }}</span></li>{% endfor %}</ul>
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% macro urgency(u, deadline=None) -%}
+{%- set labels = {'now': 'Due ≤ 30 days', 'soon': 'Due ≤ 90 days', 'later': 'Open', 'closed': 'Closed'} -%}
+<span class="badge b-{{ u }}">{{ labels.get(u, u) }}{% if deadline and u != 'closed' %} · {{ deadline|until }}{% endif %}</span>
+{%- endmacro %}
+
+{% macro kind_badge(k) -%}
+{%- set labels = {'refund': 'Refund', 'overpayment': 'Overpaid', 'underpayment': 'Underpaid', 'contested': 'Contested'} -%}
+{%- set cls = {'refund': 'b-good', 'overpayment': 'b-good', 'underpayment': 'b-now', 'contested': 'b-soon'} -%}
+<span class="badge {{ cls.get(k, '') }}">{{ labels.get(k, k) }}</span>
+{%- endmacro %}
+
+{% macro status_badge(s) -%}
+{%- set m = {'invalidated': ('b-good', 'Invalidated — refundable'), 'contested': ('b-soon', 'Contested'), 'in_force': ('b-later', 'In force'), 'fee': ('b-closed', 'Fee')} -%}
+{%- set c = m.get(s, ('', s)) -%}
+<span class="badge {{ c[0] }}">{{ c[1] }}</span>
+{%- endmacro %}
+
+{% macro legend(series) -%}
+<ul class="legend">{% for s in series %}<li><i class="swatch-{{ loop.index }}"></i>{{ s.label }}</li>{% endfor %}</ul>
+{%- endmacro %}
+
+{% macro liq(e) -%}
+{%- if e.liquidation_status == 'liquidated' -%}<span class="badge b-closed">Liquidated {{ e.liquidation_date|short_date }}</span>
+{%- elif e.liquidation_status == 'extended' -%}<span class="badge b-soon">Extended</span>
+{%- else -%}<span class="badge b-later">Unliquidated</span>{%- endif -%}
+{%- endmacro %}

@@ -1,0 +1,40 @@
+{% extends "app/layout.html" %}
+{% block page_title %}Landed cost & margin{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Landed cost & margin</h1><p>Every SKU on today's tariff stack: FOB cost + freight + every duty layer + fees. Target gross margin {{ org.target_margin|round|int }}% (<a href="/app/settings">change</a>).</p></div>
+</div>
+<div class="grid g3">
+  <div class="card stat"><span class="label">Annual duty at today's rates</span><span class="value">{{ annual|compact }}</span><span class="sub">on planned volumes</span></div>
+  <div class="card stat"><span class="label">SKUs below target margin</span><span class="value" style="color:{{ 'var(--crit)' if below else 'var(--good)' }}">{{ below|length }}</span><span class="sub">of {{ rows|length }}</span></div>
+  <div class="card stat"><span class="label">Gross profit to win back</span><span class="value">{{ gap|compact }}</span><span class="sub">a year, if below-target SKUs are repriced</span></div>
+</div>
+<div class="card table-wrap" style="margin-top:18px">
+  <div class="filters" style="margin:0 0 10px">
+    <span class="small muted">Sort:</span>
+    {% for k, l in [('margin','Lowest margin'),('duty','Highest annual duty'),('rate','Highest duty rate'),('sku','SKU')] %}<a class="small" href="?sort={{ k }}" {% if sort == k %}aria-current="true" style="font-weight:700"{% endif %}>{{ l }}</a>{% endfor %}
+  </div>
+  <table>
+    <thead><tr><th>SKU</th><th>HTS · origin</th><th class="r">FOB</th><th class="r">Duty / unit</th><th class="r">Duty rate</th><th class="r">Landed</th><th class="r">Price</th><th class="r">Margin</th><th class="r">Price to hold target</th><th class="r">Annual duty</th></tr></thead>
+    <tbody>
+    {% for r in rows %}{% set s = r.sku %}
+      <tr>
+        <td><strong class="mono">{{ s.sku }}</strong><br><span class="small">{{ s.description }}</span>{% if s.classified_by != 'broker' %} <span class="badge plain b-later">reclassified</span>{% endif %}</td>
+        <td><a class="mono small" href="/app/calculator?hts={{ s.hts }}&origin={{ s.origin }}">{{ s.hts }}</a><br><span class="small muted">{{ s.origin|country }}{% if s.usmca %} · USMCA{% endif %}</span></td>
+        <td class="r num">{{ s.unit_cost|money(true) }}</td>
+        <td class="r num">{{ r.duty_unit|money(true) }}</td>
+        <td class="r num">{{ r.rate|pct }}</td>
+        <td class="r num">{{ r.landed|money(true) }}</td>
+        <td class="r num">{{ s.unit_price|money(true) }}</td>
+        <td class="r num">{% if r.below_target %}<span class="status-icon" style="color:var(--crit)" aria-label="below target">▼</span> {% endif %}{{ r.margin|pct }}</td>
+        <td class="r">{% if r.below_target and r.hold_price > s.unit_price %}
+          <form method="post" action="/app/skus/{{ s.id }}/price" style="display:inline-flex;gap:6px;align-items:center"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="price" value="{{ r.hold_price }}"><span class="num">{{ r.hold_price|money(true) }}</span><button class="btn btn-ghost btn-sm" type="submit">Apply</button></form>
+          {% else %}<span class="muted small">on target</span>{% endif %}</td>
+        <td class="r num">{{ r.annual_duty|money }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  <p class="hint">Freight from lane assumptions per origin; duty on today's date with each SKU's metal content and USMCA status. <a href="/app/sourcing">Compare origins →</a></p>
+</div>
+{% endblock %}

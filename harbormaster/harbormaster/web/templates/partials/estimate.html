@@ -1,0 +1,29 @@
+<div class="card">
+  <span class="kicker">Estimated recoverable</span>
+  <div class="result-hero">{{ est.recoverable_low|compact }}–{{ est.recoverable_high|compact }}</div>
+  <p class="muted small">on {{ est.annual_imports|compact }} a year of imports</p>
+  <ul class="result-lines">
+    <li><span>IEEPA duties paid (Feb 2025 – Feb 2026)</span><b>{{ est.ieepa_paid|money }}</b></li>
+    <li><span>Interest owed on that refund</span><b>{{ est.ieepa_interest|money }}</b></li>
+    <li><span>Filing errors on other duty (1–3%)</span><b>{{ est.errors_low|money }}–{{ est.errors_high|money }}</b></li>
+    <li><span>Duty drawback on exports</span><b>{{ est.drawback|money }}</b></li>
+    <li><span>Section 122 — contested, preserve by protest</span><b>{{ est.s122_paid|money }}</b></li>
+  </ul>
+  {% if est.by_group %}
+  <ul class="legend" aria-hidden="true"><li><i class="swatch-2"></i>IEEPA paid by origin</li></ul>
+  {% set top = (est.by_group|map(attribute='ieepa')|max) or 1 %}
+  <table aria-label="IEEPA duty and today's rate by origin">
+    <thead><tr><th>Origin</th><th class="r">IEEPA paid</th><th class="r">Duty rate today</th></tr></thead>
+    <tbody>
+    {% for g in est.by_group %}
+      <tr><td>{{ g.label }} <span class="muted small">{{ g.share }}%</span><br><span class="bar-inline" style="width:{{ (100 * g.ieepa / top)|round(1) }}%;background:var(--s2)" data-tip="{{ g.label }}: {{ g.ieepa|money }} IEEPA"></span></td>
+      <td class="r num">{{ g.ieepa|money }}</td><td class="r num">{{ g.rate_now|pct }}</td></tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+  <div class="callout" style="margin-top:16px">At today's stack you'll pay about <strong>{{ est.current_annual_duty|money }}</strong> a year in duty ({{ est.current_rate|pct }} effective). Every point of duty designed out is worth {{ (est.annual_imports / 100)|money }} a year.</div>
+  {% for w in est.warnings %}<p class="callout crit small" style="margin-top:10px">{{ w }}</p>{% endfor %}
+  <details class="dataview"><summary>How this is calculated</summary><ul class="assumptions">{% for a in est.assumptions %}<li>{{ a }}</li>{% endfor %}</ul></details>
+  <a class="btn btn-primary" href="#waitlist" style="margin-top:14px">Claim my audit</a>
+</div>

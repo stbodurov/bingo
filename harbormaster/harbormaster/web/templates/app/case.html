@@ -1,0 +1,45 @@
+{% extends "app/layout.html" %}
+{% from "app/macros.html" import kind_badge, urgency %}
+{% block page_title %}{{ case.title }}{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><span class="kicker"><a href="/app/recovery">Recovery</a> / filing</span><h1>{{ case.title }}</h1>
+    <p>Status <span class="badge {{ 'b-good' if case.status == 'recovered' else 'b-later' }}">{{ case.status }}</span> · created {{ case.created_at|date }}{% if case.filed_at %} · filed {{ case.filed_at|date }}{% endif %}</p></div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    {% if case.route in ('CAPE', 'MIXED') %}<a class="btn btn-ghost" href="/app/cases/{{ case.id }}/cape.csv">CAPE entry list (CSV)</a>{% endif %}
+    <a class="btn btn-primary" href="/app/cases/{{ case.id }}/packet">Filing packet</a>
+  </div>
+</div>
+<div class="grid g3">
+  <div class="card stat"><span class="label">Amount claimed</span><span class="value">{{ case.amount|compact }}</span><span class="sub">incl. estimated interest</span></div>
+  <div class="card stat"><span class="label">Recovered</span><span class="value">{{ case.recovered|compact }}</span></div>
+  <div class="card stat"><span class="label">Harbormaster fee</span><span class="value">{{ fee|compact }}</span><span class="sub">{{ org.plan|capitalize }} plan · billed only on recovery</span></div>
+</div>
+<div class="split" style="margin-top:18px">
+  <section class="card">
+    <div class="card-head"><h3>Entries in this filing</h3></div>
+    {% for f in case.findings %}
+    <div class="finding">{{ kind_badge(f.kind) }}
+      <div><a class="mono" href="/app/entries/{{ f.entry_id }}">{{ f.entry.entry_number }}</a> — {{ f.title }}<p>{{ f.authority }}</p></div>
+      <div class="amt">{{ (f.amount + f.interest)|money }}<br>{{ urgency(f.urgency, f.deadline) }}</div></div>
+    {% endfor %}
+  </section>
+  <section class="card">
+    <h3>Update status</h3>
+    <form method="post" action="/app/cases/{{ case.id }}/status">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
+      <div class="field"><label for="status">Status</label><select id="status" name="status">{% for s in statuses %}<option {{ 'selected' if s == case.status }}>{{ s }}</option>{% endfor %}</select></div>
+      <div class="field"><label for="recovered">Amount recovered (if recovered)</label><input id="recovered" name="recovered" type="number" step="0.01" min="0" placeholder="{{ case.amount }}"></div>
+      <button class="btn btn-primary" type="submit">Save</button>
+    </form>
+    <h3 style="margin-top:20px">Filing checklist</h3>
+    <ol class="small muted">
+      {% if case.route == 'CAPE' %}<li>Broker or IOR logs in to the ACE portal → CAPE.</li><li>Upload the entry list CSV as a CAPE declaration.</li><li>Resolve any entry-level validation errors CBP returns.</li><li>Confirm ACH refund details are current in ACE.</li>
+      {% elif case.route == 'PROTEST' %}<li>Review the packet's statement of reasons with your broker or counsel.</li><li>File CBP Form 19 electronically in ACE before the earliest deadline in this filing.</li><li>Request accelerated disposition after 30 days if needed.</li>
+      {% elif case.route == 'PSC' %}<li>Broker transmits a post-summary correction for each entry.</li><li>Confirm each PSC is accepted before the 15-day pre-liquidation cutoff.</li>
+      {% else %}<li>Share the packet with trade counsel to confirm class membership or file a §1581(i) action.</li>{% endif %}
+    </ol>
+    <p class="callout small">{{ case.notes or 'Harbormaster drafts; a licensed customs broker or attorney files.' }}</p>
+  </section>
+</div>
+{% endblock %}

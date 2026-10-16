@@ -1,0 +1,20 @@
+{% extends "app/layout.html" %}
+{% block page_title %}Copilot{% endblock %}
+{% block content %}
+<div class="page-head">
+  <div><h1>Copilot</h1><p>Ask about refunds, deadlines, margins, landed cost or sourcing. Every number comes from the engine; the tools used are listed under each answer.</p></div>
+</div>
+<div class="chat" id="chat">
+  {% for m in messages %}
+    <div class="msg {{ m.role }}">{% if m.role == 'assistant' %}{{ m.content|md }}<div class="meta">{{ (m.meta or {}).get('engine', '') }} · {{ ((m.meta or {}).get('tools') or [])|map(attribute='tool')|join(', ') }}</div>{% else %}{{ m.content }}{% endif %}</div>
+  {% else %}
+    <div class="msg assistant"><p>I can see {{ org.name }}'s entries, findings, SKUs and the full tariff timeline. Try one of these:</p></div>
+  {% endfor %}
+</div>
+<div class="suggest" style="margin:16px 0">{% for s in suggestions %}<button type="button" data-suggest="{{ s }}">{{ s }}</button>{% endfor %}</div>
+<form class="card" hx-post="/app/copilot" hx-target="#chat" hx-swap="beforeend" hx-indicator="#cp-spin" style="display:flex;gap:10px;align-items:flex-end">
+  <input type="hidden" name="csrf" value="{{ csrf }}">
+  <div style="flex:1"><label for="question" class="visually-hidden">Question</label><input id="question" name="question" type="text" required autocomplete="off" placeholder="What's due this month?"></div>
+  <button class="btn btn-primary" type="submit">Ask</button><span id="cp-spin" class="htmx-indicator small muted">Thinking…</span>
+</form>
+{% endblock %}

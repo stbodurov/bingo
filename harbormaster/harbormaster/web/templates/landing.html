@@ -1,0 +1,245 @@
+{% extends "base.html" %}
+{% block body %}
+<header class="site-head">
+  <div class="wrap">
+    {% include "partials/logo.html" %}
+    <nav class="site-nav" aria-label="Primary">
+      <a class="hide-sm" href="#how">How it works</a>
+      <a class="hide-sm" href="#estimate">Refund estimate</a>
+      <a class="hide-sm" href="#pricing">Pricing</a>
+      <a class="hide-xs" href="/login">Sign in</a>
+      <a class="btn btn-primary btn-sm" href="#waitlist">Get early access</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <span class="kicker">For every business that buys goods from abroad</span>
+      <h1>Know what every product <em>really</em> costs to land. Get back what you overpaid.</h1>
+      <p class="lede">Harbormaster reads your customs entries, recomputes every tariff layer — MFN, IEEPA, Section 122, 301 and 232 — on the date each entry was made, and turns the difference into refunds, corrected filings and prices that hold your margin.</p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="#estimate">Estimate my refund</a>
+        <a class="btn btn-ghost" href="#waitlist">Join the waitlist</a>
+      </div>
+      <div class="trust"><span>Free audit of 21 months of entries</span><span>Pay only when money lands</span><span>Your broker still files</span></div>
+    </div>
+
+    <figure class="stackcard" id="stackcard" aria-label="Live example of a tariff stack computed by Harbormaster">
+      <div class="stack-tabs" role="group" aria-label="Examples">
+        {% for s in hero %}<button type="button" aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ s.product }}</button>{% endfor %}
+      </div>
+      <header><span class="product">{{ hero[0].product }}</span><span class="when mono">{{ hero[0].when }}</span></header>
+      <div class="layers">
+        {% for l in hero[0].layers %}<div class="layer l-{{ l.group }}"><span>{{ l.label }}</span><b>{{ l.rate }}%</b></div>{% endfor %}
+      </div>
+      <div class="stack-total"><span class="muted duty">{{ hero[0].duty }}</span><span class="value">{{ hero[0].rate }}%</span></div>
+      <p class="note small muted" style="margin:10px 0 0">{{ hero[0].note }}</p>
+      <figcaption class="visually-hidden">Duty layers by measure; total effective duty rate.</figcaption>
+    </figure>
+    <script type="application/json" id="stack-data">{{ hero|tojson }}</script>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="why">
+  <div class="wrap">
+    <div class="band-head">
+      <span class="kicker">Why now</span>
+      <h2 id="why">Tariffs became the second-largest cost line for importers — and the most error-prone.</h2>
+      <p class="muted">Five legal authorities, sixty-plus country rates and a change every few weeks. Brokers file what they're told on the day; nobody goes back. The money that's owed back has deadlines that don't move.</p>
+    </div>
+    <div class="facts">
+      <div class="fact"><div class="big">$166B</div><p>in IEEPA tariffs collected before the Supreme Court held them unlawful on Feb 20, 2026.</p><a href="https://phillipslytle.com/cbp-opens-phase-3-of-cape-for-ieepa-refunds/">Source</a></div>
+      <div class="fact"><div class="big">180 days</div><p>to protest after an entry liquidates. Jurisdictional — CBP cannot extend it.</p><a href="https://gingercontrol.com/tools/protest-deadline-calculator">19 U.S.C. 1514</a></div>
+      <div class="fact"><div class="big">Oct 6</div><p>CAPE Phase 3 opened for finally liquidated entries — for CIT plaintiffs only.</p><a href="https://leyton.com/us/insights/articles/cape-phase-3-set-to-launch-october-6-what-it-means-for-ieepa-tariff-refunds/">Source</a></div>
+      <div class="fact"><div class="big">60</div><p>economies now carry a 10–12.5% forced-labor §301 duty that stacks on everything else.</p><a href="https://www.bakerdonelson.com/forced-labor-section-301-tariffs-imposed-to-replace-expiring-section-122-tariffs-what-importers-need-to-know">Source</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" id="how" aria-labelledby="how-h">
+  <div class="wrap">
+    <div class="band-head">
+      <span class="kicker">How it works</span>
+      <h2 id="how-h">One upload. Every line recomputed. Every dollar routed.</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><h3>Connect your entries</h3><p class="muted">Pull the ACE ES-003 entry summary report or drop your broker's 7501 line export. Harbormaster maps every line to your SKUs and suppliers.</p></div>
+      <div class="step"><h3>Recompute the stack</h3><p class="muted">Each line is re-rated on its own entry date: in-transit relief, USMCA, Annex II, 232 non-stacking, metal content. Every layer comes with the authority and the reason.</p></div>
+      <div class="step"><h3>Recover and reprice</h3><p class="muted">CAPE declarations, post-summary corrections and protests are drafted for your broker, with deadlines on your calendar. Margins update on every SKU the day a tariff changes.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="estimate" aria-labelledby="est-h">
+  <div class="wrap">
+    <div class="band-head">
+      <span class="kicker">Refund estimate</span>
+      <h2 id="est-h">What are you owed? Five answers, real tariff math.</h2>
+      <p class="muted">The estimate runs the same engine as the product across every day of the IEEPA and Section 122 periods. Upload your entries for the entry-by-entry number.</p>
+    </div>
+    <div class="estimator">
+      <form class="card" hx-post="/estimate" hx-target="#estimate-out" hx-trigger="change delay:250ms, submit" hx-indicator="#estimate-out" aria-describedby="est-note">
+        <input type="hidden" name="csrf" value="{{ csrf }}">
+        <div class="field">
+          <label for="annual_imports">Annual imports (FOB value, USD)</label>
+          <input id="annual_imports" name="annual_imports" type="number" min="10000" step="10000" value="5000000" inputmode="numeric">
+        </div>
+        <fieldset class="field" style="border:0;padding:0;margin:0 0 16px">
+          <legend style="font-weight:600;font-size:.88rem;color:var(--ink-2);margin-bottom:8px">Where it's made (% of value)</legend>
+          <div class="mix">
+            {% for g, label in groups.items() %}
+            <div>
+              <label for="mix_{{ g }}">{{ label }} <output for="mix_{{ g }}">{{ default_mix[g] }}%</output></label>
+              <input id="mix_{{ g }}" name="mix_{{ g }}" type="range" min="0" max="100" step="5" value="{{ default_mix[g] }}" data-suffix="%">
+            </div>
+            {% endfor %}
+          </div>
+        </fieldset>
+        <div class="row">
+          <div class="field"><label for="metals_pct">Steel, aluminum or copper products <output for="metals_pct">15%</output></label>
+            <input id="metals_pct" name="metals_pct" type="range" min="0" max="100" step="5" value="15" data-suffix="%"></div>
+          <div class="field"><label for="export_pct">Share later exported <output for="export_pct">5%</output></label>
+            <input id="export_pct" name="export_pct" type="range" min="0" max="60" step="1" value="5" data-suffix="%"></div>
+        </div>
+        <div class="field">
+          <label for="ior">Who is the importer of record?</label>
+          <select id="ior" name="ior">
+            <option value="self">We are, on our own entries</option>
+            <option value="mixed">Mixed — some suppliers ship DDP</option>
+            <option value="supplier">Our suppliers or forwarder (DDP)</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" type="submit">Update estimate</button>
+        <p id="est-note" class="hint">Nothing you enter here is stored unless you join the waitlist.</p>
+      </form>
+      <div id="estimate-out" class="estimate-out" aria-live="polite">
+        {% include "partials/estimate.html" %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" aria-labelledby="feat-h">
+  <div class="wrap">
+    <div class="band-head">
+      <span class="kicker">The product</span>
+      <h2 id="feat-h">The refund gets you in the door. The landed-cost system is why you stay.</h2>
+    </div>
+    <div class="features">
+      {% set feats = [
+        ("Refund recovery", "Every IEEPA dollar routed to the right path — CAPE, protest, CIT class — with interest, deadlines and a filing packet your broker can submit.", "M4 12h16M12 4v16"),
+        ("Entry audit", "Paid vs. owed on every line: 232 on full value instead of metal content, missed USMCA claims, s122 on exempt goods, MPF over the cap.", "M5 13l4 4L19 7"),
+        ("Landed cost & margin", "Duty-inclusive cost for every SKU on today's stack, the price that holds your target margin, and which products slipped below it.", "M4 19V5m0 14h16M8 15l4-4 3 3 5-6"),
+        ("Sourcing simulator", "Rank every origin by landed cost — unit cost, freight, duty and fees — and layer pending actions like the §301 excess-capacity case.", "M3 12h18M12 3a15 15 0 010 18M12 3a15 15 0 000 18"),
+        ("AI classification", "Describe a product; get ranked HTS candidates with the GRI reasoning and what each choice costs in duty. A human approves the change.", "M12 3l2.5 5 5.5.8-4 3.9.9 5.5L12 15.6 7.1 18.2l.9-5.5-4-3.9 5.5-.8z"),
+        ("Tariff change impact", "Every proclamation and ruling on one timeline, with the dollar effect on your catalog the day it lands.", "M12 8v4l3 2M21 12a9 9 0 11-18 0 9 9 0 0118 0z"),
+        ("Deadline calendar", "PSC windows, liquidations, protest and CIT limits per entry — exported to your calendar, escalated before they close.", "M7 3v3m10-3v3M4 9h16M5 5h14v15H5z"),
+        ("Duty drawback", "Exports matched to duty-paid imports by HTS within five years — up to 99% of MFN, 301 and 232 duty back.", "M4 7h11a5 5 0 010 10H9m-5-10l3-3m-3 3l3 3"),
+        ("Copilot & API", "Ask \"what's due this month?\" or \"cheaper from Vietnam?\" and get answers computed by the engine. The same engine is an API for your ERP.", "M4 6h16v10H8l-4 4z"),
+      ] %}
+      {% for title, body, path in feats %}
+      <article class="feature">
+        <h3><span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ path }}"/></svg></span>{{ title }}</h3>
+        <p>{{ body }}</p>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="who-h">
+  <div class="wrap">
+    <span class="kicker">Built for</span>
+    <h2 id="who-h" class="quote">DTC brands, wholesalers and manufacturers with $1M–$500M of imports — the companies that pay the tariffs but don't have a trade-compliance department.</h2>
+    <div class="grid g3" style="margin-top:28px">
+      <div class="card"><h3>Finance</h3><p class="muted">A duty ledger that reconciles to the GL, accruals for contested duty, and refunds you can book with confidence.</p></div>
+      <div class="card"><h3>Operations</h3><p class="muted">Know the duty before the PO. Compare origins on landed cost, not unit price. Catch broker errors on the next entry, not at audit.</p></div>
+      <div class="card"><h3>Brokers & forwarders</h3><p class="muted">Offer recovery and landed-cost reporting to every client under your name. Partner revenue share on every recovery.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" id="pricing" aria-labelledby="price-h">
+  <div class="wrap">
+    <div class="band-head">
+      <span class="kicker">Pricing</span>
+      <h2 id="price-h">Pay when money lands. Stay for the margin.</h2>
+    </div>
+    <div class="pricing">
+      <div class="plan"><h3>Recovery</h3><div class="price">15%</div><p class="muted">of refunds actually received. Nothing if we find nothing.</p>
+        <ul><li>21-month entry audit</li><li>CAPE, PSC and protest packets</li><li>Deadline calendar</li></ul></div>
+      <div class="plan featured"><h3>Growth</h3><div class="price">$900<span class="small muted"> / month</span></div><p class="muted">Recovery fee drops to 10%.</p>
+        <ul><li>Everything in Recovery</li><li>Landed cost & margin on every SKU</li><li>Sourcing simulator & change alerts</li><li>AI classification, copilot, 5 seats</li></ul></div>
+      <div class="plan"><h3>Scale</h3><div class="price">Custom</div><p class="muted">For $50M+ importers and broker partners.</p>
+        <ul><li>7% recovery fee, ERP integrations</li><li>Landed-cost API (metered)</li><li>White-label for brokers</li><li>SSO, audit log, DPA</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<section class="band" aria-labelledby="faq-h">
+  <div class="wrap faq">
+    <span class="kicker">Questions</span>
+    <h2 id="faq-h">The fine print, up front.</h2>
+    <details><summary>Is Harbormaster a customs broker or a law firm?</summary><p>Neither. Harbormaster is software that computes, documents and drafts. Your licensed customs broker files CAPE declarations, corrections and protests; court actions go through trade counsel. We work with yours or introduce you to partners.</p></details>
+    <details><summary>Who actually receives the refund?</summary><p>CBP refunds the importer of record. If your supplier or forwarder imported on a DDP basis, the refund goes to them — Harbormaster quantifies what was passed through to you in your invoices and drafts the request.</p></details>
+    <details><summary>My entries have already liquidated. Is it too late?</summary><p>Not necessarily. Within 180 days of liquidation, a protest keeps the entry open. Past that, CAPE Phase 3 currently requires CIT plaintiff status; the court certified an importer class on Oct 8, 2026, and §1581(i) actions have a two-year limit from the payment. We show which bucket each entry is in.</p></details>
+    <details><summary>How accurate is the tariff engine?</summary><p>Every layer is computed from the measure's effective dates, exemptions and stacking rules, and shows the authority it relies on. Rules are versioned and re-tested against CBP CSMS guidance as it changes; anything we're unsure of is flagged for review rather than guessed.</p></details>
+    <details><summary>What data do you need, and how is it protected?</summary><p>Entry summary line data (ES-003 or 7501 exports) and, for margin, your SKU costs and prices. Data is encrypted in transit and at rest, isolated per workspace, never used to train models, and deletable on request.</p></details>
+    <details><summary>Where does AI fit?</summary><p>Language, not numbers. Claude reads product descriptions for classification and answers questions by calling the engine. Duties, deadlines and refund routes are deterministic and auditable.</p></details>
+  </div>
+</section>
+
+<section class="band alt" id="waitlist" aria-labelledby="wl-h">
+  <div class="wrap waitlist">
+    <div>
+      <span class="kicker">Early access</span>
+      <h2 id="wl-h">We onboard in deadline order.</h2>
+      <p class="muted">The earliest-closing protest windows and the largest refunds go first. Early access includes the free 21-month audit and a recovery fee locked at 10% for the first year.</p>
+      <p class="muted small">Refer another importer and both of you get the first $25,000 recovered fee-free.</p>
+      <p class="small muted">{{ stats.signups }} companies on the list.</p>
+    </div>
+    <form class="card" method="post" action="/waitlist" hx-post="/waitlist" hx-target="#wl-error">
+      <input type="hidden" name="csrf" value="{{ csrf }}">
+      <div class="hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" tabindex="-1" autocomplete="off"></div>
+      <div class="row">
+        <div class="field"><label for="email">Work email</label><input id="email" name="email" type="email" required autocomplete="email"></div>
+        <div class="field"><label for="company">Company</label><input id="company" name="company" type="text" required autocomplete="organization"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label for="role">Your role</label><select id="role" name="role">{% for r in roles %}<option>{{ r }}</option>{% endfor %}</select></div>
+        <div class="field"><label for="imports_band">Annual imports</label><select id="imports_band" name="imports_band">{% for v, l, _ in bands %}<option value="{{ v }}" {{ 'selected' if v == '1-5m' }}>{{ l }}</option>{% endfor %}</select></div>
+      </div>
+      <fieldset class="field" style="border:0;padding:0">
+        <legend style="font-weight:600;font-size:.88rem;color:var(--ink-2);margin-bottom:8px">Top origins</legend>
+        <div class="chips">{% for g, l in groups.items() %}<label class="chip"><input type="checkbox" name="origins" value="{{ g }}" {{ 'checked' if g in ('CN',) }}><span>{{ l }}</span></label>{% endfor %}</div>
+      </fieldset>
+      <fieldset class="field" style="border:0;padding:0">
+        <legend style="font-weight:600;font-size:.88rem;color:var(--ink-2);margin-bottom:8px">Where you sell</legend>
+        <div class="chips">{% for c in channels %}<label class="chip"><input type="checkbox" name="channels" value="{{ c }}"><span>{{ c }}</span></label>{% endfor %}</div>
+      </fieldset>
+      <div id="wl-error"></div>
+      <button class="btn btn-primary" type="submit">Get early access</button>
+      <p class="hint">Your refund estimate is saved with your request so we can prioritise it. No spam, ever.</p>
+    </form>
+  </div>
+</section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap">
+    <div>{% include "partials/logo.html" %}<p style="margin-top:10px">Software for importers. Not a customs broker or law firm.<br>Reference tariff data; every filing is reviewed by a licensed professional.</p></div>
+    <div class="sources">
+      <p><strong>Sources</strong></p>
+      <p>Supreme Court ruling & CIT refund order — <a href="https://kpmg.com/us/en/taxnewsflash/news/2026/03/us-trade-court-orders-refund-removal-ieepa-duties.html">KPMG</a></p>
+      <p>CAPE phases — <a href="https://www.jdsupra.com/legalnews/a-guide-to-the-new-tariff-duty-refund-5709914/">JD Supra</a>, <a href="https://phillipslytle.com/cbp-opens-phase-3-of-cape-for-ieepa-refunds/">Phillips Lytle</a></p>
+      <p>Section 122 ruling — <a href="https://www.clarkhill.com/news-events/news/section-122-tariffs-ruling/">Clark Hill</a></p>
+      <p>Forced-labor §301 — <a href="https://www.honigman.com/alert-3462">Honigman</a></p>
+      <p>232 metals (Apr/Jun 2026) — <a href="https://www.thompsonhinesmartrade.com/2026/06/president-trump-modifies-section-232-tariffs-on-aluminum-copper-and-steel-imports/">Thompson Hine</a></p>
+      <p>Deadlines — <a href="https://www.strixsmart.com/post-summary-corrections">PSC & protest timing</a></p>
+    </div>
+  </div>
+</footer>
+{% endblock %}

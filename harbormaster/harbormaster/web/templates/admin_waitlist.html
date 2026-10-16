@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Waitlist admin — Harbormaster{% endblock %}
+{% block body %}
+<main class="band"><div class="wrap">
+  <div class="page-head"><div><h1>Waitlist</h1><p>{{ rows|length }} signups · {{ total|compact }} estimated refunds in the pipeline</p></div>
+    <a class="btn btn-ghost" href="/admin/waitlist.csv?token={{ token|urlencode }}">Export CSV</a></div>
+  <div class="card table-wrap"><table>
+    <thead><tr><th>Joined</th><th>Company</th><th>Email</th><th>Role</th><th>Imports</th><th>Origins</th><th class="r">Refund est.</th><th>Ref</th></tr></thead>
+    <tbody>{% for r in rows %}<tr><td class="num">{{ r.created_at|date }}</td><td>{{ r.company }}</td><td>{{ r.email }}</td><td>{{ r.role }}</td>
+      <td>{{ r.imports_band }}</td><td>{{ (r.top_origins or [])|join(' ') }}</td><td class="r num">{{ (r.estimate or {}).get('refund_total', 0)|money }}</td><td class="mono small">{{ r.referred_by or '' }}</td></tr>
+    {% else %}<tr><td colspan="8" class="empty">No signups yet.</td></tr>{% endfor %}</tbody>
+  </table></div>
+</div></main>
+{% endblock %}

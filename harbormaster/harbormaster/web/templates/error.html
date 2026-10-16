@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}{{ code }} — Harbormaster{% endblock %}
+{% block body %}
+<header class="site-head"><div class="wrap">{% include "partials/logo.html" %}</div></header>
+<main class="band"><div class="wrap" style="max-width:640px">
+  <span class="kicker">Error {{ code }}</span>
+  <h1>{{ 'Not found' if code == 404 else 'Something went wrong' }}</h1>
+  <p class="lede">{{ detail if detail and code != 404 else "That page isn't here." }}</p>
+  <a class="btn btn-primary" href="/">Back to Harbormaster</a>
+</div></main>
+{% endblock %}
