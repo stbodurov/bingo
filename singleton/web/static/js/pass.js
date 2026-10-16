@@ -22,7 +22,7 @@
     for (const k of kids.flat()) if (k !== null && k !== undefined && k !== false) el.append(k.nodeType ? k : document.createTextNode(String(k)));
     return el;
   }
-  const show = (...nodes) => root.replaceChildren(...nodes);
+  const show = (...nodes) => root.replaceChildren(...nodes.flat().filter((n) => n !== null && n !== undefined && n !== false));
   const ago = (iso) => { const s = (Date.now() - new Date(iso)) / 1000; return s < 60 ? 'just now' : s < 3600 ? `${Math.round(s / 60)}m ago` : s < 86400 ? `${Math.round(s / 3600)}h ago` : `${Math.round(s / 86400)}d ago`; };
   const pseud = (n) => (n ? `${n.slice(0, 4)}·${n.slice(4, 8)}·${n.slice(8, 12)}` : '—');
   const busy = (btn, on) => btn && btn.classList.toggle('busy', on);

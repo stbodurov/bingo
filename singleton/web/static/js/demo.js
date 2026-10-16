@@ -21,11 +21,11 @@
       const res = await fetch(`/demo/${appKey}/api/claim`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: r.token, value }) });
       const data = await res.json();
       const p = 'pseudonym ' + (data.nullifier || r.nullifier || '').slice(0, 12);
-      if (!res.ok) say('warn', data.error, p);
-      else if (appKey === 'driftwood') say('good', `Welcome to Driftwood, @${data.value}! Verified human, 16+.`, p + ' · now try signing up again with another handle');
+      if (!res.ok) return say('warn', data.error, p); // keep the explanation on screen
+      if (appKey === 'driftwood') say('good', `Welcome to Driftwood, @${data.value}! Verified human, 16+.`, p + ' · now try signing up again with another handle');
       else if (appKey === 'frontrow') say('good', `Ticket claimed — seat ${data.value}. Enjoy the show.`, p + ' · try claiming a second one');
       else say('good', 'Vote counted. Nobody — not even us — knows how you voted.', p);
-      setTimeout(() => location.reload(), 4000);
+      setTimeout(() => location.reload(), 5000); // show the new member in the list
     } catch (e) {
       say(e.code === 'unqualified' ? 'warn' : 'bad', e.message);
     } finally { b.classList.remove('busy'); }
