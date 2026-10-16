@@ -26,6 +26,10 @@ Rails.application.routes.draw do
     resources :weights, only: %i[create destroy]
     resources :check_ins, only: :create
     get "plan", to: "plan#show", as: :plan
+    resource :off_ramp, only: %i[create destroy] do
+      post :step
+      post :stop
+    end
     get "report", to: "reports#show", as: :report
     get "appeal", to: "reports#appeal", as: :appeal
     resource :profile, only: %i[edit update destroy]

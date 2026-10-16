@@ -282,3 +282,14 @@ td.r, th.r { text-align: right; font-variant-numeric: tabular-nums; }
 details.danger { border: 1.5px solid var(--crit-bg); border-radius: 12px; padding: 12px 14px; }
 details.danger summary { cursor: pointer; font-weight: 750; color: var(--crit); }
 form.inline { display: inline; }
+
+/* Off-ramp in progress */
+.ramp-now { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.ramp-now .big { font-size: 1.7rem; font-weight: 800; letter-spacing: -.02em; margin: 4px 0; }
+.guardrail { border: 1.5px solid var(--line); border-radius: 14px; padding: 14px; display: grid; gap: 4px; }
+.guardrail .k { font-size: .74rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.guardrail strong { font-size: 1.6rem; font-variant-numeric: tabular-nums; }
+.guardrail.tripped { border-color: var(--crit); background: var(--crit-bg); }
+.path { display: flex; flex-direction: column; }
+.path form { margin-top: auto; padding-top: 12px; }
+@media (max-width: 720px) { .ramp-now { grid-template-columns: 1fr; } }

@@ -2,7 +2,7 @@
 <% med = @o.medication; s = @o.schedule; t = @o.targets %>
 <div class="topline">
   <div><span class="eyebrow"><%= @o.date.strftime("%A, %B %-d") %></span><h1>Hi <%= current_user.first_name %></h1></div>
-  <span class="small muted">Week <%= s.weeks_on_medication + 1 %> on <%= med.info.brand %></span>
+  <span class="small muted"><%= @o.on_medication? ? "Week #{s.weeks_on_medication + 1} on #{med.info.brand}" : "Maintenance · week #{@o.weeks_off.to_i + 1} off medication" %></span>
 </div>
 
 <% @o.alerts.each do |level, title, body| %>
@@ -13,24 +13,39 @@
 <% end %>
 
 <div class="grid g2">
-  <section class="card dose-card" aria-labelledby="dose-h">
-    <div class="card-head"><h3 id="dose-h"><%= med.label %></h3><span class="small muted"><%= s.adherence_pct %>% on schedule (8 wks)</span></div>
-    <% if s.due_today? %>
-      <div class="big">Dose due <%= s.next_due_at.to_date == @o.date ? "today" : "since #{s.next_due_at.strftime('%a %b %-d')}" %></div>
-      <p class="muted small"><%= med.info.how_to_take %></p>
-      <%= form_with url: doses_path, scope: :dose_log, class: "row row-end" do |f| %>
-        <% if med.info.form == :injection %>
-          <div><%= f.label :site, "Site", class: "label", style: "color:inherit" %>
-            <%= f.select :site, DrugCatalog::INJECTION_SITES.map { |x| [DrugCatalog.site_label(x), x] }, selected: s.suggested_site %></div>
+  <% if @o.on_medication? %>
+    <section class="card dose-card" aria-labelledby="dose-h">
+      <div class="card-head"><h3 id="dose-h"><%= med.label %></h3><span class="small muted"><%= s.adherence_pct %>% on schedule (8 wks)</span></div>
+      <% if s.due_today? %>
+        <div class="big">Dose due <%= s.next_due_at.to_date == @o.date ? "today" : "since #{s.next_due_at.strftime('%a %b %-d')}" %></div>
+        <p class="muted small"><%= med.info.how_to_take %></p>
+        <%= form_with url: doses_path, scope: :dose_log, class: "row row-end" do |f| %>
+          <% if med.info.form == :injection %>
+            <div><%= f.label :site, "Site", class: "label", style: "color:inherit" %>
+              <%= f.select :site, DrugCatalog::INJECTION_SITES.map { |x| [DrugCatalog.site_label(x), x] }, selected: s.suggested_site %></div>
+          <% end %>
+          <div><%= f.submit "Log #{med.info.form == :pill ? 'today’s pill' : 'injection'}", class: "btn btn-accent btn-block" %></div>
         <% end %>
-        <div><%= f.submit "Log #{med.info.form == :pill ? 'today’s pill' : 'injection'}", class: "btn btn-accent btn-block" %></div>
+      <% else %>
+        <div class="big">Next dose <%= s.next_due_at.strftime("%a %b %-d") %></div>
+        <p class="muted small">Last taken <%= s.last_dose&.taken_at&.strftime("%a %b %-d") || "—" %><%= " · next site: #{DrugCatalog.site_label(s.suggested_site)}" if s.suggested_site %></p>
       <% end %>
-    <% else %>
-      <div class="big">Next dose <%= s.next_due_at.strftime("%a %b %-d") %></div>
-      <p class="muted small">Last taken <%= s.last_dose&.taken_at&.strftime("%a %b %-d") || "—" %><%= " · next site: #{DrugCatalog.site_label(s.suggested_site)}" if s.suggested_site %></p>
-    <% end %>
-    <p class="hint"><%= s.escalation_note(recent_severe_side_effects: @o.coach.severe_recently?) %></p>
-  </section>
+      <p class="hint"><%= s.escalation_note(recent_severe_side_effects: @o.coach.severe_recently?) %></p>
+      <% if (r = @o.off_ramp) %><p class="hint">Off-ramp: <%= r.path.label.downcase %>, week <%= r.week %> · <%= link_to "see plan", plan_path(anchor: "off-ramp") %></p><% end %>
+    </section>
+  <% else %>
+    <section class="card dose-card" aria-labelledby="dose-h">
+      <div class="card-head"><h3 id="dose-h">Maintenance mode</h3><span class="small muted">Off <%= med.info.brand %> since <%= med.stopped_on&.strftime("%b %-d") %></span></div>
+      <% if (r = @o.off_ramp) %>
+        <div class="big"><%= r.drift_pct.positive? ? "+" : "" %><%= r.drift_pct %>% since you started</div>
+        <p class="muted small">Guardrail at +<%= MaintenancePlan::GUARDRAIL_PCT %>% from <%= weight(r.baseline_kg) %>. Protein, lifting and 3 weigh-ins a week carry the result from here.</p>
+      <% else %>
+        <div class="big">Habits carry it now</div>
+        <p class="muted small">Weigh in 3× a week and keep protein and lifting going. Start a guardrail in <%= link_to "Plan & cost", plan_path(anchor: "off-ramp") %>.</p>
+      <% end %>
+      <p class="hint"><%= link_to "Restarted with your prescriber? Update your medicine", edit_medication_path %></p>
+    </section>
+  <% end %>
 
   <section class="card" aria-labelledby="fuel-h">
     <div class="card-head"><h3 id="fuel-h">Today’s targets</h3><a class="small" href="<%= nutrition_path %>">Log food</a></div>

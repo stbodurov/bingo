@@ -16,16 +16,20 @@ class MedicationsController < ApplicationController
   end
 
   def edit
-    @medication = current_user.medication or return redirect_to(new_medication_path)
+    @medication = current_user.last_medication or return redirect_to(new_medication_path)
   end
 
   def update
-    @medication = current_user.medication
+    @medication = current_user.last_medication or return redirect_to(new_medication_path)
+    restarting = !@medication.active?
     changed_dose = medication_params[:dose_mg].present? && medication_params[:dose_mg].to_f != @medication.dose_mg.to_f
     attrs = medication_params
-    attrs = attrs.merge(dose_started_on: current_user.today) if changed_dose
+    attrs = attrs.merge(dose_started_on: current_user.today) if changed_dose || restarting
+    attrs = attrs.merge(active: true, stopped_on: nil) if restarting
     if @medication.update(attrs)
-      redirect_to doses_path, notice: changed_dose ? "Dose updated to #{@medication.label}." : "Saved."
+      current_user.update!(maintenance_path: nil, maintenance_started_on: nil) if restarting && current_user.maintenance_path == "stop"
+      notice = restarting ? "Welcome back on #{@medication.label}. Your schedule restarts today." : (changed_dose ? "Dose updated to #{@medication.label}." : "Saved.")
+      redirect_to doses_path, notice:
     else
       render :edit, status: :unprocessable_entity
     end

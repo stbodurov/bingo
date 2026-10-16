@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_16_201000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_16_202000) do
   create_table "check_ins", force: :cascade do |t|
     t.integer "user_id", null: false
     t.date "checked_on", null: false
@@ -78,6 +78,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_201000) do
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "stopped_on"
     t.index ["user_id"], name: "index_medications_on_user_id"
   end
 
@@ -122,6 +123,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_201000) do
     t.boolean "admin", default: false, null: false
     t.date "maintenance_started_on"
     t.string "calendar_token"
+    t.string "maintenance_path"
+    t.decimal "maintenance_from_dose_mg", precision: 6, scale: 2
+    t.decimal "maintenance_baseline_kg", precision: 5, scale: 1
     t.index ["calendar_token"], name: "index_users_on_calendar_token", unique: true
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["employer_id"], name: "index_users_on_employer_id"

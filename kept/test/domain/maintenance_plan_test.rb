@@ -15,4 +15,18 @@ class MaintenancePlanTest < ActiveSupport::TestCase
     assert_equal %i[low moderate high], plan.paths.map(&:risk)
     assert plan.guardrails.first.include?("#{targets.protein_g} g")
   end
+
+  test "progress follows the plan pinned to its starting dose and measures drift" do
+    med = Medication.new(drug: "zepbound", dose_mg: 7.5, started_on: Date.current - 300, dose_started_on: Date.current - 30)
+    trend = WeightTrend.new([Entry.new(Date.current - 1, 90, nil), Entry.new(Date.current, 90, nil)])
+    targets = Targets.new(User.new(height_cm: 170, sex: "female"), 90)
+    plan = MaintenancePlan.new(med, targets:, trend:, from_dose_mg: 10)
+    r = plan.progress("taper", started_on: Date.current - 35, baseline_kg: 88)
+    assert_equal 6, r.week
+    assert_equal 5, r.step.dose_mg # taper from 10 mg: 7.5 (wk 1), 5 (wk 5), 2.5 (wk 9), off (wk 13)
+    assert_equal 9, r.next_step.week
+    assert_in_delta 2.3, r.drift_pct, 0.05
+    assert r.tripped
+    assert_nil plan.progress("nope", started_on: Date.current, baseline_kg: 88)
+  end
 end

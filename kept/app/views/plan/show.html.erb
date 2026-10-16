@@ -14,19 +14,53 @@
   <p class="small"><%= link_to(@o.medication.monthly_cost ? "Update what you pay" : "Add what you pay to see your savings", edit_medication_path) %></p>
   <p class="hint">Prices as of October 2026 from manufacturer and federal announcements; confirm with your pharmacy. <a href="<%= appeal_path %>">Draft a coverage appeal letter →</a></p>
 </section>
-<section class="card" style="margin-top:14px">
-  <div class="card-head"><h3>Your off-ramp</h3><% if @maintenance.ready? %><span class="badge badge-info">i Worth discussing now</span><% end %></div>
-  <p class="muted">Most people stop GLP-1s within a year, and about 60% of lost weight returns within a year of stopping. A planned transition — with your prescriber — protects the result.</p>
-  <div class="grid g3">
-    <% @maintenance.paths.each_with_index do |p, i| %>
-      <div class="path <%= 'recommended' if i.zero? %>">
-        <h3><%= p.label %></h3>
-        <p class="small"><%= p.summary %></p>
-        <%= status_badge({ low: :good, moderate: :warning, high: :critical }[p.risk], "#{p.risk} regain risk") %>
-        <ol class="timeline" style="margin-top:12px"><% p.weeks.each do |w| %><li><strong>Week <%= w.week %>: <%= w.dose_mg.to_f.zero? ? "off medication" : mg(w.dose_mg) %></strong><div class="small muted"><%= w.focus %></div></li><% end %></ol>
+<section class="card" style="margin-top:14px" id="off-ramp">
+  <div class="card-head"><h3>Your off-ramp</h3><% if @o.off_ramp %><span class="badge badge-good">✓ Plan active</span><% elsif @maintenance.ready? %><span class="badge badge-info">i Worth discussing now</span><% end %></div>
+  <% if (r = @o.off_ramp) %>
+    <div class="ramp-now">
+      <div>
+        <span class="eyebrow"><%= r.path.label %> · week <%= r.week %></span>
+        <div class="big"><%= r.step.dose_mg.to_f.zero? ? "Off medication" : "Target: #{mg(r.step.dose_mg)}" %></div>
+        <p class="small"><%= r.step.focus %></p>
+        <% if r.next_step %><p class="small muted">Next: week <%= r.next_step.week %> — <%= r.next_step.dose_mg.to_f.zero? ? "last dose" : mg(r.next_step.dose_mg) %> (with your prescriber).</p><% end %>
       </div>
-    <% end %>
-  </div>
-  <h4 style="margin-top:16px">Guardrails during any transition</h4>
+      <div class="guardrail <%= r.tripped ? 'tripped' : '' %>" role="status">
+        <span class="k">Regain guardrail</span>
+        <strong><%= r.drift_pct.positive? ? "+" : "" %><%= r.drift_pct %>%</strong>
+        <span class="small">vs. <%= weight(r.baseline_kg) %> at the start · alert at +<%= MaintenancePlan::GUARDRAIL_PCT %>%</span>
+        <div class="bar" aria-hidden="true"><i style="width:<%= [[r.drift_pct / MaintenancePlan::GUARDRAIL_PCT, 0].max, 1].min * 100 %>%;background:<%= r.tripped ? 'var(--crit)' : 'var(--brand)' %>"></i></div>
+      </div>
+    </div>
+    <div class="row mt">
+      <% if @o.on_medication? %>
+        <% if r.step.dose_mg.to_f.zero? %>
+          <%= button_to "I've taken my last dose", stop_off_ramp_path, class: "btn btn-primary btn-block", form: { data: { turbo_confirm: "Mark yourself as off medication from today?" } } %>
+        <% elsif (r.step.dose_mg.to_f - @o.medication.dose_mg.to_f).abs > 0.001 %>
+          <%= button_to "I've stepped down to #{mg(r.step.dose_mg)}", step_off_ramp_path, class: "btn btn-primary btn-block" %>
+        <% else %>
+          <p class="small muted">You're on the plan's dose (<%= @o.medication.label %>).</p>
+        <% end %>
+      <% else %>
+        <p class="small muted">Off medication since <%= @o.medication.stopped_on&.strftime("%b %-d") %>. <%= link_to "Restarted? Update your medicine", edit_medication_path %></p>
+      <% end %>
+      <%= button_to "End this plan", off_ramp_path, method: :delete, class: "btn btn-ghost btn-block", form: { data: { turbo_confirm: "End the off-ramp plan? Your logs stay." } } %>
+    </div>
+    <h4 class="mt">The whole plan</h4>
+    <ol class="timeline"><% r.path.weeks.each do |w| %><li class="<%= w == r.step ? 'current' : (w.week < r.step.week ? 'done' : 'ahead') %>"><strong>Week <%= w.week %>: <%= w.dose_mg.to_f.zero? ? "off medication" : mg(w.dose_mg) %></strong><div class="small muted"><%= w.focus %></div></li><% end %></ol>
+  <% else %>
+    <p class="muted">Most people stop GLP-1s within a year, and about 60% of lost weight returns within a year of stopping. A planned transition — with your prescriber — protects the result. Pick the path you've agreed on and Kept will track it.</p>
+    <div class="grid g3">
+      <% @maintenance.paths.each_with_index do |p, i| %>
+        <div class="path <%= 'recommended' if i.zero? %>">
+          <h3><%= p.label %></h3>
+          <p class="small"><%= p.summary %></p>
+          <%= status_badge({ low: :good, moderate: :warning, high: :critical }[p.risk], "#{p.risk} regain risk") %>
+          <ol class="timeline mt"><% p.weeks.each do |w| %><li><strong>Week <%= w.week %>: <%= w.dose_mg.to_f.zero? ? "off medication" : mg(w.dose_mg) %></strong><div class="small muted"><%= w.focus %></div></li><% end %></ol>
+          <% if @o.on_medication? %><%= button_to "Start this plan", off_ramp_path(path: p.key), class: "btn #{i.zero? ? 'btn-primary' : 'btn-ghost'} btn-block" %><% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+  <h4 class="mt">Guardrails during any transition</h4>
   <ul class="list"><% @maintenance.guardrails.each do |g| %><li><%= g %></li><% end %></ul>
 </section>

@@ -8,6 +8,9 @@ class DosesController < ApplicationController
 
   def create
     med = current_user.medication
+    unless med
+      return redirect_to(edit_medication_path, alert: "You're marked as off medication. If you've restarted with your prescriber, update your medicine first.")
+    end
     log = current_user.dose_logs.new(medication: med, dose_mg: med.dose_mg,
                                      taken_at: params.dig(:dose_log, :taken_at).presence || Time.current,
                                      site: params.dig(:dose_log, :site).presence, skipped: params.dig(:dose_log, :skipped) == "1",

@@ -28,6 +28,8 @@ class User < ApplicationRecord
   has_secure_token :calendar_token
 
   def medication = medications.where(active: true).order(:started_on).last
+  def last_medication = medications.order(:started_on, :id).last
+  def off_medication? = medication.nil? && last_medication.present?
   def first_name = name.presence&.split&.first || "there"
   def imperial? = units == "imperial"
   def plus? = plan == "plus" || employer.present?

@@ -1,12 +1,13 @@
 <% content_for :title, "Doses · Kept" %>
 <% med = @o.medication; s = @o.schedule; d = med.info %>
-<div class="topline"><h1>Doses</h1><a class="btn btn-ghost btn-sm" href="<%= edit_medication_path %>">Change dose or medicine</a></div>
+<div class="topline"><h1>Doses</h1><a class="btn btn-ghost btn-sm" href="<%= edit_medication_path %>"><%= @o.on_medication? ? "Change dose or medicine" : "Restart a medicine" %></a></div>
+<% unless @o.on_medication? %><div class="alert alert-info" role="status"><span class="i" aria-hidden="true">i</span><div><strong>Off medication since <%= med.stopped_on&.strftime("%b %-d") %></strong>Your dose history stays here. Kept is in maintenance mode — the guardrail keeps watching your trend.</div></div><% end %>
 <div class="grid g3">
   <div class="card stat"><div class="k">Current</div><div class="v"><%= mg med.dose_mg %></div><div class="s"><%= d.brand %> · <%= d.frequency %> · since <%= med.dose_started_on.strftime("%b %-d") %></div></div>
-  <div class="card stat"><div class="k">Next dose</div><div class="v"><%= s.next_due_at.strftime("%a %-d") %></div><div class="s"><%= s.next_due_at.strftime("%B") %><%= " · #{DrugCatalog.site_label(s.suggested_site)}" if s.suggested_site %></div></div>
+  <div class="card stat"><div class="k">Next dose</div><% if @o.on_medication? %><div class="v"><%= s.next_due_at.strftime("%a %-d") %></div><div class="s"><%= s.next_due_at.strftime("%B") %><%= " · #{DrugCatalog.site_label(s.suggested_site)}" if s.suggested_site %></div><% else %><div class="v">—</div><div class="s">Off medication</div><% end %></div>
   <div class="card stat"><div class="k">On schedule</div><div class="v"><%= s.adherence_pct %>%</div><div class="s">of expected doses, last 8 weeks</div></div>
 </div>
-<% if (g = s.missed_guidance) %><div class="alert alert-warning" style="margin-top:14px"><span class="i">!</span><div><strong>Missed dose</strong><%= g %></div></div><% end %>
+<% if @o.on_medication? && (g = s.missed_guidance) %><div class="alert alert-warning" style="margin-top:14px"><span class="i">!</span><div><strong>Missed dose</strong><%= g %></div></div><% end %>
 <div class="grid g2" style="margin-top:14px">
   <section class="card">
     <h3>Log a dose</h3>

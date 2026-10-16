@@ -1,9 +1,12 @@
 <% content_for :title, "Medicine · Kept" %>
 <div class="topline"><h1>Medicine & dose</h1></div>
 <section class="card" style="max-width:720px">
+  <% unless @medication.active? %>
+    <div class="alert alert-info" role="status"><span class="i" aria-hidden="true">i</span><div><strong>Off medication since <%= @medication.stopped_on&.strftime("%b %-d, %Y") || "recently" %></strong>Restarted with your prescriber? Check the dose below and save — Kept restarts your schedule from today.</div></div>
+  <% end %>
   <%= form_with model: @medication, url: medication_path, method: :patch do |f| %>
     <%= render "form", f:, medication: @medication %>
     <p class="hint">Changing the dose restarts the “weeks at this dose” count from today.</p>
-    <%= f.submit "Save", class: "btn btn-primary" %>
+    <%= f.submit(@medication.active? ? "Save" : "Restart this medicine", class: "btn btn-primary") %>
   <% end %>
 </section>

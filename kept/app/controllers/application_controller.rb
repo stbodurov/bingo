@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   def overview = @overview ||= Overview.new(current_user)
 
   def require_medication!
-    redirect_to new_medication_path, notice: "First, tell Kept which medicine you take." unless current_user.medication
+    redirect_to new_medication_path, notice: "First, tell Kept which medicine you take." unless current_user.last_medication
   end
 
   def to_kg(value)
